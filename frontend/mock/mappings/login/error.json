@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/login"
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "Access-Control-Allow-Origin": "*"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/users"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "users/users.json",
+    "headers": {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres
+    volumes:
+      - db-storage:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+
+  adminer:
+    image: adminer
+    links:
+      - db
+    ports:
+      - 8080:8080
+
+  api:
+    build: ./
+    ports:
+      - 3000:3000
+      - 9229:9229
+    volumes:
+      - .:/app
+      - /app/node_modules
+    links:
+      - db
+    command: "npm run dev"
+
+volumes:
+  db-storage:

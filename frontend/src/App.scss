@@ -1,0 +1,9 @@
+@use '@scss/styles.scss' as *;
+
+html {
+  @include text(
+    $font-poppins-regular,
+    16px,
+    400
+  ); //Default font-family / font-size / font-weight
+}

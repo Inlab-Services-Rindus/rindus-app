@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/users"
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "Access-Control-Allow-Origin": "*"
+    }
+  }
+}

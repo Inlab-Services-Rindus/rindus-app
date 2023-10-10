@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/login",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"token\": \"jwt-valid-token\"}",
+        "jsonPath": "$.token"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Access-Control-Allow-Origin": "*"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "singleQuote": true,
+  "importOrder": [
+    "^react(.*)",
+    "^@/(.*)",
+    "<THIRD_PARTY_MODULES>",
+    ".(scss|css)$"
+  ],
+  "importOrderSeparation": true,
+  "overrides": [
+    {
+      "files": "*.yml",
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ]
+}

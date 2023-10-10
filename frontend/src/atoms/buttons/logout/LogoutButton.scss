@@ -1,0 +1,18 @@
+@use '@scss/fonts' as *;
+
+.logout_button {
+  cursor: pointer;
+  margin: 0px;
+  padding: 0px;
+  border: none;
+  background-color: transparent;
+
+  img {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.logout_button span {
+  color: white;
+}
