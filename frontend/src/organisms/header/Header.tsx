@@ -18,7 +18,7 @@ export function Header() {
   const magClassName = `header__mag${isSearchPage ? '-white' : '-green'}`;
   const logoClassName = `header__logoBtn${isSearchPage ? '-green' : '-white'}`;
 
-  const handleNavigate = () => {
+  const handleSearchNavigate = () => {
     navigate('/search');
   };
 
@@ -28,16 +28,28 @@ export function Header() {
     }
   };
 
+  const handleProfileNavigate = () => {
+    navigate('/profile');
+  };
+
   return (
     <div className={headerClassName} data-testid="header">
       {isLoggedIn && (
-        <button className={magClassName} onClick={handleNavigate}>
+        <button className={magClassName} onClick={handleSearchNavigate}>
           <Mag className={magClassName} />
         </button>
       )}
       <button className={logoClassName} data-testid="logo" onClick={handleLogo}>
         <RindusLogo className="header__logo" selected={!isSearchPage} />
       </button>
+      {isLoggedIn && (
+        <button className="header__profile" onClick={handleProfileNavigate}>
+          <img
+            className="header__profile"
+            src="https://placehold.co/50x50?text=profile"
+          />
+        </button>
+      )}
       {isLoggedIn && <LogoutButton />}
     </div>
   );

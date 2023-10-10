@@ -62,6 +62,7 @@ describe('Header', () => {
 
   it('should call navigate when Logo button is clicked and isLoggedIn', async () => {
     isLoggedInSpy = true;
+
     render(<Header />);
 
     screen.getAllByRole('button')[1].click();
@@ -69,5 +70,16 @@ describe('Header', () => {
     await waitFor(() => {
       expect(useNavigateSpy).toHaveBeenCalledWith('/');
     });
+  });
+
+  it('should call navigate when button is clicked', async () => {
+    isLoggedInSpy = true;
+    render(<Header />);
+
+    screen.getAllByRole('button')[1].click();
+
+    await waitFor(() =>
+      expect(useNavigateSpy).toHaveBeenCalledWith('/profile'),
+    );
   });
 });
