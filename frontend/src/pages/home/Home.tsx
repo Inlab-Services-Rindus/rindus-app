@@ -1,18 +1,15 @@
-import { useNavigate } from 'react-router-dom';
-
 import RefreshButton from '@/atoms/buttons/refresh/RefreshButton';
 import Message from '@/atoms/message/Message';
 import { config } from '@/config/config';
 import useFetch from '@/hooks/fetch/useFetch';
-import useToast from '@/hooks/toast/useToast';
 import { Employee } from '@/model/Employee';
 import { Header } from '@/organisms/header/Header';
 import { NotificationLayout } from '@/organisms/notificationLayout/NotificationLayout';
 import { PeopleTab } from '@/organisms/people-tab/PeopleTab';
 
 export function Home() {
-  const navigate = useNavigate();
-  const { showToastError, showToastInfo } = useToast();
+  // const navigate = useNavigate();
+  // const { showToastError, showToastInfo } = useToast();
 
   const navigateToLogin = async () => {
     // TODO: Problem with coookie in the backend
@@ -22,8 +19,8 @@ export function Home() {
 
   // TODO: Problem with coookie in the backend
   const { data, refresh } = useFetch<Employee[]>({
-    onErrorCallback: () =>
-      showToastError('An error occurred while processing your request.'),
+    onErrorCallback: () => {},
+    // showToastError('An error occurred while processing your request.'),
     onUnauthorizedCallback: () => navigateToLogin(),
     options: {},
     url: `${config.backendUrl}/users`,
