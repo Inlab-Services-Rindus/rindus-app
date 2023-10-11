@@ -21,6 +21,7 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
     session({
       secret: config.sessions.secret,
       cookie: {
+        domain: 'vercel.app',
         maxAge: config.sessions.maxAge,
         secure:
           config.environment === 'production' ||
