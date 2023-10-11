@@ -16,12 +16,15 @@ export const getCommonConfig = (
   },
   sessions: {
     secret: processVariables.SESSIONS_SECRET || 'mysupersecret',
-    maxAge: 86400,
+    maxAge: 86400000,
   },
   app: {
     google: {
       clientId:
         '794492959607-21m9v38tca8f0i957p9bk67li2g7nt9b.apps.googleusercontent.com',
     },
+  },
+  cors: {
+    origin: 'http://localhost:5173',
   },
 });

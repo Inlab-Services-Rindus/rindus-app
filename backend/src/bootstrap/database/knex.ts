@@ -10,7 +10,9 @@ export const knexConfig: Knex.Config = {
     port: config.database.port,
     user: config.database.user,
     password: config.database.password,
-    ssl: config.environment === 'production',
+    ssl:
+      config.environment === 'production' ||
+      config.environment === 'development',
   },
   pool: {
     min: 2,

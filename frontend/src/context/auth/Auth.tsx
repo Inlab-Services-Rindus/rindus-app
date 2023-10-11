@@ -36,6 +36,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ jwt: googleResponse.credential }),
       method: 'POST',
     });

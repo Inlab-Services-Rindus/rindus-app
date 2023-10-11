@@ -1,6 +1,6 @@
 import { Level } from 'pino';
 
-export type Environment = 'development' | 'production' | 'test';
+export type Environment = 'local' | 'development' | 'production' | 'test';
 
 export type LogLevel = Level;
 
@@ -22,6 +22,7 @@ export interface Config {
   database: Database;
   sessions: Session;
   app: App;
+  cors: Cors;
 }
 
 export interface Database {
@@ -43,4 +44,8 @@ export interface App {
 
 export interface Google {
   clientId: string;
+}
+
+export interface Cors {
+  origin: string;
 }

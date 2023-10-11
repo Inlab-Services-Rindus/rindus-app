@@ -22,7 +22,9 @@ export function Home() {
     onErrorCallback: () => {},
     // showToastError('An error occurred while processing your request.'),
     onUnauthorizedCallback: () => navigateToLogin(),
-    options: {},
+    options: {
+      credentials: 'include'
+    },
     url: `${config.backendUrl}/users`,
   });
 

@@ -1,18 +1,26 @@
 import { config as dotenvConfig } from 'dotenv';
 import { Config, Environment, ProcessVariables } from '@/config/config.type';
+import { localConfig } from '@/config/local';
 import { developmentConfig } from '@/config/development';
 import { productionConfig } from '@/config/production';
 import { getCommonConfig } from '@/config/common';
 
 function getConfig(): Config {
   const environment: Environment =
-    (process.env.NODE_ENV as Environment) || 'development';
+    (process.env.NODE_ENV as Environment) || 'local';
 
   dotenvConfig();
 
-  let envConfig = developmentConfig;
-  if (environment === 'production') {
-    envConfig = productionConfig;
+  let envConfig: Partial<Config>;
+  switch (environment) {
+    case 'development':
+      envConfig = developmentConfig;
+      break;
+    case 'production':
+      envConfig = productionConfig;
+      break;
+    default:
+      envConfig = localConfig;
   }
 
   return {
