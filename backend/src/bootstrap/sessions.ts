@@ -24,7 +24,7 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
       cookie: {
         maxAge: config.sessions.maxAge,
         secure: isLiveEnvironment(config),
-        sameSite: 'lax',
+        sameSite: 'none',
       },
       store,
       resave: false,
