@@ -2,7 +2,7 @@ interface Props {
   className: string;
 }
 
-export default function Mag({ className }: Props) {
+export default function RindusLogo({ className }: Props) {
   return (
     <svg
       fill="none"

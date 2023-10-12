@@ -2,6 +2,13 @@ import { Header } from '@/organisms/header/Header';
 
 import { render, screen, waitFor } from '@testing-library/react';
 
+let isLoggedInSpy = false;
+vi.mock('react', () => ({
+  ...vi.importActual('react'),
+  useContext: () => ({ isLoggedIn: isLoggedInSpy }),
+  createContext: vi.fn(),
+}));
+
 const useNavigateSpy = vi.fn();
 const useLocationSpy = vi.fn();
 vi.mock('react-router-dom', () => ({
@@ -11,6 +18,10 @@ vi.mock('react-router-dom', () => ({
 }));
 
 describe('Header', () => {
+  beforeEach(() => {
+    useNavigateSpy.mockClear();
+  });
+
   it('should render Header component', () => {
     render(<Header />);
 
@@ -26,14 +37,25 @@ describe('Header', () => {
   it('should render a button', () => {
     render(<Header />);
 
-    expect(screen.getAllByRole('button')).toHaveLength(2);
+    expect(screen.getAllByRole('button')).toHaveLength(3);
   });
 
-  it('should call navigate when button is clicked', async () => {
+  it('should call navigate when Mag button is clicked', async () => {
     render(<Header />);
 
     screen.getAllByRole('button')[0].click();
 
     await waitFor(() => expect(useNavigateSpy).toHaveBeenCalledWith('/search'));
+  });
+
+  it('should call navigate when Logo button is clicked and isLoggedIn', async () => {
+    isLoggedInSpy = true;
+    render(<Header />);
+
+    screen.getAllByRole('button')[1].click();
+
+    await waitFor(() => {
+      expect(useNavigateSpy).toHaveBeenCalledWith('/');
+    });
   });
 });
