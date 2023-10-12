@@ -1,7 +1,7 @@
 import https from 'https';
 import createCert from 'create-cert';
 
-import { config, isLiveEnvironment } from '@/config';
+import { config } from '@/config';
 
 import { app } from '@/bootstrap';
 import { unprotectedRouter, protectedRouter } from '@/routes';
@@ -20,17 +20,14 @@ const startupLogger = (port: number, secure: boolean) => () => {
 };
 
 const httpPort = config.app.port.http;
-const httpsPort = config.app.port.https;
-if (isLiveEnvironment(config)) {
-  // Create certs on the fly + listen https
-  createCert().then((credentials) => {
-    https
-      .createServer(credentials, app)
-      .listen(httpsPort, startupLogger(httpsPort, true));
-  });
-} else {
-  // Listen http
-  app.listen(httpPort, startupLogger(httpPort, false));
-}
+// Listen http
+app.listen(httpPort, startupLogger(httpPort, false));
+// const httpsPort = config.app.port.https;
+// Create certs on the fly + listen https
+// createCert().then((credentials) => {
+//   https
+//     .createServer(credentials, app)
+//     .listen(httpsPort, startupLogger(httpsPort, true));
+// });
 
 export default app;
