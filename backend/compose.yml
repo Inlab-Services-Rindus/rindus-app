@@ -20,7 +20,9 @@ services:
       - 8080:8080
 
   api:
-    build: ./
+    build:
+      context: ./
+      dockerfile: Dockerfile.local
     ports:
       - 3000:3000
       - 3443:3443
