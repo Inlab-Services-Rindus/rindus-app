@@ -7,7 +7,6 @@ export type LogLevel = Level;
 export interface ProcessVariables {
   NODE_ENV: Environment;
   PORT?: string;
-  HTTPS_PORT?: string;
   LOG_LEVEL?: LogLevel;
   DB_HOST: string;
   DB_USER: string;
@@ -40,13 +39,8 @@ export interface Session {
 }
 
 export interface App {
-  port: Port;
+  port: number;
   google: Google;
-}
-
-export interface Port {
-  http: number;
-  https: number;
 }
 
 export interface Google {

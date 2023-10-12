@@ -17,13 +17,14 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
     knex,
   });
 
+  app.set('trust proxy', true);
   app.use(
     session({
       secret: config.sessions.secret,
       cookie: {
         maxAge: config.sessions.maxAge,
         secure: isLiveEnvironment(config),
-        sameSite: 'none',
+        sameSite: 'lax',
       },
       store,
       resave: false,

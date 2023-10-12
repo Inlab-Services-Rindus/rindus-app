@@ -22,10 +22,7 @@ export const getCommonConfig = (
     maxAge: 86400000,
   },
   app: {
-    port: {
-      http: parseNumber(processVariables.PORT) || 3000,
-      https: parseNumber(processVariables.HTTPS_PORT) || 3443,
-    },
+    port: parseNumber(processVariables.PORT) || 3000,
     google: {
       clientId:
         '794492959607-21m9v38tca8f0i957p9bk67li2g7nt9b.apps.googleusercontent.com',
