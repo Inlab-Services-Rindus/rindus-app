@@ -29,4 +29,10 @@ function getConfig(): Config {
   };
 }
 
+export function isLiveEnvironment(config: Config) {
+  return (
+    config.environment === 'development' || config.environment === 'production'
+  );
+}
+
 export const config = getConfig();

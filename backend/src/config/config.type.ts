@@ -5,7 +5,9 @@ export type Environment = 'local' | 'development' | 'production' | 'test';
 export type LogLevel = Level;
 
 export interface ProcessVariables {
+  NODE_ENV: Environment;
   PORT?: string;
+  HTTPS_PORT?: string;
   LOG_LEVEL?: LogLevel;
   DB_HOST: string;
   DB_USER: string;
@@ -18,7 +20,6 @@ export interface ProcessVariables {
 export interface Config {
   environment: Environment;
   logLevel: Level;
-  port: number;
   database: Database;
   sessions: Session;
   app: App;
@@ -39,7 +40,13 @@ export interface Session {
 }
 
 export interface App {
+  port: Port;
   google: Google;
+}
+
+export interface Port {
+  http: number;
+  https: number;
 }
 
 export interface Google {

@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-import { config } from '@/config';
+import { config, isLiveEnvironment } from '@/config';
 
 export const knexConfig: Knex.Config = {
   client: 'pg',
@@ -10,9 +10,7 @@ export const knexConfig: Knex.Config = {
     port: config.database.port,
     user: config.database.user,
     password: config.database.password,
-    ssl:
-      config.environment === 'production' ||
-      config.environment === 'development',
+    ssl: isLiveEnvironment(config),
   },
   pool: {
     min: 2,

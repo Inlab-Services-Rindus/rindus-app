@@ -1,18 +1,7 @@
-# Development stage
 FROM node:18 as development
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-COPY tsconfig.json ./
-COPY ./ ./
-ENV NODE_ENV development
-CMD [ "npm", "run", "start" ]
-
-# Builder stage
-FROM development as builder
-WORKDIR /app
-# Build the app with devDependencies still installed from "development" stage
-RUN npm run build
-# Clear dependencies and reinstall for production (no devDependencies)
-RUN rm -rf node_modules
-RUN npm ci --only=production
+EXPOSE 3000
+EXPOSE 3443
+CMD [ "./docker/api/local/entrypoint.sh" ]

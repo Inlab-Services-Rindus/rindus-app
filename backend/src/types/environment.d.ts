@@ -1,8 +1,8 @@
+import { ProcessVariables } from '@/config/config.type';
+
 declare global {
   namespace NodeJS {
-    interface ProcessEnv {
-      NODE_ENV: 'development' | 'production' | 'test';
-    }
+    interface ProcessEnv extends ProcessVariables {}
   }
 }
 

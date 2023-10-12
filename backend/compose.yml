@@ -5,6 +5,8 @@ services:
       - db-storage:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    env_file:
+      - ./.env.docker
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -21,11 +23,15 @@ services:
     build: ./
     ports:
       - 3000:3000
+      - 3443:3443
       - 9229:9229
-    env_file:
-      - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
     links:
       - db
+    env_file:
+      - ./.env.docker
 
 volumes:
   db-storage:

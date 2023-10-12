@@ -1,54 +1,41 @@
-import { Knex } from 'knex';
 import fs from 'fs';
+
+import { Knex } from 'knex';
 
 export async function seed(knex: Knex): Promise<void> {
   // Deletes ALL existing entries
   await knex('users').del();
 
-  const employees = parseEmployeesFromJSONResponse();
+  const employees = parseEmployeesFromJSON();
 
   // Inserts seed entries
   await knex('users').insert(employees);
 }
 
-interface EmployeesData {
-  items: PersonioEmployee[];
-}
-
-interface PersonioEmployee {
-  id: number;
-  data: Data;
-}
-
-interface Data {
+interface EmployeeData {
+  id: string;
   first_name: string;
   last_name: string;
   email: string;
   profile_picture_url: string;
 }
 
-interface EmployeesResponse {
-  data: EmployeesData;
-}
-
-interface Employee extends Data {
+interface Employee extends Omit<EmployeeData, 'id'> {
   personio_id: string;
 }
 
-function parseEmployeesFromJSONResponse() {
-  return mapEmployeesResponse(
-    JSON.parse(fs.readFileSync('./seeds/employees/all.json').toString('utf-8')),
+function parseEmployeesFromJSON() {
+  return mapEmployees(
+    JSON.parse(fs.readFileSync(`./seeds/resources/all.json`).toString('utf-8')),
   );
 }
 
-function mapEmployeesResponse(
-  personioEmployees: EmployeesResponse,
-): Employee[] {
-  return personioEmployees.data.items.map((element) => ({
-    personio_id: element.id.toFixed(),
-    first_name: element.data.first_name,
-    last_name: element.data.last_name,
-    email: element.data.email,
-    profile_picture_url: element.data.profile_picture_url,
+function mapEmployees(employeeData: EmployeeData[]): Employee[] {
+  return employeeData.map((element) => ({
+    personio_id: element.id,
+    first_name: element.first_name,
+    last_name: element.last_name,
+    email: element.email,
+    profile_picture_url: element.profile_picture_url,
   }));
 }

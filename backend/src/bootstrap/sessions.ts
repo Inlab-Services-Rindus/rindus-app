@@ -4,7 +4,7 @@ import session from 'express-session';
 import { Express } from 'express';
 import { Knex } from 'knex';
 
-import { config } from '@/config';
+import { config, isLiveEnvironment } from '@/config';
 
 declare module 'express-session' {
   interface SessionData {
@@ -22,7 +22,7 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
       secret: config.sessions.secret,
       cookie: {
         maxAge: config.sessions.maxAge,
-        secure: config.environment === 'production',
+        secure: isLiveEnvironment(config),
       },
       store,
       resave: false,
