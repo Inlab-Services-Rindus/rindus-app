@@ -11,19 +11,11 @@ export function Home() {
   // const navigate = useNavigate();
   // const { showToastError, showToastInfo } = useToast();
 
-  const navigateToLogin = async () => {
-    // TODO: Problem with coookie in the backend
-    // await navigate('/login');
-    // showToastInfo('Please login to continue.');
-  };
-
   // TODO: Problem with coookie in the backend
   const { data, refresh } = useFetch<Employee[]>({
     onErrorCallback: () => {},
-    // showToastError('An error occurred while processing your request.'),
-    onUnauthorizedCallback: () => navigateToLogin(),
     options: {
-      credentials: 'include'
+      credentials: 'include',
     },
     url: `${config.backendUrl}/users`,
   });

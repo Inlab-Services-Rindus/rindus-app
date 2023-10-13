@@ -1,4 +1,5 @@
-import { createContext, useState, ReactNode } from 'react';
+import { createContext, useState, ReactNode, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
 import { config } from '@/config/config';
@@ -23,11 +24,16 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cookies] = useCookies();
+  const [isLoggedIn, setIsLoggedIn] = useState(!!cookies['connect.sid']);
 
   const navigate = useNavigate();
 
   const { showToastError, showToastSuccess } = useToast();
+
+  useEffect(() => {
+    setIsLoggedIn(!!cookies['connect.sid']);
+  }, [cookies['connect.sid']]);
 
   const login = async (
     googleResponse: google.accounts.id.CredentialResponse,

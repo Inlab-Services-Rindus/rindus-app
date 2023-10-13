@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { AuthContext } from '@/context/auth/Auth';
 import ProtectedRoutes from '@/organisms/protectedRoutes/ProtectedRoutes';
@@ -12,7 +12,10 @@ export function Router() {
 
   return (
     <Routes>
-      <Route element={<Login />} path="/login" />
+      <Route
+        element={isLoggedIn ? <Navigate to="/" /> : <Login />}
+        path="/login"
+      />
       <Route element={<ProtectedRoutes isAuth={isLoggedIn} />}>
         <Route element={<Home />} path="/" />
         <Route element={<Search />} path="/search" />

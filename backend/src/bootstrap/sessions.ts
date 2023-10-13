@@ -17,15 +17,17 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
     knex,
   });
 
-  app.set('trust proxy', true);
+  const isLiveEnv = isLiveEnvironment(config);
   app.use(
     session({
       secret: config.sessions.secret,
       cookie: {
+        httpOnly: false,
         maxAge: config.sessions.maxAge,
-        secure: isLiveEnvironment(config),
-        sameSite: 'none',
+        secure: isLiveEnv,
+        // sameSite: 'none',
       },
+      proxy: isLiveEnv,
       store,
       resave: false,
       saveUninitialized: true,
