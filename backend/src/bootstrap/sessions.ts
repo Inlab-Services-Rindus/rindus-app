@@ -25,7 +25,7 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
         httpOnly: false,
         maxAge: config.sessions.maxAge,
         secure: isLiveEnv,
-        // sameSite: 'none',
+        domain: isLiveEnv ? 'rindus-app-nine.vercel.app' : 'localhost',
       },
       proxy: isLiveEnv,
       store,
