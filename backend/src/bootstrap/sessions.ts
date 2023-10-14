@@ -22,10 +22,10 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
     session({
       secret: config.sessions.secret,
       cookie: {
-        httpOnly: false,
+        httpOnly: isLiveEnv,
         maxAge: config.sessions.maxAge,
         secure: isLiveEnv,
-        domain: isLiveEnv ? 'rindus-app-nine.vercel.app' : 'localhost',
+        sameSite: isLiveEnv ? 'none' : 'lax',
       },
       proxy: isLiveEnv,
       store,

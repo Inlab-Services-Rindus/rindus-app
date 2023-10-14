@@ -24,7 +24,8 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
-  const [cookies] = useCookies();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, _, removeCookie] = useCookies();
   const [isLoggedIn, setIsLoggedIn] = useState(!!cookies['connect.sid']);
 
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
     if (response.ok) {
       setIsLoggedIn(false);
+      removeCookie('connect.sid');
 
       navigate('/login');
       showToastSuccess('Logout successful');
