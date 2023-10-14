@@ -24,17 +24,16 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [cookies, _, removeCookie] = useCookies();
-  const [isLoggedIn, setIsLoggedIn] = useState(!!cookies['connect.sid']);
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
 
   const { showToastError, showToastSuccess } = useToast();
 
   useEffect(() => {
-    setIsLoggedIn(!!cookies['connect.sid']);
-  }, [cookies['connect.sid']]);
+    setIsLoggedIn(!!cookies['session']);
+  }, [cookies['session']]);
 
   const login = async (
     googleResponse: google.accounts.id.CredentialResponse,
@@ -50,6 +49,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
     if (response.ok) {
       setIsLoggedIn(true);
+      setCookie('session', '1');
       navigate('/');
     } else {
       showToastError('Login failed');
@@ -63,7 +63,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
     if (response.ok) {
       setIsLoggedIn(false);
-      removeCookie('connect.sid');
+      removeCookie('session');
 
       navigate('/login');
       showToastSuccess('Logout successful');

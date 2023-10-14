@@ -30,7 +30,7 @@ export default function useFetch<T>({
 
       if (!response.ok) {
         if (response.status === 401) {
-          removeCookie('connect.sid');
+          removeCookie('session');
         } else {
           onErrorCallback();
         }
