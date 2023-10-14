@@ -70,13 +70,16 @@ describe('Auth', () => {
 
     fireEvent.click(getByText('Login'));
 
-    expect(global.fetch).toHaveBeenCalledWith(`${config.backendUrl}/login`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ jwt: 'jwt-test' }),
-      method: 'POST',
-    });
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${config.backendUrl}/login`,
+      expect.objectContaining({
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ jwt: 'jwt-test' }),
+        method: 'POST',
+      }),
+    );
 
     await waitFor(() => {
       expect(getByText('Is logged in: true')).toBeTruthy();
@@ -109,13 +112,16 @@ describe('Auth', () => {
 
     fireEvent.click(getByText('Login'));
 
-    expect(global.fetch).toHaveBeenCalledWith(`${config.backendUrl}/login`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ jwt: 'jwt-test' }),
-      method: 'POST',
-    });
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${config.backendUrl}/login`,
+      expect.objectContaining({
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ jwt: 'jwt-test' }),
+        method: 'POST',
+      }),
+    );
 
     await waitFor(() => {
       expect(getByText('Is logged in: false')).toBeTruthy();

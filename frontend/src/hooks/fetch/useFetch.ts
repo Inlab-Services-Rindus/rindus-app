@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom';
 
 export interface useFetchProps {
   onErrorCallback: () => void;
@@ -23,7 +22,6 @@ export default function useFetch<T>({
   const [isLoading, setIsLoading] = useState(true);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_1, _2, removeCookie] = useCookies();
-  const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
@@ -33,7 +31,6 @@ export default function useFetch<T>({
       if (!response.ok) {
         if (response.status === 401) {
           removeCookie('connect.sid');
-          navigate('/login');
         } else {
           onErrorCallback();
         }

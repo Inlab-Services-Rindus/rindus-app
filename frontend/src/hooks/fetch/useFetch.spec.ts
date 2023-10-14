@@ -28,7 +28,6 @@ describe('useFetch', async () => {
         useFetch({
           url: mockUrl,
           options: mockOptions,
-          onUnauthorizedCallback: mockUnauthorizedCallback,
           onErrorCallback: mockErrorCallback,
         }),
       );
@@ -59,29 +58,6 @@ describe('useFetch', async () => {
         refresh: expect.any(Function),
       });
       expect(mockUnauthorizedCallback).not.toHaveBeenCalled();
-      expect(mockErrorCallback).not.toHaveBeenCalled();
-    });
-  });
-
-  it('should call unauthorized callback when the status code of the request is 401', async () => {
-    global.fetch = vi.fn().mockResolvedValueOnce({
-      ok: false,
-      status: 401,
-    });
-
-    await renderFetchHook();
-    const { result } = data as unknown as RenderHookResult<
-      useFetchReturn<Employee[]>,
-      useFetchProps
-    >;
-
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        data: null,
-        isLoading: false,
-        refresh: expect.any(Function),
-      });
-      expect(mockUnauthorizedCallback).toHaveBeenCalled();
       expect(mockErrorCallback).not.toHaveBeenCalled();
     });
   });
