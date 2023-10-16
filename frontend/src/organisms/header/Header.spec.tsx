@@ -34,13 +34,25 @@ describe('Header', () => {
     expect(screen.getByTestId('logo')).toBeInTheDocument();
   });
 
-  it('should render a button', () => {
+  it('should render a button if logged in', () => {
+    isLoggedInSpy = true;
+
     render(<Header />);
 
     expect(screen.getAllByRole('button')).toHaveLength(3);
   });
 
+  it('should render single button if not logged in', () => {
+    isLoggedInSpy = false;
+
+    render(<Header />);
+
+    expect(screen.getAllByRole('button')).toHaveLength(1);
+  });
+
   it('should call navigate when Mag button is clicked', async () => {
+    isLoggedInSpy = true;
+
     render(<Header />);
 
     screen.getAllByRole('button')[0].click();

@@ -4,12 +4,15 @@
   cursor: pointer;
   margin: 0px;
   padding: 0px;
+  height: 50px;
+  width: 50px;
   border: none;
   background-color: transparent;
 
   img {
-    width: 50px;
-    height: 50px;
+    vertical-align: middle;
+    width: 30px;
+    height: 30px;
   }
 }
 
