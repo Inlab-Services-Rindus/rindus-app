@@ -39,7 +39,7 @@ describe('Header', () => {
 
     render(<Header />);
 
-    expect(screen.getAllByRole('button')).toHaveLength(3);
+    expect(screen.getAllByRole('button')).toHaveLength(4);
   });
 
   it('should render single button if not logged in', () => {
@@ -76,7 +76,7 @@ describe('Header', () => {
     isLoggedInSpy = true;
     render(<Header />);
 
-    screen.getAllByRole('button')[1].click();
+    screen.getAllByRole('button')[2].click();
 
     await waitFor(() =>
       expect(useNavigateSpy).toHaveBeenCalledWith('/profile'),

@@ -2,6 +2,12 @@ import { BackButton } from '@/atoms/buttons/back/BackButton';
 
 import { render, screen } from '@testing-library/react';
 
+const useNavigateSpy = vi.fn();
+vi.mock('react-router-dom', () => ({
+  ...vi.importActual('react-router-dom'),
+  useNavigate: () => useNavigateSpy,
+}));
+
 describe('RefreshButton', () => {
   it('should render successfully', () => {
     render(<BackButton />);
@@ -17,6 +23,6 @@ describe('RefreshButton', () => {
 
     buttonElement.click();
 
-    expect(window.history.back).toHaveBeenCalled();
+    expect(useNavigateSpy).toHaveBeenCalled();
   });
 });

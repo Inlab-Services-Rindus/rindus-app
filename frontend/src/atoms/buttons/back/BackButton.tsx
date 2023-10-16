@@ -1,10 +1,15 @@
+import { useNavigate } from 'react-router-dom';
+
 import Back from '@/assets/svgs/Back';
 import '@/atoms/buttons/back/BackButton.scss';
 
 export function BackButton() {
+  const navigate = useNavigate();
+
   const handleBack = () => {
-    window.history.back();
+    navigate(-1);
   };
+
   return (
     <button
       className="back_button"
