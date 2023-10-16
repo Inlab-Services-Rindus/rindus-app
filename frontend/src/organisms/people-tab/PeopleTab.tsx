@@ -9,10 +9,13 @@ export function PeopleTab({ people }: PeopleTabProps) {
     <section data-testid="people-tab">
       <h1>PeopleTab</h1>
       <div>
-        {people?.map(
-          (employee) =>
-            `${employee.first_name} ${employee.last_name} -  ${employee.email}`,
-        )}
+        <ul>
+          {people?.map((employee, index) => (
+            <li key={index}>
+              {`${employee.firstName} ${employee.lastName} - ${employee.email}`}
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
