@@ -58,6 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
   const logout = async () => {
     const response = await fetch(`${config.backendUrl}/logout`, {
+      credentials: 'include',
       method: 'POST',
     });
 
