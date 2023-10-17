@@ -28,8 +28,19 @@ export class KnexUserRepository implements UserRepository {
           firstName: userRecord.first_name,
           lastName: userRecord.last_name,
           email: userRecord.email,
-          profilePictureUrl: userRecord.profile_picture_url,
+          profilePictureUrl: this.mapAvatarUrl(userRecord.profile_picture_url),
         })),
       );
+  }
+
+  private mapAvatarUrl(personioUrl?: string) {
+    const personioImageServer = 'https://images.personio.de/';
+    if (personioUrl && personioUrl.includes(personioImageServer)) {
+      return personioUrl
+        .replace(personioImageServer, '/avatars/')
+        .replace('small', 'large');
+    } else {
+      return personioUrl;
+    }
   }
 }
