@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useState, ReactNode } from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,15 +25,11 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [cookies, setCookie, removeCookie] = useCookies();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!cookies['isLogged']);
 
   const navigate = useNavigate();
 
   const { showToastError, showToastSuccess } = useToast();
-
-  useEffect(() => {
-    setIsLoggedIn(!!cookies['session']);
-  }, [cookies['session']]);
 
   const login = async (
     googleResponse: google.accounts.id.CredentialResponse,
@@ -49,7 +45,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
     if (response.ok) {
       setIsLoggedIn(true);
-      setCookie('session', '1');
+      setCookie('isLogged', 'true');
       navigate('/');
     } else {
       showToastError('Login failed');
@@ -64,7 +60,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
     if (response.ok) {
       setIsLoggedIn(false);
-      removeCookie('session');
+      removeCookie('isLogged');
 
       navigate('/login');
       showToastSuccess('Logout successful');

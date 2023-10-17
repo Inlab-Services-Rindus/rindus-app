@@ -8,7 +8,7 @@ export default function LogoutButton() {
   const { logout } = useContext(AuthContext);
 
   return (
-    <button className="logout_button" data-testid="logout" onClick={logout}>
+    <button className="logout__button" data-testid="logout" onClick={logout}>
       <img alt="SVG logout" src={logoutIcon} />
     </button>
   );

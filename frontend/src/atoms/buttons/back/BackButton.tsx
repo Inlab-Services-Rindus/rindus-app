@@ -12,12 +12,12 @@ export function BackButton() {
 
   return (
     <button
-      className="back_button"
+      className="back__button"
       data-testid="back-button"
       onClick={handleBack}
       type="button"
     >
-      <Back className="back_button" />
+      <Back />
     </button>
   );
 }

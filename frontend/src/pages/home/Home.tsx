@@ -1,36 +1,32 @@
-import RefreshButton from '@/atoms/buttons/refresh/RefreshButton';
-import Message from '@/atoms/message/Message';
 import { config } from '@/config/config';
 import useFetch from '@/hooks/fetch/useFetch';
+import useToast from '@/hooks/toast/useToast';
 import { Employee } from '@/model/Employee';
 import { Header } from '@/organisms/header/Header';
-import { NotificationLayout } from '@/organisms/notificationLayout/NotificationLayout';
 import { PeopleTab } from '@/organisms/people-tab/PeopleTab';
+import Retry from '@/organisms/retry/Retry';
 
 export function Home() {
-  // const navigate = useNavigate();
-  // const { showToastError, showToastInfo } = useToast();
+  const { showToastError } = useToast();
 
-  // TODO: Problem with coookie in the backend
-  const { data, refresh } = useFetch<Employee[]>({
-    onErrorCallback: () => {},
+  const { data, isLoading, refresh } = useFetch<Employee[]>({
+    onErrorCallback: () => {
+      showToastError('An error occurred while processing your request.');
+    },
     options: {
       credentials: 'include',
     },
     url: `${config.backendUrl}/users`,
   });
 
+  if (isLoading) {
+    return <div data-testid="loader">Loading...</div>;
+  }
+
   return (
     <div className="homePage">
       <Header />
-      {data ? (
-        <PeopleTab people={data} />
-      ) : (
-        <NotificationLayout>
-          <Message message="Oops! Something went wrong. Please click to refresh and try again." />
-          <RefreshButton handleRefresh={refresh} />
-        </NotificationLayout>
-      )}
+      {data ? <PeopleTab people={data} /> : <Retry refresh={refresh} />}
     </div>
   );
 }

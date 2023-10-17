@@ -3,12 +3,15 @@ import { BackButton } from '@/atoms/buttons/back/BackButton';
 import { render, screen } from '@testing-library/react';
 
 const useNavigateSpy = vi.fn();
-vi.mock('react-router-dom', () => ({
-  ...vi.importActual('react-router-dom'),
-  useNavigate: () => useNavigateSpy,
-}));
+vi.mock('react-router-dom', async () => {
+  const actual = (await vi.importActual('react-router-dom')) as any;
+  return {
+    ...actual,
+    useNavigate: () => useNavigateSpy,
+  };
+});
 
-describe('RefreshButton', () => {
+describe('BackButton', () => {
   it('should render successfully', () => {
     render(<BackButton />);
     const buttonElement = screen.getByRole('button');
