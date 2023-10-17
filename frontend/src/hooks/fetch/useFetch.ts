@@ -22,7 +22,7 @@ export default function useFetch<T>({
 }: useFetchProps): useFetchReturn<T> {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [_1, _2, removeCookie] = useCookies();
+  const [, , removeCookie] = useCookies();
 
   console.log('Pedro ===> useToast()', useToast());
 
