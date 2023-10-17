@@ -1,85 +1,89 @@
 import { Header } from '@/organisms/header/Header';
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
-let isLoggedInSpy = false;
-vi.mock('react', () => ({
-  ...vi.importActual('react'),
-  useContext: () => ({ isLoggedIn: isLoggedInSpy }),
-  createContext: vi.fn(),
-}));
+let isLoggedInSpy = true;
+
+vi.mock('react', async () => {
+  const actual = (await vi.importActual('react')) as any;
+  return {
+    ...actual,
+    useContext: () => ({ isLoggedIn: isLoggedInSpy }),
+    createContext: vi.fn(),
+  };
+});
 
 const useNavigateSpy = vi.fn();
 const useLocationSpy = vi.fn();
-vi.mock('react-router-dom', () => ({
-  ...vi.importActual('react-router-dom'),
-  useNavigate: () => useNavigateSpy,
-  useLocation: () => useLocationSpy,
-}));
+vi.mock('react-router-dom', async () => {
+  const actual = (await vi.importActual('react-router-dom')) as any;
+  return {
+    ...actual,
+    useNavigate: () => useNavigateSpy,
+    useLocation: () => useLocationSpy,
+  };
+});
 
 describe('Header', () => {
   beforeEach(() => {
     useNavigateSpy.mockClear();
-  });
-
-  it('should render Header component', () => {
-    render(<Header />);
-
-    expect(screen.getByTestId('header')).toBeInTheDocument();
-  });
-
-  it('should render logo', () => {
-    render(<Header />);
-
-    expect(screen.getByTestId('logo')).toBeInTheDocument();
-  });
-
-  it('should render a button if logged in', () => {
     isLoggedInSpy = true;
-
-    render(<Header />);
-
-    expect(screen.getAllByRole('button')).toHaveLength(4);
   });
 
-  it('should render single button if not logged in', () => {
-    isLoggedInSpy = false;
+  describe('not logged', () => {
+    it('should render header login when the user is not logged', () => {
+      isLoggedInSpy = false;
 
-    render(<Header />);
+      render(<Header />);
 
-    expect(screen.getAllByRole('button')).toHaveLength(1);
-  });
+      expect(screen.getByTestId('header-login')).toBeInTheDocument();
+      expect(screen.getByTestId('logo')).toBeInTheDocument();
+      expect(screen.getAllByRole('button')).toHaveLength(1);
+    });
 
-  it('should call navigate when Mag button is clicked', async () => {
-    isLoggedInSpy = true;
+    it('should not call navigate when Logo button is clicked', () => {
+      isLoggedInSpy = false;
 
-    render(<Header />);
+      render(<Header />);
 
-    screen.getAllByRole('button')[0].click();
+      screen.getByTestId('logo').click();
 
-    await waitFor(() => expect(useNavigateSpy).toHaveBeenCalledWith('/search'));
-  });
-
-  it('should call navigate when Logo button is clicked and isLoggedIn', async () => {
-    isLoggedInSpy = true;
-
-    render(<Header />);
-
-    screen.getAllByRole('button')[1].click();
-
-    await waitFor(() => {
-      expect(useNavigateSpy).toHaveBeenCalledWith('/');
+      expect(useNavigateSpy).not.toHaveBeenCalled();
     });
   });
 
-  it('should call navigate when button is clicked', async () => {
-    isLoggedInSpy = true;
-    render(<Header />);
+  describe('logged', () => {
+    it('should render header logged when the user is logged', () => {
+      render(<Header />);
 
-    screen.getAllByRole('button')[2].click();
+      expect(screen.getByTestId('header-logged')).toBeInTheDocument();
+      expect(screen.getByTestId('logo')).toBeInTheDocument();
+      expect(screen.getByTestId('mag')).toBeInTheDocument();
+      expect(screen.getByTestId('profile')).toBeInTheDocument();
+    });
 
-    await waitFor(() =>
-      expect(useNavigateSpy).toHaveBeenCalledWith('/profile'),
-    );
+    it('should call navigate when Mag button is clicked', () => {
+      render(<Header />);
+
+      screen.getByTestId('mag').click();
+
+      expect(useNavigateSpy).toHaveBeenCalledWith('/search');
+    });
+
+    it('should call navigate when Logo button is clicked', () => {
+      render(<Header />);
+
+      screen.getByTestId('logo').click();
+
+      expect(useNavigateSpy).toHaveBeenCalledWith('/');
+    });
+
+    it('should call navigate when Profile button is clicked', () => {
+      render(<Header />);
+
+      screen.getByTestId('profile').click();
+
+      expect(useNavigateSpy).toHaveBeenCalledWith('/profile');
+    });
   });
 });

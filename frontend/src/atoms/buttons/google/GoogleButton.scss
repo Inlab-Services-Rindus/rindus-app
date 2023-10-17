@@ -1,6 +1,6 @@
 @use '@scss/fonts' as *;
 
-.google-button {
+.google__button {
   @include text($sans-serif, 14px, 500);
 
   transition:

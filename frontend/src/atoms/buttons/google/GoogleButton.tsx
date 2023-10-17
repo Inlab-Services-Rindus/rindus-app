@@ -17,7 +17,7 @@ export default function GoogleButton({
   }
 
   return (
-    <button className="google-button" onClick={handleGoogleLogin}>
+    <button className="google__button" onClick={handleGoogleLogin}>
       Sign in with Google
     </button>
   );

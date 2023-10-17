@@ -36,6 +36,7 @@ module.exports = {
         ],
       },
     ],
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     'spaced-comment': 'error',
   },
   settings: {

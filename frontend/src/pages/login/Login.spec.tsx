@@ -15,6 +15,17 @@ vi.mock('@/atoms/buttons/google/GoogleButton', () => ({
   ),
 }));
 
+const useNavigateSpy = vi.fn();
+const useLocationSpy = vi.fn();
+vi.mock('react-router-dom', async () => {
+  const actual = (await vi.importActual('react-router-dom')) as any;
+  return {
+    ...actual,
+    useNavigate: () => useNavigateSpy,
+    useLocation: () => useLocationSpy,
+  };
+});
+
 interface GoogleAPI {
   accounts: {
     id: {
@@ -33,18 +44,13 @@ interface GoogleAPI {
   },
 } as GoogleAPI;
 
-// TODO: check wrong usage of useNavigate
-describe.skip('Login', () => {
+describe('Login', () => {
   it('should render successfully', () => {
     render(<Login />);
 
     expect(screen.getByTestId('login-page')).toBeInTheDocument();
-  });
-
-  it('should render a button', () => {
-    render(<Login />);
-
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByTestId('header-login')).toBeInTheDocument();
+    expect(screen.getByTestId('google-mock')).toBeInTheDocument();
   });
 
   it('should call fetch when button is clicked', () => {
@@ -57,7 +63,7 @@ describe.skip('Login', () => {
       </AuthContext.Provider>,
     );
 
-    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByTestId('google-mock'));
 
     expect(loginSpy).toHaveBeenCalled();
   });

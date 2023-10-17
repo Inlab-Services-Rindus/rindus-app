@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { AuthContext } from '@/context/auth/Auth';
-import ProtectedRoutes from '@/organisms/protectedRoutes/ProtectedRoutes';
+import ProtectedRoutes from '@/organisms/protected-routes/ProtectedRoutes';
 import { Home } from '@/pages/home/Home';
 import { Login } from '@/pages/login/Login';
 import { Profile } from '@/pages/profile/Profile';

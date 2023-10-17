@@ -1,12 +1,15 @@
-import ProtectedRoutes from '@/organisms/protectedRoutes/ProtectedRoutes';
+import ProtectedRoutes from '@/organisms/protected-routes/ProtectedRoutes';
 
 import { render, screen } from '@testing-library/react';
 
-vi.mock('react-router-dom', () => ({
-  ...vi.importActual('react-router-dom'),
-  Navigate: () => <div data-testid="navigate"></div>,
-  Outlet: () => <div data-testid="outlet"></div>,
-}));
+vi.mock('react-router-dom', async () => {
+  const actual = (await vi.importActual('react-router-dom')) as any;
+  return {
+    ...actual,
+    Navigate: () => <div data-testid="navigate"></div>,
+    Outlet: () => <div data-testid="outlet"></div>,
+  };
+});
 
 describe('ProtectedRoutes', () => {
   it('should render the outlet component when is authenticated', () => {

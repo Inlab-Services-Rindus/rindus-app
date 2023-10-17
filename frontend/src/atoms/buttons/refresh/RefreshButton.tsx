@@ -8,7 +8,7 @@ interface Props {
 export default function RefreshButton({ handleRefresh }: Props) {
   return (
     <button
-      className="refresh_button"
+      className="refresh__button"
       data-testid="refresh-button"
       onClick={handleRefresh}
       type="button"

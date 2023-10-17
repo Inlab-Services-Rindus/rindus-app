@@ -12,11 +12,30 @@ import {
   waitFor,
 } from '@testing-library/react';
 
+const removeCookie = vi.fn();
+vi.mock('react-cookie', async () => {
+  const actual = (await vi.importActual('react-cookie')) as any;
+  return {
+    ...actual,
+    useCookies: () => [{}, vi.fn(), removeCookie],
+  };
+});
+
+const showToastWarningSpy = vi.fn();
+vi.mock('@/hooks/toast/useToast', async () => {
+  const actual = (await vi.importActual('@/hooks/toast/useToast')) as any;
+  return {
+    ...actual,
+    default: () => ({
+      showToastWarning: showToastWarningSpy,
+    }),
+  };
+});
+
 describe('useFetch', async () => {
   const mockData = mockUsersResponse;
   const mockUrl = 'https://example.com/api/data';
   const mockOptions = {};
-  const mockUnauthorizedCallback = vi.fn();
   const mockErrorCallback = vi.fn();
   let data:
     | RenderHookResult<useFetchReturn<Employee[]>, useFetchProps>
@@ -51,14 +70,28 @@ describe('useFetch', async () => {
       useFetchProps
     >;
 
+    expect(result.current).toEqual({
+      data: mockData,
+      isLoading: false,
+      refresh: expect.any(Function),
+    });
+
+    expect(mockErrorCallback).not.toHaveBeenCalled();
+  });
+
+  it('should call remove cookie and show toast when the status code of the request is 401', async () => {
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: false,
+      status: 401,
+    });
+
+    await renderFetchHook();
+
     await waitFor(() => {
-      expect(result.current).toEqual({
-        data: mockData,
-        isLoading: false,
-        refresh: expect.any(Function),
-      });
-      expect(mockUnauthorizedCallback).not.toHaveBeenCalled();
-      expect(mockErrorCallback).not.toHaveBeenCalled();
+      expect(removeCookie).toHaveBeenCalledWith('isLogged');
+      expect(showToastWarningSpy).toHaveBeenCalledWith(
+        'Please, login to continue',
+      );
     });
   });
 
@@ -74,15 +107,12 @@ describe('useFetch', async () => {
       useFetchProps
     >;
 
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        data: null,
-        isLoading: false,
-        refresh: expect.any(Function),
-      });
-      expect(mockUnauthorizedCallback).not.toHaveBeenCalled();
-      expect(mockErrorCallback).toHaveBeenCalled();
+    expect(result.current).toEqual({
+      data: null,
+      isLoading: false,
+      refresh: expect.any(Function),
     });
+    expect(mockErrorCallback).toHaveBeenCalled();
   });
 
   it('should call error callback when there is an exception', async () => {
@@ -96,15 +126,12 @@ describe('useFetch', async () => {
       useFetchProps
     >;
 
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        data: null,
-        isLoading: false,
-        refresh: expect.any(Function),
-      });
-      expect(mockUnauthorizedCallback).not.toHaveBeenCalled();
-      expect(mockErrorCallback).toHaveBeenCalled();
+    expect(result.current).toEqual({
+      data: null,
+      isLoading: false,
+      refresh: expect.any(Function),
     });
+    expect(mockErrorCallback).toHaveBeenCalled();
   });
 
   it('should fetch again when refresh function is called', async () => {
@@ -117,9 +144,7 @@ describe('useFetch', async () => {
       useFetchProps
     >;
 
-    await act(async () => {
-      await result.current.refresh();
-    });
+    await result.current.refresh();
 
     expect(global.fetch).toHaveBeenCalledTimes(2);
   });
