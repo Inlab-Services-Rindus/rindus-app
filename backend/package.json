@@ -7,9 +7,9 @@
     "build": "rimraf dist && tsc && tsc-alias -p tsconfig.json",
     "dev": "nodemon | pino-pretty -c",
     "start": "node dist/src/index.js",
-    "unit": "jest unit",
+    "unit": "jest --testPathIgnorePatterns=repository",
     "unit:watch": "npm run unit -- --watch",
-    "integration": "jest int",
+    "integration": "jest repository",
     "test": "npm run unit && npm run integration"
   },
   "dependencies": {

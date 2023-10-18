@@ -1,16 +1,16 @@
 import { connectTestDatabase } from '@/bootstrap/database';
 import { UserRecord } from '@/model/service/UserRecord';
-import { KnexUserRepository } from '@/repository/knex/user';
+import { KnexUserRepository } from '@/repository/knex/user.repository';
 
 describe('KnexUserRepository', () => {
   let userRepository: KnexUserRepository;
-  const findableUserId = 2;
   const findableUserEmail = 'test@email.com';
   const findableUser = {
-    id: findableUserId,
+    id: 2,
     email: findableUserEmail,
     first_name: 'Found',
     last_name: 'User',
+    profile_picture_url: 'url',
   };
 
   beforeAll(async () => {
@@ -28,17 +28,23 @@ describe('KnexUserRepository', () => {
     userRepository = new KnexUserRepository(knex);
   });
 
-  describe('findUserId', () => {
-    it('should find user ID by email', async () => {
-      const userId = await userRepository.findUserId(findableUserEmail);
+  describe('findUser', () => {
+    it('should find user by email', async () => {
+      const user = await userRepository.findUser(findableUserEmail);
 
-      expect(userId).toEqual(findableUserId.toFixed());
+      expect(user).toEqual({
+        id: findableUser.id.toFixed(),
+        firstName: findableUser.first_name,
+        lastName: findableUser.last_name,
+        email: findableUser.email,
+        profilePictureUrl: findableUser.profile_picture_url,
+      });
     });
 
     it('should return undefined if user not found', async () => {
-      const userId = await userRepository.findUserId('foo');
+      const user = await userRepository.findUser('foo');
 
-      expect(userId).toEqual(undefined);
+      expect(user).toEqual(undefined);
     });
   });
 
