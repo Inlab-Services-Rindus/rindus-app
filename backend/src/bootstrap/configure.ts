@@ -11,6 +11,8 @@ export const configure = (app: Express, knex: Knex) => {
   app.disable('x-powered-by');
   app.use(
     cors({
+      origin: config.cors.origin,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       credentials: true,
     }),
   );
