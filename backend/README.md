@@ -7,28 +7,21 @@ API for Rindus App
 - Docker desktop
 - Node ^18.XX.X (& npm)
 
-## Installation
+## Start backend alone
 
-1. Install depencies and init environment
+```shell
+$ docker compose --env-file .env.docker up  -d
+```
+
+## Start full project
+
+See `../README.md`
+
+## Change config
 
 ```shell
 $ cp .env.example .env
-$ # Fill in correct secrets in .env
-$ npm install
-```
-
-2. Init database (Complete steps of `seeds/README.md`)
-
-```shell
-$ docker compose up -d db adminer
-$ npx knex migrate:up
-$ npx knex seed:run
-```
-
-## Start project
-
-```shell
-$ docker compose up -d
+$ # Restart api container
 ```
 
 ### Debug

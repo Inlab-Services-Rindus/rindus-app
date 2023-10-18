@@ -1,5 +1,7 @@
 import { Employee } from '@/model/Employee';
 
+import { config } from '@/config/config';
+
 interface PeopleTabProps {
   people: Employee[];
 }
@@ -12,7 +14,8 @@ export function PeopleTab({ people }: PeopleTabProps) {
         <ul>
           {people?.map((employee, index) => (
             <li key={index}>
-              {`${employee.firstName} ${employee.lastName} - ${employee.email}`}
+              <ul><img src={`${config.backendUrl}${employee.profilePictureUrl}`} style={{height: '50px', width: '50px'}}></img>
+              <span>{` ${employee.firstName} ${employee.lastName} - ${employee.email}`}</span></ul>
             </li>
           ))}
         </ul>

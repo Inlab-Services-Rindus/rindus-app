@@ -7,16 +7,7 @@
 
 ## Run
 
-### Docker
-
-In order to run the frontend project with a backend mock (Wiremock)
-
-```shell
-$ docker compose -f compose.yml -f mock/compose.yml up -d
-$ open http://localhost:5173
-```
-
-If you just want to start frontend app (using the real backend), simply use `docker compose up -d`
+See `../README.md`
 
 ### Useful docker commands
 
