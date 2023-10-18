@@ -19,7 +19,7 @@ const httpSessions = (app, knex) => {
             maxAge: config_1.config.sessions.maxAge,
             secure: isLiveEnv,
             sameSite: 'lax',
-            domain: '.vercel.app',
+            domain: 'vercel.app',
         },
         proxy: isLiveEnv,
         store,

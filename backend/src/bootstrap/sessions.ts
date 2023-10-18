@@ -26,7 +26,7 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
         maxAge: config.sessions.maxAge,
         secure: isLiveEnv,
         sameSite: 'lax',
-        domain: '.vercel.app',
+        domain: 'vercel.app',
       },
       proxy: isLiveEnv,
       store,
