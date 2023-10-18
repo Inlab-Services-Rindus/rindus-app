@@ -18,7 +18,7 @@ const httpSessions = (app, knex) => {
             httpOnly: isLiveEnv,
             maxAge: config_1.config.sessions.maxAge,
             secure: isLiveEnv,
-            sameSite: isLiveEnv ? 'none' : 'lax',
+            sameSite: 'lax',
         },
         proxy: isLiveEnv,
         store,
