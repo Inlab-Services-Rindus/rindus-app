@@ -4,7 +4,7 @@ import { Login } from '@/pages/login/Login';
 
 import { render, screen, fireEvent } from '@testing-library/react';
 
-vi.mock('@/atoms/buttons/google/GoogleButton', () => ({
+vi.mock('@/components/atoms/buttons/google/GoogleButton', () => ({
   default: (props: GoogleButtonProps) => (
     <button
       data-testid="google-mock"
