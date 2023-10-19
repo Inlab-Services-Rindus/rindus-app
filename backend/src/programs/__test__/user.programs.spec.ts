@@ -1,4 +1,4 @@
-import { UserPrograms } from '@/programs/user';
+import { UserPrograms } from '@/programs/user.programs';
 import { MockUserRepository, mockAll } from '@/repository/__mocks__/user';
 
 describe('UserPrograms', () => {

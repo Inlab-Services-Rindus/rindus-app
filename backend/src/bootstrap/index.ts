@@ -3,12 +3,12 @@ import express from 'express';
 import { connectDatabase } from '@/bootstrap/database';
 import { configure } from '@/bootstrap/configure';
 
-import { KnexUserRepository } from '@/repository/knex/user';
+import { KnexUserRepository } from '@/repository/knex/user.repository';
 
 import { GoogleJwtValidator } from '@/services/jwt-validator/google';
 
-import { SessionPrograms } from '@/programs/session';
-import { UserPrograms } from '@/programs/user';
+import { SessionPrograms } from '@/programs/session.programs';
+import { UserPrograms } from '@/programs/user.programs';
 
 import { SessionController } from '@/controllers/session.controller';
 import { UsersController } from '@/controllers/users.controller';

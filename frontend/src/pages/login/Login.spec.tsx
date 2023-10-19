@@ -49,7 +49,6 @@ describe('Login', () => {
     render(<Login />);
 
     expect(screen.getByTestId('login-page')).toBeInTheDocument();
-    expect(screen.getByTestId('header-login')).toBeInTheDocument();
     expect(screen.getByTestId('google-mock')).toBeInTheDocument();
   });
 

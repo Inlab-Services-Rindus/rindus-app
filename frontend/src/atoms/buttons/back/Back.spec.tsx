@@ -1,4 +1,4 @@
-import { BackButton } from '@/atoms/buttons/back/BackButton';
+import Back from '@/atoms/buttons/back/Back';
 
 import { render, screen } from '@testing-library/react';
 
@@ -11,17 +11,18 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-describe('BackButton', () => {
+describe('Back', () => {
   it('should render successfully', () => {
-    render(<BackButton />);
+    render(<Back />);
     const buttonElement = screen.getByRole('button');
 
     expect(buttonElement).toBeInTheDocument();
+    expect(buttonElement.querySelector('svg')).toBeInTheDocument();
   });
 
   it('should call handleBack when button is clicked', () => {
     window.history.back = vi.fn();
-    render(<BackButton />);
+    render(<Back />);
     const buttonElement = screen.getByRole('button');
 
     buttonElement.click();
