@@ -89,7 +89,7 @@ describe('Header', () => {
     });
 
     describe('on profile page', () => {
-      it.only('should render header logged when the user is logged', () => {
+      it('should render header logged when the user is logged', () => {
         pathnameSpy = '/profile';
         render(<Header />);
 
