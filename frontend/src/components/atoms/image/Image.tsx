@@ -1,4 +1,4 @@
-import '@/atoms/image/Image.scss';
+import '@/components/atoms/image/Image.scss';
 
 interface Props {
   src: string;
