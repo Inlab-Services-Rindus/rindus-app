@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+//fonts
+$sans-serif: sans-serif;
+$font-poppins-regular: 'Poppins', sans-serif;
+
+@mixin text(
+  $font-family,
+  $font-size: 16px,
+  $font-weight: 400,
+  $line-height: inherit,
+  $letter-spacing: inherit
+) {
+  font-family: $font-family;
+  font-size: $font-size;
+  font-weight: $font-weight;
+  line-height: $line-height;
+  letter-spacing: $letter-spacing;
+}
+
+@mixin text-ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+@mixin multiline-text-ellipsis($number-of-lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $number-of-lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
