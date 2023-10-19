@@ -1,4 +1,4 @@
-import Retry from '@/organisms/retry/Retry';
+import Retry from '@/components/organisms/retry/Retry';
 
 import { render, screen } from '@testing-library/react';
 

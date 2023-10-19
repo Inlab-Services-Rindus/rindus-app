@@ -1,4 +1,4 @@
-import { BackButton } from '@/atoms/buttons/back/BackButton';
+import { BackButton } from '@/components/atoms/buttons/back/BackButton';
 
 import { render, screen } from '@testing-library/react';
 

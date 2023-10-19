@@ -1,5 +1,5 @@
 import refreshIcon from '@/assets/iconRefresh.svg';
-import '@/atoms/buttons/refresh/RefreshButton.scss';
+import '@/components/atoms/buttons/refresh/RefreshButton.scss';
 
 interface Props {
   handleRefresh: () => void;

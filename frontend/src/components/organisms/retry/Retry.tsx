@@ -1,5 +1,5 @@
-import RefreshButton from '@/atoms/buttons/refresh/RefreshButton';
-import '@/organisms/retry/Retry.scss';
+import RefreshButton from '@/components/atoms/buttons/refresh/RefreshButton';
+import '@/components/organisms/retry/Retry.scss';
 
 interface Props {
   refresh: () => void;

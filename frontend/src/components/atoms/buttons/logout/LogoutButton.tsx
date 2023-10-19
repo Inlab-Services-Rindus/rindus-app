@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import logoutIcon from '@/assets/logout.svg';
-import '@/atoms/buttons/logout/LogoutButton.scss';
+import '@/components/atoms/buttons/logout/LogoutButton.scss';
 import { AuthContext } from '@/context/auth/Auth';
 
 export default function LogoutButton() {

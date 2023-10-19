@@ -1,4 +1,4 @@
-import RefreshButton from '@/atoms/buttons/refresh/RefreshButton';
+import RefreshButton from '@/components/atoms/buttons/refresh/RefreshButton';
 
 import { render, screen } from '@testing-library/react';
 

@@ -1,4 +1,4 @@
-import { Header } from '@/organisms/header/Header';
+import { Header } from '@/components/organisms/header/Header';
 
 export function Search() {
   return (

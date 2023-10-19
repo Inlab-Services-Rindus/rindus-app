@@ -1,4 +1,4 @@
-import LogoutButton from '@/atoms/buttons/logout/LogoutButton';
+import LogoutButton from '@/components/atoms/buttons/logout/LogoutButton';
 import { AuthContext } from '@/context/auth/Auth';
 
 import { render, screen, fireEvent } from '@testing-library/react';

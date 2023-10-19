@@ -1,4 +1,4 @@
-import GoogleButton from '@/atoms/buttons/google/GoogleButton';
+import GoogleButton from '@/components/atoms/buttons/google/GoogleButton';
 
 import { render, screen, fireEvent } from '@testing-library/react';
 

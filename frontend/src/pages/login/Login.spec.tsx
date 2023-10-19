@@ -1,4 +1,4 @@
-import { GoogleButtonProps } from '@/atoms/buttons/google/GoogleButton';
+import { GoogleButtonProps } from '@/components/atoms/buttons/google/GoogleButton';
 import { AuthContext } from '@/context/auth/Auth';
 import { Login } from '@/pages/login/Login';
 

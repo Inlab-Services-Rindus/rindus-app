@@ -3,13 +3,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 import Mag from '@/assets/svgs/Mag';
 import RindusLogo from '@/assets/svgs/RindusLogo';
+import '@/components/organisms/header/Header.scss';
 import { AuthContext } from '@/context/auth/Auth';
-import '@/organisms/header/Header.scss';
 
 export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, userGoogleData } = useContext(AuthContext);
+  console.log('userGoogleData', userGoogleData);
 
   const isSearchPage = location.pathname === '/search';
   const isHomePage = location.pathname === '/';
@@ -67,7 +68,7 @@ export function Header() {
 
       <div className="header__profile">
         <button onClick={handleProfileNavigate} data-testid="profile">
-          <img src="https://placehold.co/50x50?text=profile" />
+          <img src={userGoogleData?.imageUrl} />
         </button>
       </div>
 

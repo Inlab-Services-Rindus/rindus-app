@@ -1,4 +1,4 @@
-import '@/atoms/buttons/google/GoogleButton.scss';
+import '@/components/atoms/buttons/google/GoogleButton.scss';
 
 export interface GoogleButtonProps {
   afterLogin: (token: google.accounts.id.CredentialResponse) => void;

@@ -11,10 +11,19 @@ interface AuthContextType {
     googleResponse: google.accounts.id.CredentialResponse,
   ) => Promise<void>;
   logout: () => Promise<void>;
+  userGoogleData?: UserGoogleData;
+}
+
+interface UserGoogleData {
+  id: string;
+  email: string;
+  name: string;
+  imageUrl: string;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
+  userGoogleData: undefined,
   login: async () => {},
   logout: async () => {},
 });
@@ -26,6 +35,12 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [cookies, setCookie, removeCookie] = useCookies();
   const [isLoggedIn, setIsLoggedIn] = useState(!!cookies['isLogged']);
+  const [userGoogleData, setUserGoogleData] = useState<UserGoogleData>({
+    id: '',
+    email: '',
+    name: '',
+    imageUrl: '',
+  });
 
   const navigate = useNavigate();
 
@@ -46,6 +61,13 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     if (response.ok) {
       setIsLoggedIn(true);
       setCookie('isLogged', 'true');
+      // TODO: Replace this data with data provided by the /login endpoint
+      setUserGoogleData({
+        id: 'test user',
+        email: 'test email',
+        name: 'test name',
+        imageUrl: 'https://placekitten.com/150/150',
+      });
       navigate('/');
     } else {
       showToastError('Login failed');
@@ -71,6 +93,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   };
 
   const contextValue: AuthContextType = {
+    userGoogleData,
     isLoggedIn,
     login,
     logout,

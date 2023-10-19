@@ -1,4 +1,4 @@
-import { Image } from '@/atoms/image/Image';
+import { Image } from '@/components/atoms/image/Image';
 
 import { render, screen } from '@testing-library/react';
 

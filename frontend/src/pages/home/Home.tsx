@@ -1,10 +1,10 @@
+import { Header } from '@/components/organisms/header/Header';
+import { PeopleTab } from '@/components/organisms/people-tab/PeopleTab';
+import Retry from '@/components/organisms/retry/Retry';
 import { config } from '@/config/config';
 import useFetch from '@/hooks/fetch/useFetch';
 import useToast from '@/hooks/toast/useToast';
 import { Employee } from '@/model/Employee';
-import { Header } from '@/organisms/header/Header';
-import { PeopleTab } from '@/organisms/people-tab/PeopleTab';
-import Retry from '@/organisms/retry/Retry';
 
 export function Home() {
   const { showToastError } = useToast();

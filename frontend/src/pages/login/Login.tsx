@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 
-import GoogleButton from '@/atoms/buttons/google/GoogleButton';
+import GoogleButton from '@/components/atoms/buttons/google/GoogleButton';
+import { Header } from '@/components/organisms/header/Header';
 import { AuthContext } from '@/context/auth/Auth';
-import { Header } from '@/organisms/header/Header';
 import '@/pages/login/Login.scss';
 
 export function Login() {

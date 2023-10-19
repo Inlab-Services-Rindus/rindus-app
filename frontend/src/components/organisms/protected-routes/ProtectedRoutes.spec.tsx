@@ -1,4 +1,4 @@
-import ProtectedRoutes from '@/organisms/protected-routes/ProtectedRoutes';
+import ProtectedRoutes from '@/components/organisms/protected-routes/ProtectedRoutes';
 
 import { render, screen } from '@testing-library/react';
 
