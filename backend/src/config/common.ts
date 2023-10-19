@@ -29,6 +29,6 @@ export const getCommonConfig = (
     },
   },
   cors: {
-    origin: 'https://rindus-app-git-poc-pedros-projects-f183f2c0.vercel.app',
+    origin: 'https://app.rindus.de',
   },
 });
