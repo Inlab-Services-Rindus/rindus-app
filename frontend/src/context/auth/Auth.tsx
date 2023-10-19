@@ -11,14 +11,15 @@ interface AuthContextType {
     googleResponse: google.accounts.id.CredentialResponse,
   ) => Promise<void>;
   logout: () => Promise<void>;
-  userProfileData?: UserProfileData;
+  userProfileData?: userProfileData;
 }
 
-interface UserProfileData {
+interface userProfileData {
   id: string;
+  firstName: string;
+  lastName?: string;
   email: string;
-  name: string;
-  imageUrl: string;
+  profilePictureUrl?: string;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -35,11 +36,12 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [cookies, setCookie, removeCookie] = useCookies();
   const [isLoggedIn, setIsLoggedIn] = useState(!!cookies['isLogged']);
-  const [userProfileData, setuserProfileData] = useState<UserProfileData>({
+  const [userProfileData, setUserProfileData] = useState<userProfileData>({
     id: '',
+    firstName: '',
+    lastName: '',
     email: '',
-    name: '',
-    imageUrl: '',
+    profilePictureUrl: '',
   });
 
   const navigate = useNavigate();
@@ -59,14 +61,11 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     });
 
     if (response.ok) {
+      const data = await response.json();
+
       setIsLoggedIn(true);
       setCookie('isLogged', 'true');
-      setuserProfileData({
-        id: 'test user',
-        email: 'test email',
-        name: 'test name',
-        imageUrl: 'https://placekitten.com/150/150',
-      });
+      setUserProfileData(data);
       navigate('/');
     } else {
       showToastError('Login failed');
