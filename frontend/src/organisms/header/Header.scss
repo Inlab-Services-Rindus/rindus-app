@@ -46,6 +46,12 @@ header {
     justify-content: center;
     align-items: center;
     flex-grow: 1;
+
+    img {
+      object-fit: fill;
+      height: 100%;
+      clip-path: circle(50% at 50% 50%);
+    }
   }
 
   .back {

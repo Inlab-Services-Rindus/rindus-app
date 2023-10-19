@@ -2,9 +2,10 @@ import { useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import Back from '@/atoms/buttons/back/Back';
-import Logout from '@/atoms/buttons/logout/LogoutButton';
+import LogoutButton from '@/atoms/buttons/logout/LogoutButton';
 import Mag from '@/atoms/buttons/mag/Mag';
 import RindusLogo from '@/atoms/buttons/rindus-logo/RindusLogo';
+import { config } from '@/config/config';
 import { SVGColorGreen, SVGColorWhite } from '@/constants/svgColor';
 import { AuthContext } from '@/context/auth/Auth';
 import '@/organisms/header/Header.scss';
@@ -12,7 +13,7 @@ import '@/organisms/header/Header.scss';
 export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, userProfileData } = useContext(AuthContext);
 
   const isHomePage = location.pathname === '/';
   const isSearchPage = location.pathname === '/search';
@@ -47,7 +48,7 @@ export function Header() {
         </div>
 
         <div className="logout">
-          <Logout />
+          <LogoutButton />
         </div>
       </header>
     );
@@ -70,14 +71,18 @@ export function Header() {
           color={isHomePage ? SVGColorGreen : SVGColorWhite}
         />
       </div>
-
       <div className="right">
         <button
           onClick={handleProfileNavigate}
           data-testid="profile"
           className="button__logo"
         >
-          <img src="https://placehold.co/50x50?text=profile" />
+          <img
+            src={
+              userProfileData &&
+              `${config.backendUrl}${userProfileData.profilePictureUrl}`
+            }
+          />
         </button>
       </div>
     </header>
