@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { UserPrograms } from '@/programs/user';
+import { UserPrograms } from '@/programs/user.programs';
 
 export class UsersController {
   private readonly userPrograms: UserPrograms;

@@ -1,8 +1,6 @@
-import { SessionPrograms } from '@/programs/session';
-import {
-  MockUserRepository,
-  mockFindUserId,
-} from '@/repository/__mocks__/user';
+import { mockUser } from '@/model/__mocks__/business/User';
+import { SessionPrograms } from '@/programs/session.programs';
+import { MockUserRepository, mockFindUser } from '@/repository/__mocks__/user';
 import {
   MockJwtValidator,
   mockValidateToken,
@@ -21,31 +19,31 @@ describe('SessionPrograms', () => {
     const token = 'foo';
 
     it('should return user ID based on email', async () => {
-      const userId = await sessionProgram.login(token);
+      const user = await sessionProgram.login(token);
 
       expect(mockValidateToken).toHaveBeenCalledTimes(1);
-      expect(mockFindUserId).toHaveBeenCalledTimes(1);
-      expect(userId).toEqual('userId');
+      expect(mockFindUser).toHaveBeenCalledTimes(1);
+      expect(user).toEqual(mockUser);
     });
 
     it('should not fetch user if no email', async () => {
       mockValidateToken.mockResolvedValueOnce(undefined);
 
-      const userId = await sessionProgram.login(token);
+      const user = await sessionProgram.login(token);
 
       expect(mockValidateToken).toHaveBeenCalledTimes(1);
-      expect(mockFindUserId).not.toHaveBeenCalled();
-      expect(userId).toEqual(undefined);
+      expect(mockFindUser).not.toHaveBeenCalled();
+      expect(user).toEqual(undefined);
     });
 
     it('should return undefined if no user', async () => {
-      mockFindUserId.mockResolvedValueOnce(undefined);
+      mockFindUser.mockResolvedValueOnce(undefined);
 
-      const userId = await sessionProgram.login(token);
+      const user = await sessionProgram.login(token);
 
       expect(mockValidateToken).toHaveBeenCalledTimes(1);
-      expect(mockFindUserId).toHaveBeenCalledTimes(1);
-      expect(userId).toEqual(undefined);
+      expect(mockFindUser).toHaveBeenCalledTimes(1);
+      expect(user).toEqual(undefined);
     });
   });
 });

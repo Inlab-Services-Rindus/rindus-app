@@ -2,7 +2,7 @@ import { createRouter } from '@/bootstrap/configure';
 import { helloWorldRouter } from '@/routes/hello-world.routes';
 import { usersRouter } from '@/routes/users.routes';
 import { sessionRouter } from '@/routes/session.routes';
-import { avatarsRouter } from '@/routes/avatars';
+import { avatarsRouter } from '@/routes/avatars.routes';
 import { authenticated } from '@/middleware/authenticated';
 
 const unprotectedRouter = createRouter();

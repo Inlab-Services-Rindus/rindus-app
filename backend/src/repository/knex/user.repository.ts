@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 
 import { User } from '@/model/business/User';
-import { UserRepository } from '@/repository/user';
+import { UserRepository } from '@/repository/user.repository';
 import { UserRecord } from '@/model/service/UserRecord';
 
 export class KnexUserRepository implements UserRepository {
@@ -11,26 +11,32 @@ export class KnexUserRepository implements UserRepository {
     this.knex = knex;
   }
 
-  public findUserId(email: string): Promise<string | undefined> {
+  public findUser(email: string): Promise<User | undefined> {
     return this.knex<UserRecord>('users')
-      .select('id')
+      .select('id', 'first_name', 'last_name', 'email', 'profile_picture_url')
       .where('email', email)
       .first()
-      .then((userRecord) => userRecord?.id.toFixed());
+      .then((userRecord) =>
+        userRecord ? this.recordToUser(userRecord) : undefined,
+      );
   }
 
   public all(): Promise<User[]> {
     return this.knex<UserRecord>('users')
       .select('id', 'first_name', 'last_name', 'email', 'profile_picture_url')
       .then((userRecords) =>
-        userRecords.map((userRecord) => ({
-          id: userRecord.id.toFixed(),
-          firstName: userRecord.first_name,
-          lastName: userRecord.last_name,
-          email: userRecord.email,
-          profilePictureUrl: this.mapAvatarUrl(userRecord.profile_picture_url),
-        })),
+        userRecords.map((record) => this.recordToUser(record)),
       );
+  }
+
+  private recordToUser(userRecord: UserRecord): User {
+    return {
+      id: userRecord.id.toFixed(),
+      firstName: userRecord.first_name,
+      lastName: userRecord.last_name,
+      email: userRecord.email,
+      profilePictureUrl: this.mapAvatarUrl(userRecord.profile_picture_url),
+    };
   }
 
   private mapAvatarUrl(personioUrl?: string) {
