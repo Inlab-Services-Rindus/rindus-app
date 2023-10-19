@@ -1,4 +1,4 @@
-import { User } from '@/model/business/User';
+import { User } from '@/models/business/User';
 
 export const mockUser: User = {
   id: '0',

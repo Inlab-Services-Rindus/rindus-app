@@ -1,4 +1,4 @@
-import { User } from '@/model/business/User';
+import { User } from '@/models/business/User';
 import { UserRepository } from '@/repository/user.repository';
 import { JwtValidator } from '@/services/jwt-validator';
 

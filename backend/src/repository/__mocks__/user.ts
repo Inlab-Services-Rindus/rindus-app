@@ -1,5 +1,5 @@
-import { mockUser } from '@/model/__mocks__/business/User';
-import { User } from '@/model/business/User';
+import { mockUser } from '@/models/__mocks__/business/User';
+import { User } from '@/models/business/User';
 import { UserRepository } from '@/repository/user.repository';
 
 export const mockFindUserByEmail = jest.fn().mockReturnValue(mockUser);

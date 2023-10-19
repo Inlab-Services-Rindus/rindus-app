@@ -1,8 +1,9 @@
 import { config } from '@/config/config';
 import * as useFetch from '@/hooks/fetch/useFetch';
+import { mockUsersResponse } from '@/model/__mocks__/fetch/Employee';
+import { mockPartnersResponse } from '@/model/__mocks__/fetch/Partner';
 import { Home } from '@/pages/home/Home';
 
-import mockUsersResponse from '@mocks/responses/users/users.json';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 const useNavigateSpy = vi.fn();
@@ -49,6 +50,11 @@ describe('Home', () => {
       isLoading: false,
       refresh: vi.fn(),
     });
+    useFetchSpy.mockReturnValueOnce({
+      data: mockPartnersResponse,
+      isLoading: false,
+      refresh: vi.fn(),
+    });
 
     render(<Home />);
 
@@ -67,6 +73,11 @@ describe('Home', () => {
       isLoading: true,
       refresh: vi.fn(),
     });
+    useFetchSpy.mockReturnValueOnce({
+      data: mockPartnersResponse,
+      isLoading: false,
+      refresh: vi.fn(),
+    });
 
     render(<Home />);
 
@@ -76,6 +87,11 @@ describe('Home', () => {
   it('should render the RefreshButton when fetch response is empty', () => {
     useFetchSpy.mockReturnValueOnce({
       data: null,
+      isLoading: false,
+      refresh: vi.fn(),
+    });
+    useFetchSpy.mockReturnValueOnce({
+      data: mockPartnersResponse,
       isLoading: false,
       refresh: vi.fn(),
     });
@@ -91,6 +107,11 @@ describe('Home', () => {
       isLoading: false,
       refresh: vi.fn(),
     });
+    useFetchSpy.mockReturnValueOnce({
+      data: [],
+      isLoading: false,
+      refresh: vi.fn(),
+    });
 
     render(<Home />);
 
@@ -101,6 +122,10 @@ describe('Home', () => {
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: false,
       json: vi.fn().mockResolvedValueOnce(mockUsersResponse),
+    });
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: false,
+      json: vi.fn().mockResolvedValueOnce(mockPartnersResponse),
     });
 
     render(<Home />);
@@ -117,6 +142,11 @@ describe('Home', () => {
       data: null,
       isLoading: false,
       refresh: refreshSpy,
+    });
+    useFetchSpy.mockReturnValueOnce({
+      data: null,
+      isLoading: false,
+      refresh: vi.fn(),
     });
 
     render(<Home />);

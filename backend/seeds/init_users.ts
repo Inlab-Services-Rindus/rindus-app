@@ -1,41 +1,13 @@
-import fs from 'fs';
-
 import { Knex } from 'knex';
 
+import { USERS_FILE_NAME, parseFromJSONFile } from '@seeds/helper';
+import { UserRecord as Employee } from '@/models/service/UserRecord';
+
 export async function seed(knex: Knex): Promise<void> {
-  // Deletes ALL existing entries
-  await knex('users').del();
+  const usersTable = knex('users');
+  await usersTable.del();
 
-  const employees = parseEmployeesFromJSON();
+  const employees = parseFromJSONFile<Employee>(USERS_FILE_NAME);
 
-  // Inserts seed entries
-  await knex('users').insert(employees);
-}
-
-interface EmployeeData {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  profile_picture_url: string;
-}
-
-interface Employee extends Omit<EmployeeData, 'id'> {
-  personio_id: string;
-}
-
-function parseEmployeesFromJSON() {
-  return mapEmployees(
-    JSON.parse(fs.readFileSync(`./seeds/resources/all.json`).toString('utf-8')),
-  );
-}
-
-function mapEmployees(employeeData: EmployeeData[]): Employee[] {
-  return employeeData.map((element) => ({
-    personio_id: element.id,
-    first_name: element.first_name,
-    last_name: element.last_name,
-    email: element.email,
-    profile_picture_url: element.profile_picture_url,
-  }));
+  await usersTable.insert(employees);
 }
