@@ -11,10 +11,19 @@ interface AuthContextType {
     googleResponse: google.accounts.id.CredentialResponse,
   ) => Promise<void>;
   logout: () => Promise<void>;
+  userProfileData?: UserProfileData;
+}
+
+interface UserProfileData {
+  id: string;
+  email: string;
+  name: string;
+  imageUrl: string;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
+  userProfileData: undefined,
   login: async () => {},
   logout: async () => {},
 });
@@ -26,6 +35,12 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [cookies, setCookie, removeCookie] = useCookies();
   const [isLoggedIn, setIsLoggedIn] = useState(!!cookies['isLogged']);
+  const [userProfileData, setuserProfileData] = useState<UserProfileData>({
+    id: '',
+    email: '',
+    name: '',
+    imageUrl: '',
+  });
 
   const navigate = useNavigate();
 
@@ -46,6 +61,12 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     if (response.ok) {
       setIsLoggedIn(true);
       setCookie('isLogged', 'true');
+      setuserProfileData({
+        id: 'test user',
+        email: 'test email',
+        name: 'test name',
+        imageUrl: 'https://placekitten.com/150/150',
+      });
       navigate('/');
     } else {
       showToastError('Login failed');
@@ -71,6 +92,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   };
 
   const contextValue: AuthContextType = {
+    userProfileData,
     isLoggedIn,
     login,
     logout,
