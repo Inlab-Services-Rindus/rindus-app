@@ -50,7 +50,7 @@ export function Header() {
     );
 
   return (
-    <div className="header__container--logged" data-testid="header-logged">
+    <header className="header__container--logged" data-testid="header-logged">
       <div className="header__mag">
         <button
           data-testid="mag"
@@ -72,6 +72,6 @@ export function Header() {
       </div>
 
       {/* //TODO: Add logout button on profile header {isLoggedIn && <LogoutButton />} */}
-    </div>
+    </header>
   );
 }

@@ -25,7 +25,6 @@ export function Home() {
 
   return (
     <div className="homePage">
-      <Header />
       {data ? <PeopleTab people={data} /> : <Retry refresh={refresh} />}
     </div>
   );
