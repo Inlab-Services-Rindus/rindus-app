@@ -28,4 +28,10 @@ describe('App', () => {
 
     expect(container.querySelector('#toast-container')).toBeInTheDocument();
   });
+
+  it('should render Header', () => {
+    render(<App />);
+
+    expect(screen.getByTestId('header-login')).toBeInTheDocument();
+  });
 });

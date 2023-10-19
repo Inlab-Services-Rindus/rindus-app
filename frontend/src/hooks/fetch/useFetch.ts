@@ -24,8 +24,6 @@ export default function useFetch<T>({
   const [isLoading, setIsLoading] = useState(true);
   const [, , removeCookie] = useCookies();
 
-  console.log('Pedro ===> useToast()', useToast());
-
   const { showToastWarning } = useToast();
 
   const fetchData = async () => {
