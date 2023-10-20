@@ -3,8 +3,8 @@ import useFetch, {
   useFetchReturn,
 } from '@/hooks/fetch/useFetch';
 import { Employee } from '@/model/Employee';
+import { mockUsersResponse } from '@/model/__mocks__/fetch/Employee';
 
-import mockUsersResponse from '@mocks/responses/users/users.json';
 import {
   RenderHookResult,
   act,

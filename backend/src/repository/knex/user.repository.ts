@@ -1,8 +1,8 @@
 import { Knex } from 'knex';
 
-import { User } from '@/model/business/User';
+import { User } from '@/models/business/User';
 import { UserRepository } from '@/repository/user.repository';
-import { UserRecord } from '@/model/service/UserRecord';
+import { UserRecord } from '@/models/service/UserRecord';
 
 export class KnexUserRepository implements UserRepository {
   private readonly knex: Knex;

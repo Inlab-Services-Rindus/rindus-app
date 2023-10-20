@@ -1,4 +1,4 @@
-import { mockUser } from '@/model/__mocks__/business/User';
+import { mockUser } from '@/models/__mocks__/business/User';
 import { SessionPrograms } from '@/programs/session.programs';
 import {
   MockUserRepository,

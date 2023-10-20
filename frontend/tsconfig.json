@@ -3,7 +3,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@mocks/*": ["./mock/*"],
       "@scss/*": ["./src/assets/scss/*"]
     },
     "target": "ES2020",

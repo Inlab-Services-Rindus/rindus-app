@@ -1,4 +1,4 @@
-import { User } from '@/model/business/User';
+import { User } from '@/models/business/User';
 
 export interface UserRepository {
   findUserByEmail: (_email: string) => Promise<User | undefined>;
