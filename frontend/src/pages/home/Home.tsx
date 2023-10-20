@@ -1,3 +1,4 @@
+import Loader from '@/atoms/loader/Loader';
 import { config } from '@/config/config';
 import useFetch from '@/hooks/fetch/useFetch';
 import useToast from '@/hooks/toast/useToast';
@@ -19,7 +20,11 @@ export function Home() {
   });
 
   if (isLoading) {
-    return <div data-testid="loader">Loading...</div>;
+    return (
+      <div className="loader__container">
+        <Loader />
+      </div>
+    );
   }
 
   return (

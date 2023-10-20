@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
+import Loader from '@/atoms/loader/Loader';
 import { AuthContext } from '@/context/auth/Auth';
 import ProtectedRoutes from '@/organisms/protected-routes/ProtectedRoutes';
 import { Home } from '@/pages/home/Home';
@@ -12,7 +13,11 @@ export function Router() {
   const { isLoggedIn, isLoading } = useContext(AuthContext);
 
   if (isLoading) {
-    return <div data-testid="loader">Loading...</div>;
+    return (
+      <div className="loader__container">
+        <Loader />
+      </div>
+    );
   }
 
   return (
