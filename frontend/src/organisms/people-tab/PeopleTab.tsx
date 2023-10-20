@@ -8,12 +8,17 @@ interface PeopleTabProps {
 }
 
 export function PeopleTab({ people }: PeopleTabProps) {
+  function handleClick() {
+    console.log('clicked');
+  }
+
   return (
     <section data-testid="people-tab">
       <h1>PeopleTab</h1>
       <div className="people-tab__container">
         {people?.map((employee, index) => (
           <UserCard
+            onClick={handleClick}
             key={index}
             profilePictureUrl={`${config.backendUrl}${employee.profilePictureUrl}`}
             firstName={employee.firstName}
