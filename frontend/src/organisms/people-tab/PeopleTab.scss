@@ -1,0 +1,11 @@
+.people-tab__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.user-card {
+  margin: 8px;
+}
