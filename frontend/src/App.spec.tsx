@@ -16,11 +16,11 @@ vi.mock('@/context/auth/Auth', async () => {
   };
 });
 
-describe.skip('App', () => {
-  it('should render Router with default page', () => {
+describe('App', () => {
+  it('should render loading', () => {
     render(<App />);
 
-    expect(screen.getByTestId('login-page')).toBeInTheDocument();
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
   });
 
   it('should render Toast', () => {

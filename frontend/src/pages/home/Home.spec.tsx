@@ -39,6 +39,10 @@ vi.mock('react', async () => {
 describe('Home', () => {
   const useFetchSpy = vi.spyOn(useFetch, 'default');
 
+  beforeEach(() => {
+    showToastErrorSpy.mockReset();
+  });
+
   it('should fetch the data when render the component', async () => {
     useFetchSpy.mockReturnValueOnce({
       data: mockUsersResponse,

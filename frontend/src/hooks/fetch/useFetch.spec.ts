@@ -12,15 +12,6 @@ import {
   waitFor,
 } from '@testing-library/react';
 
-const removeCookie = vi.fn();
-vi.mock('react-cookie', async () => {
-  const actual = (await vi.importActual('react-cookie')) as any;
-  return {
-    ...actual,
-    useCookies: () => [{}, vi.fn(), removeCookie],
-  };
-});
-
 const showToastWarningSpy = vi.fn();
 vi.mock('@/hooks/toast/useToast', async () => {
   const actual = (await vi.importActual('@/hooks/toast/useToast')) as any;
@@ -32,7 +23,16 @@ vi.mock('@/hooks/toast/useToast', async () => {
   };
 });
 
-describe.skip('useFetch', async () => {
+const logoutSpy = vi.fn();
+vi.mock('react', async () => {
+  const actual = (await vi.importActual('react')) as any;
+  return {
+    ...actual,
+    useContext: () => ({ logout: logoutSpy }),
+  };
+});
+
+describe('useFetch', async () => {
   const mockData = mockUsersResponse;
   const mockUrl = 'https://example.com/api/data';
   const mockOptions = {};
@@ -56,6 +56,7 @@ describe.skip('useFetch', async () => {
   beforeEach(() => {
     data = undefined;
     vi.resetAllMocks();
+    showToastWarningSpy.mockReset();
   });
 
   it('should fetch data successfully', async () => {
@@ -79,7 +80,7 @@ describe.skip('useFetch', async () => {
     expect(mockErrorCallback).not.toHaveBeenCalled();
   });
 
-  it('should call remove cookie and show toast when the status code of the request is 401', async () => {
+  it('should call logout and show toast when the status code of the request is 401', async () => {
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: false,
       status: 401,
@@ -88,7 +89,7 @@ describe.skip('useFetch', async () => {
     await renderFetchHook();
 
     await waitFor(() => {
-      expect(removeCookie).toHaveBeenCalledWith('isLogged');
+      expect(logoutSpy).toHaveBeenCalled();
       expect(showToastWarningSpy).toHaveBeenCalledWith(
         'Please, login to continue',
       );
@@ -144,7 +145,9 @@ describe.skip('useFetch', async () => {
       useFetchProps
     >;
 
-    await result.current.refresh();
+    await act(async () => {
+      result.current.refresh();
+    });
 
     expect(global.fetch).toHaveBeenCalledTimes(2);
   });

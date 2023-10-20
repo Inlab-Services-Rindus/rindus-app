@@ -12,6 +12,10 @@ vi.mock('react-router-dom', async () => {
 });
 
 describe('Back', () => {
+  beforeEach(() => {
+    useNavigateSpy.mockClear();
+  });
+
   it('should render successfully', () => {
     render(<Back />);
     const buttonElement = screen.getByRole('button');

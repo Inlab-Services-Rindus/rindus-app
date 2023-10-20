@@ -66,6 +66,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     });
 
     setIsLoading(false);
+
     if (response.ok) {
       const data = await response.json();
 
@@ -83,6 +84,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     });
 
     setIsLoading(false);
+
     if (response.ok) {
       const user = await response.json();
 

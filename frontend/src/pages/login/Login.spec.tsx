@@ -1,7 +1,7 @@
 import { GoogleButtonProps } from '@/atoms/buttons/google/GoogleButton';
 import { Login } from '@/pages/login/Login';
 
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 vi.mock('@/atoms/buttons/google/GoogleButton', () => ({
   default: (props: GoogleButtonProps) => (
@@ -43,6 +43,15 @@ interface GoogleAPI {
   },
 } as GoogleAPI;
 
+const loginSpy = vi.fn();
+vi.mock('react', async () => {
+  const actual = (await vi.importActual('react')) as any;
+  return {
+    ...actual,
+    useContext: () => ({ login: loginSpy }),
+  };
+});
+
 describe('Login', () => {
   it('should render successfully', () => {
     render(<Login />);
@@ -51,18 +60,11 @@ describe('Login', () => {
     expect(screen.getByTestId('google-mock')).toBeInTheDocument();
   });
 
-  // it('should call fetch when button is clicked', () => {
-  //   const loginSpy = vi.fn();
-  //   render(
-  //     <AuthContext.Provider
-  //       value={{ isLoggedIn: false, login: loginSpy, logout: vi.fn() }}
-  //     >
-  //       <Login />
-  //     </AuthContext.Provider>,
-  //   );
+  it('should call fetch when button is clicked', () => {
+    render(<Login />);
 
-  //   fireEvent.click(screen.getByTestId('google-mock'));
+    fireEvent.click(screen.getByTestId('google-mock'));
 
-  //   expect(loginSpy).toHaveBeenCalled();
-  // });
+    expect(loginSpy).toHaveBeenCalled();
+  });
 });
