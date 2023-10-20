@@ -1,7 +1,7 @@
 import { connectTestDatabase } from '@/bootstrap/database';
 
 export default async (globalConfig: { testPathPattern: string }) => {
-  if (globalConfig.testPathPattern !== 'int') {
+  if (globalConfig.testPathPattern !== 'repository') {
     // No database needed for unit tests
     return;
   }

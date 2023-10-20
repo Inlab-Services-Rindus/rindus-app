@@ -5,12 +5,18 @@
 ### Full App
 
 ```shell
-$ docker compose --env-file backend/.env.docker up -d
+$ scripts/start.sh
 ```
 
 ### Backend only
 
 See `backend/README.md`
+
+### Run all tests
+
+```shell
+$ scripts/test.sh
+```
 
 ## Outline
 

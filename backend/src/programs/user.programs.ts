@@ -1,4 +1,4 @@
-import { UserRepository } from '@/repository/user';
+import { UserRepository } from '@/repository/user.repository';
 
 export class UserPrograms {
   private readonly userRepository;

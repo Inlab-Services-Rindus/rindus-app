@@ -78,7 +78,6 @@ describe('Home', () => {
 
     render(<Home />);
 
-    expect(screen.getByTestId('header-logged')).toBeInTheDocument();
     expect(screen.getByTestId('refresh-button')).toBeInTheDocument();
   });
 
@@ -91,7 +90,6 @@ describe('Home', () => {
 
     render(<Home />);
 
-    expect(screen.getByTestId('header-logged')).toBeInTheDocument();
     expect(screen.getByTestId('people-tab')).toBeInTheDocument();
   });
 

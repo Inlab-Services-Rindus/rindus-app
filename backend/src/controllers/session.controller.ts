@@ -1,5 +1,5 @@
 import { logger } from '@/bootstrap/logger';
-import { SessionPrograms } from '@/programs/session';
+import { SessionPrograms } from '@/programs/session.programs';
 import { Request, Response } from 'express';
 
 export class SessionController {
@@ -16,12 +16,12 @@ export class SessionController {
       return response.sendStatus(400);
     }
 
-    const maybeUserId = await this.sessionProgram.login(jwt);
+    const maybeUser = await this.sessionProgram.login(jwt);
 
-    if (maybeUserId !== undefined) {
-      request.session.userId = maybeUserId;
+    if (maybeUser !== undefined) {
+      request.session.userId = maybeUser.id;
 
-      return response.sendStatus(200);
+      return response.send(maybeUser);
     }
 
     return response.sendStatus(401);

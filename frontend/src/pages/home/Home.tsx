@@ -2,7 +2,6 @@ import { config } from '@/config/config';
 import useFetch from '@/hooks/fetch/useFetch';
 import useToast from '@/hooks/toast/useToast';
 import { Employee } from '@/model/Employee';
-import { Header } from '@/organisms/header/Header';
 import { PeopleTab } from '@/organisms/people-tab/PeopleTab';
 import Retry from '@/organisms/retry/Retry';
 
@@ -25,7 +24,6 @@ export function Home() {
 
   return (
     <div className="homePage">
-      <Header />
       {data ? <PeopleTab people={data} /> : <Retry refresh={refresh} />}
     </div>
   );
