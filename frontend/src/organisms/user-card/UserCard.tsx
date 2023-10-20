@@ -4,26 +4,28 @@ interface UserCardProps {
   firstName: string;
   lastName: string;
   profilePictureUrl: string;
+  onClick: () => void;
 }
 
 export default function UserCard({
   firstName,
   lastName,
   profilePictureUrl,
+  onClick,
 }: UserCardProps): JSX.Element {
   return (
-    <div className="user-card">
-      <div className="user-card__img">
+    <div onClick={onClick} className="user-card">
+      <div>
         <img
           className="user-card__img"
           src={profilePictureUrl}
           alt={`${firstName}'s profile`}
         />
       </div>
-      <div>
-        <span className="user-card__name">
-          {firstName} {lastName}
-        </span>
+      <div className="user-card__overlay"></div>
+      <div className="user-card__name">
+        <span>{firstName}</span>
+        <span>{lastName}</span>
       </div>
     </div>
   );
