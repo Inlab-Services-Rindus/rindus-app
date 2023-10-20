@@ -85,6 +85,7 @@ describe('Auth', () => {
   it('should set authed to true, setCookie and navigate to home when the response from login call is ok', async () => {
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: true,
+      json: async () => ({}),
     });
     const { getByText } = render(
       <AuthProvider>

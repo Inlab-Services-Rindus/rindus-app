@@ -11,10 +11,20 @@ interface AuthContextType {
     googleResponse: google.accounts.id.CredentialResponse,
   ) => Promise<void>;
   logout: () => Promise<void>;
+  userProfileData?: userProfileData;
+}
+
+interface userProfileData {
+  id: string;
+  firstName: string;
+  lastName?: string;
+  email: string;
+  profilePictureUrl?: string;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
+  userProfileData: undefined,
   login: async () => {},
   logout: async () => {},
 });
@@ -26,6 +36,13 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [cookies, setCookie, removeCookie] = useCookies();
   const [isLoggedIn, setIsLoggedIn] = useState(!!cookies['isLogged']);
+  const [userProfileData, setUserProfileData] = useState<userProfileData>({
+    id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    profilePictureUrl: '',
+  });
 
   const navigate = useNavigate();
 
@@ -44,8 +61,11 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     });
 
     if (response.ok) {
+      const data = await response.json();
+
       setIsLoggedIn(true);
       setCookie('isLogged', 'true');
+      setUserProfileData(data);
       navigate('/');
     } else {
       showToastError('Login failed');
@@ -71,6 +91,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   };
 
   const contextValue: AuthContextType = {
+    userProfileData,
     isLoggedIn,
     login,
     logout,
