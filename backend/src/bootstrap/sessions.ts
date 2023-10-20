@@ -13,6 +13,13 @@ declare module 'express-session' {
   }
 }
 
+export const cookieConfig = (isLiveEnv: boolean): session.CookieOptions => ({
+  httpOnly: isLiveEnv,
+  maxAge: config.sessions.maxAge,
+  secure: isLiveEnv,
+  sameSite: isLiveEnv ? 'none' : 'lax',
+});
+
 export const httpSessions = (app: Express, knex: Knex): Express => {
   app.use(cookieParser());
   const store = new (knexSessionStore(session))({
@@ -23,13 +30,8 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
   app.use(
     session({
       secret: config.sessions.secret,
-      cookie: {
-        httpOnly: isLiveEnv,
-        maxAge: config.sessions.maxAge,
-        secure: isLiveEnv,
-        sameSite: isLiveEnv ? 'none' : 'lax',
-      },
       proxy: isLiveEnv,
+      cookie: cookieConfig(isLiveEnv),
       store,
       resave: false,
       saveUninitialized: false,

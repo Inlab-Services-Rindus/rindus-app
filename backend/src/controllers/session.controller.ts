@@ -1,7 +1,9 @@
 import { logger } from '@/bootstrap/logger';
+import { cookieConfig } from '@/bootstrap/sessions';
+import { config, isLiveEnvironment } from '@/config';
 import { SessionPrograms } from '@/programs/session.programs';
 import { UserRepository } from '@/repository/user.repository';
-import { Request, Response } from 'express';
+import { CookieOptions, Request, Response } from 'express';
 
 export class SessionController {
   private readonly sessionProgram: SessionPrograms;
@@ -60,7 +62,13 @@ export class SessionController {
     if (userId) {
       request.session.destroy(() => logger.debug('User session destroyed'));
 
-      return response.cookie('connect.sid', '', { maxAge: 1 }).sendStatus(200);
+      const cookieConf = cookieConfig(isLiveEnvironment(config));
+      return response
+        .cookie('connect.sid', '', {
+          ...cookieConf,
+          maxAge: 1,
+        } as CookieOptions)
+        .sendStatus(200);
     }
 
     return response.sendStatus(200);
