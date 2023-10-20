@@ -9,7 +9,11 @@ import { Profile } from '@/pages/profile/Profile';
 import { Search } from '@/pages/search/Search';
 
 export function Router() {
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, isLoading } = useContext(AuthContext);
+
+  if (isLoading) {
+    return <div data-testid="loader">Loading...</div>;
+  }
 
   return (
     <Routes>

@@ -11,10 +11,20 @@ export class KnexUserRepository implements UserRepository {
     this.knex = knex;
   }
 
-  public findUser(email: string): Promise<User | undefined> {
+  public findUserByEmail(email: string): Promise<User | undefined> {
     return this.knex<UserRecord>('users')
       .select('id', 'first_name', 'last_name', 'email', 'profile_picture_url')
       .where('email', email)
+      .first()
+      .then((userRecord) =>
+        userRecord ? this.recordToUser(userRecord) : undefined,
+      );
+  }
+
+  public findUserById(id: string): Promise<User | undefined> {
+    return this.knex<UserRecord>('users')
+      .select('id', 'first_name', 'last_name', 'email', 'profile_picture_url')
+      .where('id', Number(id))
       .first()
       .then((userRecord) =>
         userRecord ? this.recordToUser(userRecord) : undefined,

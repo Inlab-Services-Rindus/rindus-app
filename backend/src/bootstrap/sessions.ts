@@ -1,5 +1,6 @@
 import knexSessionStore from 'connect-session-knex';
 import session from 'express-session';
+import cookieParser from 'cookie-parser';
 
 import { Express } from 'express';
 import { Knex } from 'knex';
@@ -13,6 +14,7 @@ declare module 'express-session' {
 }
 
 export const httpSessions = (app: Express, knex: Knex): Express => {
+  app.use(cookieParser());
   const store = new (knexSessionStore(session))({
     knex,
   });
@@ -30,7 +32,7 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
       proxy: isLiveEnv,
       store,
       resave: false,
-      saveUninitialized: true,
+      saveUninitialized: false,
     }),
   );
 

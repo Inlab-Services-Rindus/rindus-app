@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
+import { useContext, useEffect, useState } from 'react';
 
+import { AuthContext } from '@/context/auth/Auth';
 import useToast from '@/hooks/toast/useToast';
 
 export interface useFetchProps {
@@ -22,7 +22,7 @@ export default function useFetch<T>({
 }: useFetchProps): useFetchReturn<T> {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [, , removeCookie] = useCookies();
+  const { logout } = useContext(AuthContext);
 
   const { showToastWarning } = useToast();
 
@@ -33,7 +33,7 @@ export default function useFetch<T>({
 
       if (!response.ok) {
         if (response.status === 401) {
-          removeCookie('isLogged');
+          await logout();
           showToastWarning('Please, login to continue');
         } else {
           onErrorCallback();

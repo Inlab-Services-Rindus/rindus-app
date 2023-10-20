@@ -16,7 +16,7 @@ export class SessionPrograms {
     const email = await this.jwtValidator.validateToken(jwt);
 
     if (email !== undefined) {
-      const user = await this.userRepository.findUser(email);
+      const user = await this.userRepository.findUserByEmail(email);
 
       if (user !== undefined) {
         return user;

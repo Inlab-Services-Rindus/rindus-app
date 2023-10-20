@@ -30,7 +30,7 @@ describe('KnexUserRepository', () => {
 
   describe('findUser', () => {
     it('should find user by email', async () => {
-      const user = await userRepository.findUser(findableUserEmail);
+      const user = await userRepository.findUserByEmail(findableUserEmail);
 
       expect(user).toEqual({
         id: findableUser.id.toFixed(),
@@ -42,7 +42,7 @@ describe('KnexUserRepository', () => {
     });
 
     it('should return undefined if user not found', async () => {
-      const user = await userRepository.findUser('foo');
+      const user = await userRepository.findUserByEmail('foo');
 
       expect(user).toEqual(undefined);
     });

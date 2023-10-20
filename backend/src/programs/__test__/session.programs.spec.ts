@@ -1,6 +1,9 @@
 import { mockUser } from '@/model/__mocks__/business/User';
 import { SessionPrograms } from '@/programs/session.programs';
-import { MockUserRepository, mockFindUser } from '@/repository/__mocks__/user';
+import {
+  MockUserRepository,
+  mockFindUserByEmail,
+} from '@/repository/__mocks__/user';
 import {
   MockJwtValidator,
   mockValidateToken,
@@ -22,7 +25,7 @@ describe('SessionPrograms', () => {
       const user = await sessionProgram.login(token);
 
       expect(mockValidateToken).toHaveBeenCalledTimes(1);
-      expect(mockFindUser).toHaveBeenCalledTimes(1);
+      expect(mockFindUserByEmail).toHaveBeenCalledTimes(1);
       expect(user).toEqual(mockUser);
     });
 
@@ -32,17 +35,17 @@ describe('SessionPrograms', () => {
       const user = await sessionProgram.login(token);
 
       expect(mockValidateToken).toHaveBeenCalledTimes(1);
-      expect(mockFindUser).not.toHaveBeenCalled();
+      expect(mockFindUserByEmail).not.toHaveBeenCalled();
       expect(user).toEqual(undefined);
     });
 
     it('should return undefined if no user', async () => {
-      mockFindUser.mockResolvedValueOnce(undefined);
+      mockFindUserByEmail.mockResolvedValueOnce(undefined);
 
       const user = await sessionProgram.login(token);
 
       expect(mockValidateToken).toHaveBeenCalledTimes(1);
-      expect(mockFindUser).toHaveBeenCalledTimes(1);
+      expect(mockFindUserByEmail).toHaveBeenCalledTimes(1);
       expect(user).toEqual(undefined);
     });
   });
