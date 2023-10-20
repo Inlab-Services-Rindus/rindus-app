@@ -18,7 +18,7 @@ const httpSessions = (app, knex) => {
             httpOnly: isLiveEnv,
             maxAge: config_1.config.sessions.maxAge,
             secure: isLiveEnv,
-            sameSite: 'none',
+            sameSite: 'lax',
             domain: '.rindus.de',
         },
         proxy: isLiveEnv,

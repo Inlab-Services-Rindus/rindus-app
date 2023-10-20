@@ -22,10 +22,10 @@ class SessionController {
             if (!jwt) {
                 return response.sendStatus(400);
             }
-            const maybeUserId = yield this.sessionProgram.login(jwt);
-            if (maybeUserId !== undefined) {
-                request.session.userId = maybeUserId;
-                return response.sendStatus(200);
+            const maybeUser = yield this.sessionProgram.login(jwt);
+            if (maybeUser !== undefined) {
+                request.session.userId = maybeUser.id;
+                return response.send(maybeUser);
             }
             return response.sendStatus(401);
         });

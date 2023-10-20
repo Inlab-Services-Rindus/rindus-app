@@ -25,7 +25,7 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
         httpOnly: isLiveEnv,
         maxAge: config.sessions.maxAge,
         secure: isLiveEnv,
-        sameSite: 'none',
+        sameSite: 'lax',
         domain: '.rindus.de',
       },
       proxy: isLiveEnv,
