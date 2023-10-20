@@ -1,5 +1,4 @@
-import { createContext, useState, ReactNode } from 'react';
-import { useCookies } from 'react-cookie';
+import { createContext, useState, ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { config } from '@/config/config';
@@ -10,6 +9,7 @@ interface AuthContextType {
   login: (
     googleResponse: google.accounts.id.CredentialResponse,
   ) => Promise<void>;
+  isLoading: boolean;
   logout: () => Promise<void>;
   userProfileData?: userProfileData;
 }
@@ -26,6 +26,7 @@ export const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
   userProfileData: undefined,
   login: async () => {},
+  isLoading: true,
   logout: async () => {},
 });
 
@@ -34,8 +35,8 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
-  const [cookies, setCookie, removeCookie] = useCookies();
-  const [isLoggedIn, setIsLoggedIn] = useState(!!cookies['isLogged']);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [userProfileData, setUserProfileData] = useState<userProfileData>({
     id: '',
     firstName: '',
@@ -43,6 +44,10 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     email: '',
     profilePictureUrl: '',
   });
+
+  useEffect(() => {
+    softLogin();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -60,15 +65,34 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
       method: 'POST',
     });
 
+    setIsLoading(false);
     if (response.ok) {
       const data = await response.json();
 
       setIsLoggedIn(true);
-      setCookie('isLogged', 'true');
       setUserProfileData(data);
       navigate('/');
     } else {
       showToastError('Login failed');
+    }
+  };
+
+  const softLogin = async () => {
+    const response = await fetch(`${config.backendUrl}/soft-login`, {
+      credentials: 'include',
+    });
+
+    setIsLoading(false);
+    if (response.ok) {
+      const user = await response.json();
+
+      setIsLoggedIn(true);
+      setUserProfileData(user);
+      navigate('/');
+    } else {
+      if (response.status !== 400) {
+        showToastError('Login expired');
+      }
     }
   };
 
@@ -80,8 +104,6 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
     if (response.ok) {
       setIsLoggedIn(false);
-      removeCookie('isLogged');
-
       navigate('/login');
       showToastSuccess('Logout successful');
     } else {
@@ -94,6 +116,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     userProfileData,
     isLoggedIn,
     login,
+    isLoading,
     logout,
   };
 

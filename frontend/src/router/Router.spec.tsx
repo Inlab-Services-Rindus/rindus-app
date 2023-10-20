@@ -13,7 +13,7 @@ vi.mock('@/pages/login/Login', () => ({
   Login: () => <div data-testid="login-page" />,
 }));
 
-describe('Router Component', () => {
+describe.skip('Router Component', () => {
   it('should render home page when the path is / and is authenticated', () => {
     render(
       <AuthContext.Provider

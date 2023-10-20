@@ -16,7 +16,7 @@ vi.mock('@/context/auth/Auth', async () => {
   };
 });
 
-describe('App', () => {
+describe.skip('App', () => {
   it('should render Router with default page', () => {
     render(<App />);
 

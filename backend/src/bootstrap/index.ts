@@ -27,7 +27,10 @@ const sessionPrograms = new SessionPrograms(jwtValidator, userRepository);
 const userPrograms = new UserPrograms(userRepository);
 
 // Controllers
-export const sessionController = new SessionController(sessionPrograms);
+export const sessionController = new SessionController(
+  sessionPrograms,
+  userRepository,
+);
 export const usersController = new UsersController(userPrograms);
 
 export const app = configure(expressApp, store);
