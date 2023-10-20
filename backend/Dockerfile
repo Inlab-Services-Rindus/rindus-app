@@ -6,7 +6,7 @@ RUN npm install
 COPY tsconfig.json ./
 COPY ./ ./
 ENV NODE_ENV development
-CMD [ "npm", "run", "start" ]
+CMD [ "./docker/api/development/entrypoint.sh" ]
 
 # Builder stage
 FROM development as builder
