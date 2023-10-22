@@ -9,9 +9,19 @@ export const manifestForPlugin: Partial<VitePWAOptions> = {
     description: 'Rindus app for employees.',
     icons: [
       {
-        src: '/rindusLogo.svg',
+        src: '/rindusLogo192.png',
+        sizes: '192x192',
+        type: 'image/png',
+      },
+      {
+        src: '/rindusLogo512.png',
+        sizes: '512x512',
+        type: 'image/png',
+      },
+      {
+        src: '/rindusLogo180.png',
         sizes: '180x180',
-        type: 'image/svg+xml',
+        type: 'image/png',
         purpose: 'apple touch icon',
       },
     ],
