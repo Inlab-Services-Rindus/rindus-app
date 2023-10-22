@@ -19,16 +19,6 @@ export const manifestForPlugin: Partial<VitePWAOptions> = {
         type: 'image/svg',
       },
       {
-        src: '/android-chrome-512x512.png',
-        sizes: '512x512',
-        type: 'image/png',
-      },
-      {
-        src: '/rindusLogo.svg',
-        sizes: '512x512',
-        type: 'image/svg',
-      },
-      {
         src: '/rindusLogo.svg',
         sizes: '180x180',
         type: 'image/svg',
