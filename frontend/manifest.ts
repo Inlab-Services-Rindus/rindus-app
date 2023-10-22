@@ -14,6 +14,12 @@ export const manifestForPlugin: Partial<VitePWAOptions> = {
         type: 'image/svg+xml',
         purpose: 'any',
       },
+      {
+        src: '/rindusLogo.svg',
+        sizes: '180x180',
+        type: 'image/svg+xml',
+        purpose: 'apple touch icon',
+      },
     ],
     display: 'standalone',
     scope: '/',
