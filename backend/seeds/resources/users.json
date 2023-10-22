@@ -1,12 +1,23 @@
 [
   {
+    "first_name": "Agata Edyta",
+    "last_name": "Wesolowska",
+    "email": "agata.wesolowska@rindus.de",
+    "office_id": "Málaga",
+    "department_id": "IT Auxmoney",
+    "position": "UX / UI Designer",
+    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/db023f97d2d3da8951212d2812b4738eab6472a4.jpg",
+    "birthday": "Dec 15"
+  },
+  {
     "first_name": "Aridane",
     "last_name": "Martin Falcón",
     "email": "aridane.m.falcon@rindus.de",
     "office_id": "Málaga",
     "department_id": "IT Douglas",
     "position": "Frontend Developer",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/d13a13c2dd8657a2722124849633f3a77aa691e9.jpg"
+    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/d13a13c2dd8657a2722124849633f3a77aa691e9.jpg",
+    "birthday": "Aug 05"
   },
   {
     "first_name": "Antonio Jesus",
@@ -15,7 +26,8 @@
     "office_id": "Málaga",
     "department_id": "IT Douglas",
     "position": "Scrum Master",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/992b4d177b295b83b6fc6d3c8e2ddd7d56e83fb8.jpg"
+    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/992b4d177b295b83b6fc6d3c8e2ddd7d56e83fb8.jpg",
+    "birthday": "Mar 50"
   },
   {
     "first_name": "Pedro",
@@ -24,7 +36,8 @@
     "office_id": "Málaga",
     "department_id": "IT Douglas",
     "position": "Frontend developer",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/6ae0728a103471fcf356ed3edddfbca22a249f8c.jpg"
+    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/6ae0728a103471fcf356ed3edddfbca22a249f8c.jpg",
+    "birthday": "Oct 15"
   },
   {
     "first_name": "Cristina",
@@ -33,7 +46,8 @@
     "office_id": "Málaga",
     "department_id": "People and Culture",
     "position": "Senior IT Recruiter",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/8e7b2e23fc5a06713fb805392aa2c581ba53314c.jpg"
+    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/8e7b2e23fc5a06713fb805392aa2c581ba53314c.jpg",
+    "birthday": "Nov 24"
   },
   {
     "first_name": "Adrián",
@@ -42,7 +56,8 @@
     "office_id": "Málaga",
     "department_id": "IT Douglas",
     "position": "Scala Developer",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/70ea8090cf0bf9e0927815b4cbbe17162f4e0788.png"
+    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/70ea8090cf0bf9e0927815b4cbbe17162f4e0788.png",
+    "birthday": "Aug 13"
   },
   {
     "first_name": "Tiziana",
@@ -51,7 +66,8 @@
     "office_id": "Málaga",
     "department_id": "IT Auxmoney",
     "position": "Scrum Master",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/280837fc79659c90d02cacd723dc8ccde169212e.png"
+    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/280837fc79659c90d02cacd723dc8ccde169212e.png",
+    "birthday": "Dec 21"
   },
   {
     "first_name": "Dominikus",
@@ -60,7 +76,8 @@
     "office_id": "München",
     "department_id": "Management",
     "position": "Managing Partner",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/2cb7270eae53e2b2a22244158956f4cf8da0abf8.jpg"
+    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/2cb7270eae53e2b2a22244158956f4cf8da0abf8.jpg",
+    "birthday": "Apr 29"
   },
   {
     "first_name": "Rolf",
@@ -69,6 +86,7 @@
     "office_id": "München",
     "department_id": "Management",
     "position": "Managing Partner",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/029f303bf6975e5b28a8c15fca34c255038c9d0a.png"
+    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/029f303bf6975e5b28a8c15fca34c255038c9d0a.png",
+    "birthday": "Dec 23"
   }
 ]

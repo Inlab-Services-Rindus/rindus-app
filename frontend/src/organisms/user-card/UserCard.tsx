@@ -1,8 +1,10 @@
+import { BirthdayCake } from '@/atoms/badges/BirthdayCake';
 import '@/organisms/user-card/UserCard.scss';
 
 interface UserCardProps {
   firstName: string;
   lastName: string;
+  isBirthday?: boolean;
   profilePictureUrl: string;
   onClick: () => void;
 }
@@ -10,6 +12,7 @@ interface UserCardProps {
 export default function UserCard({
   firstName,
   lastName,
+  isBirthday,
   profilePictureUrl,
   onClick,
 }: UserCardProps): JSX.Element {
@@ -27,6 +30,11 @@ export default function UserCard({
         <span>{firstName}</span>
         <span>{lastName}</span>
       </div>
+      {isBirthday && (
+        <div className="user-card__bday">
+          <BirthdayCake />
+        </div>
+      )}
     </div>
   );
 }

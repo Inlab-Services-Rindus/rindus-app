@@ -33,7 +33,14 @@ export class KnexUserRepository implements UserRepository {
 
   public all(): Promise<User[]> {
     return this.knex<UserRecord>('users')
-      .select('id', 'first_name', 'last_name', 'email', 'profile_picture_url')
+      .select(
+        'id',
+        'first_name',
+        'last_name',
+        'email',
+        'profile_picture_url',
+        'birthday',
+      )
       .then((userRecords) =>
         userRecords.map((record) => this.recordToUser(record)),
       );
@@ -46,6 +53,7 @@ export class KnexUserRepository implements UserRepository {
       lastName: userRecord.last_name,
       email: userRecord.email,
       profilePictureUrl: this.mapAvatarUrl(userRecord.profile_picture_url),
+      birthday: userRecord.birthday,
     };
   }
 
