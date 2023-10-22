@@ -4,4 +4,5 @@ export interface UserRecord {
   last_name?: string;
   email: string;
   profile_picture_url?: string;
+  birthday?: string;
 }

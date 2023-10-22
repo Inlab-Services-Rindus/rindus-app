@@ -1,3 +1,7 @@
-import { User as BusinessUser } from '@/models/business/User';
-
-export type User = BusinessUser;
+export interface User {
+  firstName: string;
+  lastName?: string;
+  email: string;
+  profilePictureUrl?: string;
+  isBirthday?: boolean;
+}

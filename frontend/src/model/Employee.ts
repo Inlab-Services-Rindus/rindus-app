@@ -3,4 +3,5 @@ export interface Employee {
   lastName: string;
   email: string;
   profilePictureUrl: string;
+  isBirthday?: boolean;
 }
