@@ -11,11 +11,16 @@ services:
       POSTGRES_DB: ${DB_NAME}
 
   adminer:
-    image: adminer
+    image: adminer:4.8.1
     links:
       - db
+    volumes:
+      - ./docker/adminer/adminer-4.8.1.php:/var/www/html/adminer-4.8.1.php
+      - ./docker/adminer/adminer.php:/var/www/html/adminer.php
     ports:
       - 8080:8080
+    environment:
+      - ADMINER_DESIGN=hydra
 
   api:
     build:
