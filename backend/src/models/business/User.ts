@@ -2,7 +2,11 @@ export interface User {
   id: string;
   firstName: string;
   lastName?: string;
+  fullName: string;
   email: string;
-  profilePictureUrl?: string;
+  partner?: string;
+  office: string;
+  pictureUrl: string;
   birthday?: string;
+  position?: string;
 }

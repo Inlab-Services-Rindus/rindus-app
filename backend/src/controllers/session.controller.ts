@@ -1,6 +1,7 @@
 import { logger } from '@/bootstrap/logger';
 import { cookieConfig } from '@/bootstrap/sessions';
 import { config, isLiveEnvironment } from '@/config';
+import { ApiUserLoginConverter } from '@/models/api/converters/User.converter';
 import { SessionPrograms } from '@/programs/session.programs';
 import { UserRepository } from '@/repository/user.repository';
 import { CookieOptions, Request, Response } from 'express';
@@ -10,12 +11,15 @@ export class SessionController {
 
   private readonly userRepository: UserRepository;
 
+  private readonly apiUserLoginConverter: ApiUserLoginConverter;
+
   constructor(
     sessionPrograms: SessionPrograms,
     userRepository: UserRepository,
   ) {
     this.sessionProgram = sessionPrograms;
     this.userRepository = userRepository;
+    this.apiUserLoginConverter = new ApiUserLoginConverter();
   }
 
   public async login(request: Request, response: Response) {
@@ -30,7 +34,7 @@ export class SessionController {
     if (maybeUser !== undefined) {
       request.session.userId = maybeUser.id;
 
-      return response.send(maybeUser);
+      return response.send(this.apiUserLoginConverter.convert(maybeUser));
     }
 
     return response.sendStatus(401);
@@ -47,7 +51,7 @@ export class SessionController {
       const maybeUser = await this.userRepository.findUserById(maybeUserId);
 
       if (maybeUser) {
-        return response.send(maybeUser);
+        return response.send(this.apiUserLoginConverter.convert(maybeUser));
       }
 
       return response.sendStatus(401);

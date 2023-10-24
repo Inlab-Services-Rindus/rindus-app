@@ -1,5 +1,5 @@
-export interface PartnerRecord {
-  id: number;
-  name: string;
-  picture_url: string;
+import { Enumerable, Identifiable } from '@/models/service/Record';
+
+export interface PartnerRecord extends Identifiable, Enumerable {
+  logo_url: string;
 }

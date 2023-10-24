@@ -5,6 +5,6 @@ export const mockUser: User = {
   firstName: 'Foo',
   lastName: 'Bar Jones',
   email: 'foo-barjones@rindus.de',
-  profilePictureUrl: '/avatars/v1/images/2217/large/foo-barjones.jpg',
+  pictureUrl: '/avatars/v1/images/2217/large/foo-barjones.jpg',
   birthday: 'Jan 1',
 };

@@ -19,6 +19,14 @@ export function PeopleTab({
     console.log('clicked');
   }
 
+  function profilePictureUrl(employee: Employee) {
+    if (employee.profilePictureUrl.startsWith('/')) {
+      return `${config.backendUrl}${employee.profilePictureUrl}`;
+    } else {
+      return employee.profilePictureUrl;
+    }
+  }
+
   return (
     <Tab
       isLoading={isPeopleLoading}
@@ -31,7 +39,7 @@ export function PeopleTab({
         <UserCard
           onClick={handleClick}
           key={index}
-          profilePictureUrl={`${config.backendUrl}${employee.profilePictureUrl}`}
+          profilePictureUrl={profilePictureUrl(employee)}
           firstName={employee.firstName}
           isBirthday={employee.isBirthday}
         />

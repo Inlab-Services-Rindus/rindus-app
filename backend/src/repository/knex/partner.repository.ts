@@ -13,7 +13,7 @@ export class KnexPartnerRepository implements PartnerRepository {
 
   public all(): Promise<Partner[]> {
     return this.knex<PartnerRecord>('partners')
-      .select('id', 'name', 'picture_url')
+      .select('id', 'name', 'logo_url')
       .then((partnerRecords) =>
         partnerRecords.map((record) => this.recordToPartner(record)),
       );
@@ -23,7 +23,7 @@ export class KnexPartnerRepository implements PartnerRepository {
     return {
       id: partnerRecord.id.toFixed(),
       name: partnerRecord.name,
-      pictureUrl: partnerRecord.picture_url,
+      logoUrl: partnerRecord.logo_url,
     };
   }
 }
