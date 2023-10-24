@@ -1,0 +1,19 @@
+@use '@scss/colors' as *;
+
+.tabPanel {
+  &__button-container {
+    padding: 2rem 1rem;
+  }
+
+  &__button {
+    background: transparent;
+    color: black;
+    padding: 0.5rem 2rem;
+    border-radius: 1rem;
+  }
+
+  &__button--active {
+    background: $rindus-green;
+    color: white;
+  }
+}

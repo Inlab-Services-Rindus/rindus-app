@@ -1,13 +1,22 @@
+import Loader from '@/atoms/loader/Loader';
 import { Partner } from '@/model/Partner';
 
 interface PartnersTabProps {
-  partners: Partner[];
+  partners?: Partner[];
+  isPartnersLoading: boolean;
 }
 
-export function PartnersTab({ partners }: PartnersTabProps) {
+export function PartnersTab({ partners, isPartnersLoading }: PartnersTabProps) {
+  if (isPartnersLoading) {
+    return (
+      <div className="loader__container">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <section data-testid="partners-tab">
-      <h1>PartnersTab</h1>
       <div>
         <ul>
           {partners?.map((partner, index) => (
