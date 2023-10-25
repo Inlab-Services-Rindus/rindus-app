@@ -2,14 +2,18 @@
 
 .tabPanel {
   &__button-container {
-    padding: 2rem 1rem;
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $rindus-light-gray;
   }
 
   &__button {
     background: transparent;
     color: black;
-    padding: 0.5rem 2rem;
-    border-radius: 1rem;
+    padding: 8px 16px;
+    border-radius: 32px;
   }
 
   &__button--active {

@@ -25,19 +25,17 @@ export function PeopleTab({
   }
 
   return (
-    <section data-testid="people-tab">
-      <div className="people-tab__container">
-        {people?.map((employee, index) => (
-          <UserCard
-            onClick={handleClick}
-            key={index}
-            profilePictureUrl={`${config.backendUrl}${employee.profilePictureUrl}`}
-            firstName={employee.firstName}
-            lastName={employee.lastName}
-            isBirthday={employee.isBirthday}
-          />
-        ))}
-      </div>
+    <section data-testid="people-tab" className="people-tab__container">
+      {people?.map((employee, index) => (
+        <UserCard
+          onClick={handleClick}
+          key={index}
+          profilePictureUrl={`${config.backendUrl}${employee.profilePictureUrl}`}
+          firstName={employee.firstName}
+          lastName={employee.lastName}
+          isBirthday={employee.isBirthday}
+        />
+      ))}
     </section>
   );
 }
