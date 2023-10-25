@@ -23,7 +23,7 @@ export function TabPanel({ tabs }: TabPanelProps) {
             className={BEMClassHelper(
               'tabPanel',
               'button',
-              currentTab === index ? ['active'] : [],
+              currentTab === index && ['active'],
             )}
             key={tab.label}
             onClick={() => {

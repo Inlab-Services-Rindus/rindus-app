@@ -21,14 +21,11 @@ const Tab = ({
   shouldRefresh,
 }: TabProps) => {
   if (isLoading) {
-    return (
-      <div className="loader__container">
-        <Loader />
-      </div>
-    );
+    return <Loader />;
   }
 
   if (refresh && shouldRefresh) {
+    console.log('hi!!');
     return <Retry refresh={refresh} />;
   }
 

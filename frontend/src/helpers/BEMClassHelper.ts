@@ -1,7 +1,7 @@
 export function BEMClassHelper(
   block: string,
   element?: string,
-  modifiers?: string[],
+  modifiers?: string[] | false,
 ): string {
   const baseClass = block;
   const elementClass = element ? `${baseClass}__${element}` : '';
