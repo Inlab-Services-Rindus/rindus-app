@@ -1,6 +1,6 @@
 import { config } from '@/config/config';
-import useToast from '@/hooks/toast/useToast';
 import { Employee } from '@/model/Employee';
+import Tab from '@/molecules/tab/Tab';
 import '@/organisms/people-tab/PeopleTab.scss';
 import Retry from '@/organisms/retry/Retry';
 import UserCard from '@/organisms/user-card/UserCard';
@@ -20,12 +20,14 @@ export function PeopleTab({
     console.log('clicked');
   }
 
-  if (isPeopleLoading) {
-    return <Retry refresh={refreshPeople} />;
-  }
-
   return (
-    <section data-testid="people-tab" className="people-tab__container">
+    <Tab
+      isLoading={isPeopleLoading}
+      className="people-tab__container"
+      dataTestId="people-tab"
+      refresh={refreshPeople}
+      shouldRefresh={!isPeopleLoading && !people?.length}
+    >
       {people?.map((employee, index) => (
         <UserCard
           onClick={handleClick}
@@ -36,6 +38,6 @@ export function PeopleTab({
           isBirthday={employee.isBirthday}
         />
       ))}
-    </section>
+    </Tab>
   );
 }

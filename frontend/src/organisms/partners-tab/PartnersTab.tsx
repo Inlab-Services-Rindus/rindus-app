@@ -1,5 +1,5 @@
-import Loader from '@/atoms/loader/Loader';
 import { Partner } from '@/model/Partner';
+import Tab from '@/molecules/tab/Tab';
 import '@/organisms/partners-tab/PartnersTab.scss';
 
 interface PartnersTabProps {
@@ -8,16 +8,12 @@ interface PartnersTabProps {
 }
 
 export function PartnersTab({ partners, isPartnersLoading }: PartnersTabProps) {
-  if (isPartnersLoading) {
-    return (
-      <div className="loader__container">
-        <Loader />
-      </div>
-    );
-  }
-
   return (
-    <section className="partners-tab__container" data-testid="partners-tab">
+    <Tab
+      isLoading={isPartnersLoading}
+      className="partners-tab__container"
+      dataTestId="partners-tab"
+    >
       <ul>
         {partners?.map((partner, index) => (
           <li key={index}>
@@ -31,6 +27,6 @@ export function PartnersTab({ partners, isPartnersLoading }: PartnersTabProps) {
           </li>
         ))}
       </ul>
-    </section>
+    </Tab>
   );
 }
