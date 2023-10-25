@@ -2,7 +2,6 @@ import { config } from '@/config/config';
 import { Employee } from '@/model/Employee';
 import Tab from '@/molecules/tab/Tab';
 import '@/organisms/people-tab/PeopleTab.scss';
-import Retry from '@/organisms/retry/Retry';
 import UserCard from '@/organisms/user-card/UserCard';
 
 interface PeopleTabProps {

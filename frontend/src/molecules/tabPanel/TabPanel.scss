@@ -10,14 +10,24 @@
   }
 
   &__button {
+    position: relative;
     background: transparent;
     color: black;
     padding: 8px 16px;
-    border-radius: 32px;
+
+    &--active {
+      color: white;
+    }
   }
 
-  &__button--active {
+  &__button-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
     background: $rindus-green;
-    color: white;
+    mix-blend-mode: multiply;
   }
 }

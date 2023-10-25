@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { BEMClassHelper } from '@/helpers/BEMClassHelper';
 import '@/molecules/tabPanel/TabPanel.scss';
 
+import { motion } from 'framer-motion';
+
 interface TabPanelProps {
   tabs: {
     label: string;
@@ -28,6 +30,14 @@ export function TabPanel({ tabs }: TabPanelProps) {
               setCurrentTab(index);
             }}
           >
+            {currentTab === index && (
+              <motion.span
+                layoutId="bubble"
+                className="tabPanel__button-overlay"
+                style={{ borderRadius: '32px' }}
+                transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+              />
+            )}
             {tab.label}
           </button>
         ))}
