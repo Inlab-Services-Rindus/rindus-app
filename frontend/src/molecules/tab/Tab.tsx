@@ -20,9 +20,6 @@ const Tab = ({
   refresh,
   shouldRefresh,
 }: TabProps) => {
-  console.log('==isLoading==', isLoading);
-  console.log('==shouldRefresh==', shouldRefresh);
-  console.log('==refresh==', refresh);
   if (isLoading) {
     return (
       <div className="loader__container">
