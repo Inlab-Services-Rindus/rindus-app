@@ -1,96 +1,83 @@
 import { Converter } from '@/models/Converter';
-import { User as BusinessUser } from '@/models/business/User';
-import { IndexUser, ShowUser } from '@/models/api/User';
-import { UserLogin } from '@/models/api/User';
+import {
+  User as BusinessUser,
+  WithBirthday,
+  WithInfo,
+  LoggedInUser,
+} from '@/models/business/User';
+import {
+  LoggedInUser as ApiLoggedInUser,
+  IndexUser,
+  ShowUser,
+  User as ApiUser,
+} from '@/models/api/User';
+import { fromRecordId } from '@/helpers/RecordConverterHelper';
+import { Language } from '@/models/business/Language';
 
-export class IndexUserConverter implements Converter<BusinessUser, IndexUser> {
-  convert(source: BusinessUser): IndexUser {
-    const today = new Date();
-
+export class LoggedInUserConverter
+  implements Converter<LoggedInUser, ApiLoggedInUser>
+{
+  convert(source: LoggedInUser): ApiLoggedInUser {
     return {
-      id: source.id,
-      email: source.email,
-      firstName: source.firstName,
-      lastName: source.lastName,
+      id: fromRecordId(source.id),
       profilePictureUrl: source.pictureUrl,
-      isBirthday: this.isBirthday(source, today),
     };
-  }
-
-  private isBirthday(businessUser: BusinessUser, today: Date): boolean {
-    if (!businessUser.birthday) {
-      return false;
-    }
-
-    const months: { [x: string]: number } = {
-      Jan: 1,
-      Feb: 2,
-      Mar: 3,
-      Apr: 4,
-      May: 5,
-      Jun: 6,
-      Jul: 7,
-      Aug: 8,
-      Sep: 9,
-      Oct: 10,
-      Nov: 11,
-      Dec: 12,
-    };
-
-    const [monthName, dayString] = businessUser.birthday.split(' ');
-    const birthdayMonth = months[monthName];
-    const birthdayDay = Number(dayString);
-
-    return birthdayDay === today.getDay() && birthdayMonth === today.getMonth();
   }
 }
 
-export class IndexUserMockBirthdayConverter
-  implements Converter<BusinessUser, (_: boolean) => IndexUser>
-{
-  private readonly indexUserConverter: IndexUserConverter;
+export class UserConverter implements Converter<BusinessUser, ApiUser> {
+  private readonly userLoginConverter: LoggedInUserConverter;
 
   constructor() {
-    this.indexUserConverter = new IndexUserConverter();
+    this.userLoginConverter = new LoggedInUserConverter();
   }
 
-  convert(source: BusinessUser): (_: boolean) => IndexUser {
-    const user = this.indexUserConverter.convert(source);
+  convert(source: BusinessUser): ApiUser {
+    return {
+      ...this.userLoginConverter.convert(source),
+      email: source.email,
+      firstName: source.firstName,
+      lastName: source.lastName,
+      fullName: source.fullName,
+    };
+  }
+}
 
-    return (mockBirthday: boolean) => ({
-      ...user,
-      isBirthday: mockBirthday || user.isBirthday,
-    });
+export class IndexUserConverter
+  implements Converter<BusinessUser & WithBirthday, IndexUser>
+{
+  private readonly userConverter: UserConverter;
+
+  constructor() {
+    this.userConverter = new UserConverter();
+  }
+
+  convert(source: BusinessUser & WithBirthday): IndexUser {
+    return {
+      ...this.userConverter.convert(source),
+      isBirthday: source.isBirthday,
+    };
   }
 }
 
 export class ShowUserConverter
-  implements Converter<[BusinessUser, string[]], ShowUser>
+  implements Converter<[BusinessUser & WithInfo, Language[]], ShowUser>
 {
-  private readonly indexUserConverter: IndexUserConverter;
+  private readonly userConverter: UserConverter;
 
   constructor() {
-    this.indexUserConverter = new IndexUserConverter();
+    this.userConverter = new UserConverter();
   }
 
-  convert(source: [BusinessUser, string[]]): ShowUser {
+  convert(source: [BusinessUser & WithInfo, Language[]]): ShowUser {
     const [user, languages] = source;
 
     return {
-      ...this.indexUserConverter.convert(user),
+      ...this.userConverter.convert(user),
       position: user.position,
       office: user.office,
       partner: user.partner,
       languages,
-    };
-  }
-}
-
-export class UserLoginConverter implements Converter<BusinessUser, UserLogin> {
-  convert(source: BusinessUser): UserLogin {
-    return {
-      id: source.id,
-      profilePictureUrl: source.pictureUrl,
     };
   }
 }

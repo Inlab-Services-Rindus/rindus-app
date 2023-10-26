@@ -1,8 +1,10 @@
-import { IndexUser } from '@/models/api/User';
+import { isBirthday } from '@/helpers/WithBirthdayHelper';
+import { IndexUser, ShowUser } from '@/models/api/User';
 import {
-  IndexUserMockBirthdayConverter,
+  IndexUserConverter,
   ShowUserConverter,
 } from '@/models/api/converters/User.converter';
+import { User, WithBirthday } from '@/models/business/User';
 import { LanguageRepository } from '@/repository/language.repository';
 import { UserRepository } from '@/repository/user.repository';
 
@@ -11,7 +13,7 @@ export class UserPrograms {
 
   private readonly languageRepository: LanguageRepository;
 
-  private readonly indexUserMockBirthdayConverter: IndexUserMockBirthdayConverter;
+  private readonly indexUserConverter: IndexUserConverter;
 
   private readonly showUserConverter: ShowUserConverter;
 
@@ -21,27 +23,38 @@ export class UserPrograms {
   ) {
     this.userRepository = userRepository;
     this.languageRepository = languageRepository;
-    this.indexUserMockBirthdayConverter = new IndexUserMockBirthdayConverter();
+    this.indexUserConverter = new IndexUserConverter();
     this.showUserConverter = new ShowUserConverter();
   }
 
   public async index(mockBirthdays: boolean): Promise<IndexUser[]> {
     const users = await this.userRepository.all();
 
-    return users.map((businessUser, index) => {
+    return this.enrichIsBirthday(users, mockBirthdays).map((user) =>
+      this.indexUserConverter.convert(user),
+    );
+  }
+
+  private enrichIsBirthday(
+    users: User[],
+    mockBirthdays: boolean,
+  ): (User & WithBirthday)[] {
+    return users.map((user, index) => {
       let mockBirthday = false;
       if (mockBirthdays && index < 3) {
         mockBirthday = true;
       }
-      return this.indexUserMockBirthdayConverter.convert(businessUser)(
-        mockBirthday,
-      );
+
+      return {
+        ...user,
+        isBirthday: mockBirthday || isBirthday(user.birthday),
+      };
     });
   }
 
-  public async show(userId: string): Promise<IndexUser | undefined> {
+  public async show(userId: string): Promise<ShowUser | undefined> {
     const [maybeUser, languages] = await Promise.all([
-      this.userRepository.findUserById(userId),
+      this.userRepository.findUserWithInfoById(userId),
       this.languageRepository.userLanguagesById(userId),
     ]);
 

@@ -1,7 +1,7 @@
 import { logger } from '@/bootstrap/logger';
 import { cookieConfig } from '@/bootstrap/sessions';
 import { config, isLiveEnvironment } from '@/config';
-import { UserLoginConverter } from '@/models/api/converters/User.converter';
+import { LoggedInUserConverter } from '@/models/api/converters/User.converter';
 import { SessionPrograms } from '@/programs/session.programs';
 import { UserRepository } from '@/repository/user.repository';
 import { CookieOptions, Request, Response } from 'express';
@@ -11,7 +11,7 @@ export class SessionController {
 
   private readonly userRepository: UserRepository;
 
-  private readonly apiUserLoginConverter: UserLoginConverter;
+  private readonly loggedInUserConverter: LoggedInUserConverter;
 
   constructor(
     sessionPrograms: SessionPrograms,
@@ -19,7 +19,7 @@ export class SessionController {
   ) {
     this.sessionProgram = sessionPrograms;
     this.userRepository = userRepository;
-    this.apiUserLoginConverter = new UserLoginConverter();
+    this.loggedInUserConverter = new LoggedInUserConverter();
   }
 
   public async login(request: Request, response: Response) {
@@ -32,9 +32,10 @@ export class SessionController {
     const maybeUser = await this.sessionProgram.login(jwt);
 
     if (maybeUser !== undefined) {
-      request.session.userId = maybeUser.id;
+      const apiUserLogin = this.loggedInUserConverter.convert(maybeUser);
+      request.session.userId = apiUserLogin.id;
 
-      return response.send(this.apiUserLoginConverter.convert(maybeUser));
+      return response.send(apiUserLogin);
     }
 
     return response.sendStatus(401);
@@ -51,7 +52,7 @@ export class SessionController {
       const maybeUser = await this.userRepository.findUserById(maybeUserId);
 
       if (maybeUser) {
-        return response.send(this.apiUserLoginConverter.convert(maybeUser));
+        return response.send(this.loggedInUserConverter.convert(maybeUser));
       }
 
       return response.sendStatus(401);

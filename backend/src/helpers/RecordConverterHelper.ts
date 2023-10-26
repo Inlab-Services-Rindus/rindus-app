@@ -4,6 +4,12 @@ export type Insertable<T> = Omit<T, 'id'>;
 
 export const fromRecordId = (id: number): string => id.toFixed();
 
+export const toRecordId = (id: string): number | undefined => {
+  const number = Number(id);
+
+  return isNaN(number) ? undefined : number;
+};
+
 export function distinctRecords(items: string[]): Enumerable[] {
   return distinct(items).map(toRecord);
 }

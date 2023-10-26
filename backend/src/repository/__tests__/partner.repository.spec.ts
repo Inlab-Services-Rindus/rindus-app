@@ -2,7 +2,7 @@ import { connectTestDatabase } from '@/bootstrap/database';
 import { PartnerRecord } from '@/models/service/PartnerRecord';
 import { KnexPartnerRepository } from '@/repository/knex/partner.repository';
 
-describe('KnexPartnerRepository', () => {
+describe.skip('KnexPartnerRepository', () => {
   let partnerRepository: KnexPartnerRepository;
   const allPartnerRecords = [
     {

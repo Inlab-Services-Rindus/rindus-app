@@ -1,11 +1,14 @@
 import { Identifiable } from '@/models/service/Record';
 import { Knex } from 'knex';
 
-export interface UserRecord extends Identifiable {
+export interface LoggedInUserRecord extends Identifiable {
+  picture_url?: string;
+}
+
+export interface UserRecord extends LoggedInUserRecord {
   first_name: string;
   last_name?: string;
   email: string;
-  picture_url?: string;
   office_id: number;
   partner_id?: number;
   position?: string;

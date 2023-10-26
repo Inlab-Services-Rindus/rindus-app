@@ -1,45 +1,82 @@
 import { Knex } from 'knex';
 
-import { User } from '@/models/business/User';
+import { LoggedInUser, User, WithInfo } from '@/models/business/User';
 import { UserRepository } from '@/repository/user.repository';
 import {
+  LoggedInUserRecord,
   UserRecord,
   WithOffice,
   WithPartner,
 } from '@/models/service/UserRecord';
-import { ExtendedUserRecordConverter } from '@/models/service/converters/UserRecord.converter';
+import {
+  LoggedInUserConverter,
+  UserConverter,
+  UserWithInfoConverter,
+} from '@/models/service/converters/UserRecord.converter';
+import { toRecordId } from '@/helpers/RecordConverterHelper';
 
 export class KnexUserRepository implements UserRepository {
   private readonly knex: Knex;
-  private readonly converter: ExtendedUserRecordConverter;
+
+  private readonly userConverter: UserConverter;
+  private readonly loggedInConverter: LoggedInUserConverter;
+  private readonly userWithInfoConverter: UserWithInfoConverter;
 
   constructor(knex: Knex) {
     this.knex = knex;
-    this.converter = new ExtendedUserRecordConverter();
+    this.userConverter = new UserConverter();
+    this.loggedInConverter = new LoggedInUserConverter();
+    this.userWithInfoConverter = new UserWithInfoConverter();
   }
 
-  public async findUserByEmail(email: string): Promise<User | undefined> {
-    const userRecord = await this.selectUsers().where('email', email).first();
+  async all(): Promise<User[]> {
+    const userRecords = await this.knex('users');
 
-    return this.toBusiness(userRecord);
+    return userRecords.map((record) => this.userConverter.convert(record));
   }
 
-  public async findUserById(id: string): Promise<User | undefined> {
-    const userRecord = await this.selectUsers()
-      .where('u.id', Number(id))
+  async findUserByEmail(email: string): Promise<LoggedInUser | undefined> {
+    const maybeRecord = await this.selectLoggedInUserRecord()
+      .where('email', email)
       .first();
 
-    return this.toBusiness(userRecord);
+    return this.toLoggedInUser(maybeRecord);
   }
 
-  public async all(): Promise<User[]> {
-    const userRecords = await this.selectUsers();
+  async findUserById(id: string): Promise<LoggedInUser | undefined> {
+    const maybeUserId = toRecordId(id);
 
-    return userRecords.map((record) => this.converter.convert(record));
+    if (!maybeUserId) {
+      return undefined;
+    }
+
+    const maybeRecord = await this.selectLoggedInUserRecord()
+      .where('id', maybeUserId)
+      .first();
+
+    return this.toLoggedInUser(maybeRecord);
   }
 
-  private selectUsers() {
-    return this.knex<UserRecord & WithOffice & WithPartner>({ u: 'users' })
+  private selectLoggedInUserRecord() {
+    return this.knex('users').select('id', 'picture_url');
+  }
+
+  private toLoggedInUser(record: LoggedInUserRecord | undefined) {
+    return record ? this.loggedInConverter.convert(record) : undefined;
+  }
+
+  async findUserWithInfoById(
+    id: string,
+  ): Promise<(User & WithInfo) | undefined> {
+    const maybeUserId = toRecordId(id);
+
+    if (!maybeUserId) {
+      return undefined;
+    }
+
+    const maybeRecord = await this.knex<UserRecord & WithOffice & WithPartner>({
+      u: 'users',
+    })
       .leftJoin({ p: 'partners' }, 'u.partner_id', 'p.id')
       .leftJoin({ o: 'offices' }, 'u.office_id', 'o.id')
       .select(
@@ -51,12 +88,12 @@ export class KnexUserRepository implements UserRepository {
         { partner_name: 'p.name' },
         'position',
         'picture_url',
-      );
-  }
+      )
+      .where('u.id', maybeUserId)
+      .first();
 
-  private toBusiness(
-    userRecord: (UserRecord & WithOffice & WithPartner) | undefined,
-  ) {
-    return userRecord ? this.converter.convert(userRecord) : undefined;
+    return maybeRecord
+      ? this.userWithInfoConverter.convert(maybeRecord)
+      : undefined;
   }
 }
