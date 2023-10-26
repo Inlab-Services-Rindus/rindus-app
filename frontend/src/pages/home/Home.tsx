@@ -20,9 +20,9 @@ export function Home() {
       showToastError('An error occurred while processing your request.');
     },
     options: {
-      headers: {
-        'X-Mock-Birthdays': 'true',
-      },
+      // headers: {
+      //   'X-Mock-Birthdays': 'true',
+      // },
       credentials: 'include',
     },
     url: `${config.backendUrl}/users`,
