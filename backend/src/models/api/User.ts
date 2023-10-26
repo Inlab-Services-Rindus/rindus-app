@@ -1,10 +1,18 @@
-export interface User {
+export interface IndexUser {
   id: string;
   firstName: string;
   lastName?: string;
   email: string;
   profilePictureUrl: string;
-  isBirthday?: boolean;
+  isBirthday: boolean;
 }
 
-export interface UserLogin extends Pick<User, 'id' | 'profilePictureUrl'> {}
+export interface ShowUser extends IndexUser {
+  languages: string[];
+  office: string;
+  partner?: string;
+  position?: string;
+}
+
+export interface UserLogin
+  extends Pick<IndexUser, 'id' | 'profilePictureUrl'> {}

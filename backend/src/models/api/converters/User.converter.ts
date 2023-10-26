@@ -1,26 +1,20 @@
 import { Converter } from '@/models/Converter';
 import { User as BusinessUser } from '@/models/business/User';
-import { User as ApiUser } from '@/models/api/User';
-import { UserLogin as ApiUserLogin } from '@/models/api/User';
+import { IndexUser, ShowUser } from '@/models/api/User';
+import { UserLogin } from '@/models/api/User';
 
-export class ApiUserConverter
-  implements Converter<BusinessUser, (_: boolean) => ApiUser>
-{
-  private readonly date: Date;
+export class IndexUserConverter implements Converter<BusinessUser, IndexUser> {
+  convert(source: BusinessUser): IndexUser {
+    const today = new Date();
 
-  constructor(date: Date) {
-    this.date = date;
-  }
-
-  convert(source: BusinessUser): (_: boolean) => ApiUser {
-    return (mockBirthday: boolean) => ({
+    return {
       id: source.id,
       email: source.email,
       firstName: source.firstName,
       lastName: source.lastName,
       profilePictureUrl: source.pictureUrl,
-      isBirthday: mockBirthday || this.isBirthday(source, this.date),
-    });
+      isBirthday: this.isBirthday(source, today),
+    };
   }
 
   private isBirthday(businessUser: BusinessUser, today: Date): boolean {
@@ -51,10 +45,49 @@ export class ApiUserConverter
   }
 }
 
-export class ApiUserLoginConverter
-  implements Converter<BusinessUser, ApiUserLogin>
+export class IndexUserMockBirthdayConverter
+  implements Converter<BusinessUser, (_: boolean) => IndexUser>
 {
-  convert(source: BusinessUser): ApiUserLogin {
+  private readonly indexUserConverter: IndexUserConverter;
+
+  constructor() {
+    this.indexUserConverter = new IndexUserConverter();
+  }
+
+  convert(source: BusinessUser): (_: boolean) => IndexUser {
+    const user = this.indexUserConverter.convert(source);
+
+    return (mockBirthday: boolean) => ({
+      ...user,
+      isBirthday: mockBirthday || user.isBirthday,
+    });
+  }
+}
+
+export class ShowUserConverter
+  implements Converter<[BusinessUser, string[]], ShowUser>
+{
+  private readonly indexUserConverter: IndexUserConverter;
+
+  constructor() {
+    this.indexUserConverter = new IndexUserConverter();
+  }
+
+  convert(source: [BusinessUser, string[]]): ShowUser {
+    const [user, languages] = source;
+
+    return {
+      ...this.indexUserConverter.convert(user),
+      position: user.position,
+      office: user.office,
+      partner: user.partner,
+      languages,
+    };
+  }
+}
+
+export class UserLoginConverter implements Converter<BusinessUser, UserLogin> {
+  convert(source: BusinessUser): UserLogin {
     return {
       id: source.id,
       profilePictureUrl: source.pictureUrl,

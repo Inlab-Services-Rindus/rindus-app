@@ -1,7 +1,7 @@
 import { logger } from '@/bootstrap/logger';
 import { cookieConfig } from '@/bootstrap/sessions';
 import { config, isLiveEnvironment } from '@/config';
-import { ApiUserLoginConverter } from '@/models/api/converters/User.converter';
+import { UserLoginConverter } from '@/models/api/converters/User.converter';
 import { SessionPrograms } from '@/programs/session.programs';
 import { UserRepository } from '@/repository/user.repository';
 import { CookieOptions, Request, Response } from 'express';
@@ -11,7 +11,7 @@ export class SessionController {
 
   private readonly userRepository: UserRepository;
 
-  private readonly apiUserLoginConverter: ApiUserLoginConverter;
+  private readonly apiUserLoginConverter: UserLoginConverter;
 
   constructor(
     sessionPrograms: SessionPrograms,
@@ -19,7 +19,7 @@ export class SessionController {
   ) {
     this.sessionProgram = sessionPrograms;
     this.userRepository = userRepository;
-    this.apiUserLoginConverter = new ApiUserLoginConverter();
+    this.apiUserLoginConverter = new UserLoginConverter();
   }
 
   public async login(request: Request, response: Response) {

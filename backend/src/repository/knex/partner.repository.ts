@@ -11,12 +11,14 @@ export class KnexPartnerRepository implements PartnerRepository {
     this.knex = knex;
   }
 
-  public all(): Promise<Partner[]> {
-    return this.knex<PartnerRecord>('partners')
-      .select('id', 'name', 'logo_url')
-      .then((partnerRecords) =>
-        partnerRecords.map((record) => this.recordToPartner(record)),
-      );
+  public async all(): Promise<Partner[]> {
+    const partnerRecords = await this.knex<PartnerRecord>('partners').select(
+      'id',
+      'name',
+      'logo_url',
+    );
+
+    return partnerRecords.map((record) => this.recordToPartner(record));
   }
 
   private recordToPartner(partnerRecord: PartnerRecord): Partner {
