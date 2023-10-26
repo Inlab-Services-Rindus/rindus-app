@@ -7,7 +7,7 @@ interface Props {
 
 export default function Retry({ refresh }: Props): JSX.Element {
   return (
-    <div className="retry">
+    <div className="retry" data-testid="retry-component">
       <div className="retry__content">
         <p>
           Oops! Something went wrong. Please click to refresh and try again.

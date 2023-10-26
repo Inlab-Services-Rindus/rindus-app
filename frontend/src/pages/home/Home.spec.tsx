@@ -65,40 +65,14 @@ describe('Home', () => {
         onErrorCallback: expect.any(Function),
       }),
     );
-  });
 
-  it('should show loader when isLoading the fetch', () => {
-    useFetchSpy.mockReturnValueOnce({
-      data: [],
-      isLoading: true,
-      refresh: vi.fn(),
-    });
-    useFetchSpy.mockReturnValueOnce({
-      data: mockPartnersResponse,
-      isLoading: false,
-      refresh: vi.fn(),
-    });
-
-    render(<Home />);
-
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
-  });
-
-  it('should render the RefreshButton when fetch response is empty', () => {
-    useFetchSpy.mockReturnValueOnce({
-      data: null,
-      isLoading: false,
-      refresh: vi.fn(),
-    });
-    useFetchSpy.mockReturnValueOnce({
-      data: mockPartnersResponse,
-      isLoading: false,
-      refresh: vi.fn(),
-    });
-
-    render(<Home />);
-
-    expect(screen.getByTestId('refresh-button')).toBeInTheDocument();
+    expect(useFetchSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: `${config.backendUrl}/partners`,
+        options: { credentials: 'include' },
+        onErrorCallback: expect.any(Function),
+      }),
+    );
   });
 
   it('should render the PeopleTab when fetch response is not empty', () => {
@@ -135,24 +109,22 @@ describe('Home', () => {
     });
   });
 
-  it('should call to refresh when clicks on the RefreshButton', () => {
-    const refreshSpy = vi.fn();
-
+  it('should render the PartnersTab when fetch response is not empty', () => {
     useFetchSpy.mockReturnValueOnce({
-      data: null,
+      data: [],
       isLoading: false,
-      refresh: refreshSpy,
+      refresh: vi.fn(),
     });
     useFetchSpy.mockReturnValueOnce({
-      data: null,
+      data: mockPartnersResponse,
       isLoading: false,
       refresh: vi.fn(),
     });
 
     render(<Home />);
 
-    fireEvent.click(screen.getByTestId('refresh-button'));
+    fireEvent.click(screen.getByText('Partners'));
 
-    expect(refreshSpy).toHaveBeenCalled();
+    expect(screen.getByTestId('partners-tab')).toBeInTheDocument();
   });
 });

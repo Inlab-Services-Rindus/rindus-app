@@ -3,7 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@scss/*": ["./src/assets/scss/*"]
+      "@scss/*": ["./src/assets/scss/*"],
+      "@helpers/*": ["./src/helpers/*"]
     },
     "target": "ES2020",
     "useDefineForClassFields": true,

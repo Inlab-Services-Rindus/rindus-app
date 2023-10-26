@@ -1,5 +1,9 @@
 import '@/atoms/loader/Loader.scss';
 
 export default function Loader() {
-  return <span className="loader" data-testid="loader"></span>;
+  return (
+    <div className="loader">
+      <span className="loader__spinner" data-testid="loader"></span>
+    </div>
+  );
 }
