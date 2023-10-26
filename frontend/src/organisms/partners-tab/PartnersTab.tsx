@@ -1,28 +1,32 @@
 import { Partner } from '@/model/Partner';
+import Tab from '@/molecules/tab/Tab';
+import '@/organisms/partners-tab/PartnersTab.scss';
 
 interface PartnersTabProps {
-  partners: Partner[];
+  partners?: Partner[];
+  isPartnersLoading: boolean;
 }
 
-export function PartnersTab({ partners }: PartnersTabProps) {
+export function PartnersTab({ partners, isPartnersLoading }: PartnersTabProps) {
   return (
-    <section data-testid="partners-tab">
-      <h1>PartnersTab</h1>
-      <div>
-        <ul>
-          {partners?.map((partner, index) => (
-            <li key={index}>
-              <ul>
-                <img
-                  src={partner.pictureUrl}
-                  style={{ height: '50px', width: '50px' }}
-                ></img>
-                <span>{` ${partner.name}`}</span>
-              </ul>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
+    <Tab
+      isLoading={isPartnersLoading}
+      className="partners-tab__container"
+      dataTestId="partners-tab"
+    >
+      <ul>
+        {partners?.map((partner, index) => (
+          <li key={index}>
+            <ul>
+              <img
+                src={partner.pictureUrl}
+                style={{ height: '50px', width: '50px' }}
+              ></img>
+              <span>{` ${partner.name}`}</span>
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </Tab>
   );
 }

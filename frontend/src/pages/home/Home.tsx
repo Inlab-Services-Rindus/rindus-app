@@ -1,12 +1,11 @@
-import Loader from '@/atoms/loader/Loader';
 import { config } from '@/config/config';
 import useFetch from '@/hooks/fetch/useFetch';
 import useToast from '@/hooks/toast/useToast';
 import { Employee } from '@/model/Employee';
 import { Partner } from '@/model/Partner';
+import { TabPanel } from '@/molecules/tabPanel/TabPanel';
 import { PartnersTab } from '@/organisms/partners-tab/PartnersTab';
 import { PeopleTab } from '@/organisms/people-tab/PeopleTab';
-import Retry from '@/organisms/retry/Retry';
 
 export function Home() {
   const { showToastError } = useToast();
@@ -38,22 +37,31 @@ export function Home() {
     url: `${config.backendUrl}/partners`,
   });
 
-  if (isPeopleLoading || isPartnersLoading) {
-    return (
-      <div className="loader__container">
-        <Loader />
-      </div>
-    );
-  }
+  const tabs = [
+    {
+      label: 'People',
+      content: (
+        <PeopleTab
+          people={people ?? []}
+          isPeopleLoading={isPeopleLoading}
+          refreshPeople={refreshPeople}
+        />
+      ),
+    },
+    {
+      label: 'Partners',
+      content: (
+        <PartnersTab
+          partners={partners ?? []}
+          isPartnersLoading={isPartnersLoading}
+        />
+      ),
+    },
+  ];
 
   return (
     <div className="homePage">
-      {people ? (
-        <PeopleTab people={people} />
-      ) : (
-        <Retry refresh={refreshPeople} />
-      )}
-      {partners && <PartnersTab partners={partners} />}
+      <TabPanel tabs={tabs} />
     </div>
   );
 }
