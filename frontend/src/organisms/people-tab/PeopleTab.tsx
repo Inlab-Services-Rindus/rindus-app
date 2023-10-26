@@ -33,7 +33,6 @@ export function PeopleTab({
           key={index}
           profilePictureUrl={`${config.backendUrl}${employee.profilePictureUrl}`}
           firstName={employee.firstName}
-          lastName={employee.lastName}
           isBirthday={employee.isBirthday}
         />
       ))}
