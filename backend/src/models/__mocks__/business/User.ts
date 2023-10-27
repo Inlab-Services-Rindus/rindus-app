@@ -8,4 +8,5 @@ export const mockUser: User = {
   email: 'foo-barjones@rindus.de',
   pictureUrl: '/avatars/v1/images/2217/large/foo-barjones.jpg',
   birthday: 'Jan 1',
+  isBirthday: false,
 };
