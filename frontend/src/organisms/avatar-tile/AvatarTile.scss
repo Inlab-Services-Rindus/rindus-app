@@ -1,0 +1,27 @@
+@import '@/assets/scss/_fonts.scss';
+
+.avatar-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+
+  &__name {
+    color: var(--Gray-Dark, #303140);
+    text-align: center;
+    @include text($font-poppins-regular, 14px, 400, 16px);
+    padding-bottom: 12px;
+  }
+}
+
+@media (min-width: 450px) {
+  .avatar-tile {
+    width: 250px;
+    height: 250px;
+
+    &__name {
+      font-size: 20px;
+    }
+  }
+}

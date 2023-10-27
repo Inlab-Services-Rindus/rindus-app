@@ -7,6 +7,7 @@ export interface useFetchProps {
   onErrorCallback: () => void;
   url: string;
   options?: RequestInit;
+  deps?: string;
 }
 
 export interface useFetchReturn<T> {
@@ -19,6 +20,7 @@ export default function useFetch<T>({
   onErrorCallback,
   url,
   options,
+  deps = '',
 }: useFetchProps): useFetchReturn<T> {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,7 +53,7 @@ export default function useFetch<T>({
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [deps]);
 
   const refresh = () => {
     fetchData();
