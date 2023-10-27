@@ -2,6 +2,7 @@ import { Converter } from '@/models/Converter';
 import { PartnerRecord } from '@/models/service/PartnerRecord';
 import { Partner } from '@/models/business/Partner';
 import { fromRecordId } from '@/helpers/RecordConverterHelper';
+import { config } from '@/config';
 
 export class PartnerRecordConverter
   implements Converter<PartnerRecord, Partner>
@@ -10,7 +11,7 @@ export class PartnerRecordConverter
     return {
       id: fromRecordId(source.id),
       name: source.name,
-      logoUrl: source.logo_url,
+      logoUrl: `${config.app.url}${source.logo_url}`,
     };
   }
 }

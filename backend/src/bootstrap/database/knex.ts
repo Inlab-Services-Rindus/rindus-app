@@ -24,7 +24,7 @@ export const TestDatabaseFileName = './integration-db.sqlite';
 export const testKnexConfig: Knex.Config = {
   client: 'sqlite3',
   useNullAsDefault: true,
-  // Uncomment to debug Knex queries
+  // Uncomment to debug Knex queries. Also DEBUG=knex:* can be used
   // debug: true,
   connection: {
     filename: TestDatabaseFileName,

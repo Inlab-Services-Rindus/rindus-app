@@ -8,15 +8,20 @@ export interface User extends LoggedInUser {
   lastName?: string;
   fullName: string;
   email: string;
-}
-
-export interface IndexUser extends User {
   isBirthday: boolean;
 }
+
+export interface IndexUser extends User {}
 
 export interface ShowUser extends User {
   languages: string[];
   office: string;
   partner?: string;
+  position?: string;
+}
+
+export interface UserResult extends LoggedInUser {
+  fullName: string;
+  isBirthday: boolean;
   position?: string;
 }

@@ -1,15 +1,14 @@
 import { Converter } from '@/models/Converter';
 import {
   User as BusinessUser,
-  WithBirthday,
   WithInfo,
   LoggedInUser,
 } from '@/models/business/User';
 import {
   LoggedInUser as ApiLoggedInUser,
-  IndexUser,
   ShowUser,
   User as ApiUser,
+  UserResult,
 } from '@/models/api/User';
 import { fromRecordId } from '@/helpers/RecordConverterHelper';
 import { Language } from '@/models/business/Language';
@@ -39,22 +38,6 @@ export class UserConverter implements Converter<BusinessUser, ApiUser> {
       firstName: source.firstName,
       lastName: source.lastName,
       fullName: source.fullName,
-    };
-  }
-}
-
-export class IndexUserConverter
-  implements Converter<BusinessUser & WithBirthday, IndexUser>
-{
-  private readonly userConverter: UserConverter;
-
-  constructor() {
-    this.userConverter = new UserConverter();
-  }
-
-  convert(source: BusinessUser & WithBirthday): IndexUser {
-    return {
-      ...this.userConverter.convert(source),
       isBirthday: source.isBirthday,
     };
   }
@@ -78,6 +61,25 @@ export class ShowUserConverter
       office: user.office,
       partner: user.partner,
       languages,
+    };
+  }
+}
+
+export class UserResultConverter
+  implements Converter<BusinessUser, UserResult>
+{
+  private readonly loggedInUserConverter: LoggedInUserConverter;
+
+  constructor() {
+    this.loggedInUserConverter = new LoggedInUserConverter();
+  }
+
+  convert(source: BusinessUser): UserResult {
+    return {
+      ...this.loggedInUserConverter.convert(source),
+      fullName: source.fullName,
+      position: source.position,
+      isBirthday: source.isBirthday,
     };
   }
 }

@@ -1,3 +1,5 @@
+import { config } from '@/config';
+import { isBirthday } from '@/helpers/WithBirthdayHelper';
 import { Converter } from '@/models/Converter';
 import { LoggedInUser, User, WithInfo } from '@/models/business/User';
 import {
@@ -28,7 +30,7 @@ export class LoggedInUserConverter
 
     if (pictureUrl.startsWith(personioImageServer)) {
       return pictureUrl
-        .replace(personioImageServer, '/avatars/')
+        .replace(personioImageServer, `${config.app.url}/avatars/`)
         .replace('small', 'large');
     } else {
       return pictureUrl;
@@ -56,6 +58,7 @@ export class UserConverter implements Converter<UserRecord, User> {
       email: source.email,
       position: source.position,
       birthday,
+      isBirthday: isBirthday(birthday),
     };
   }
 }

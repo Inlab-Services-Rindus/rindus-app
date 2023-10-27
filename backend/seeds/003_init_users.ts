@@ -3,7 +3,7 @@ import { Knex } from 'knex';
 import { parsePersonioJSONFile } from '@seeds/helper';
 import {
   PersonioEmployeeConverter,
-  sanitisePartner,
+  PersonioEmployeePartnerConverter,
 } from '@/models/service/converters/seeds/Personio.converter';
 import { Employee } from '@/models/service/seeds/Personio';
 import { OfficeRecord } from '@/models/service/OfficeRecord';
@@ -17,7 +17,12 @@ export async function seed(knex: Knex): Promise<void> {
   const personioData = parsePersonioJSONFile();
 
   const converter = new PersonioEmployeeConverter();
-  const processEmployeeBaseData = employeeBaseDataProcessor(knex, converter);
+  const partnerConverter = new PersonioEmployeePartnerConverter();
+  const processEmployeeBaseData = employeeBaseDataProcessor(
+    knex,
+    converter,
+    partnerConverter,
+  );
 
   const employees = await Promise.all(
     personioData.data.items
@@ -29,11 +34,15 @@ export async function seed(knex: Knex): Promise<void> {
 }
 
 const employeeBaseDataProcessor =
-  (knex: Knex, converter: PersonioEmployeeConverter) =>
+  (
+    knex: Knex,
+    converter: PersonioEmployeeConverter,
+    partnerConverter: PersonioEmployeePartnerConverter,
+  ) =>
   async (personioEmployee: Employee): Promise<Insertable<UserRecord>> => {
     const [officeId, partnerId] = await Promise.all([
       processOffice(knex, personioEmployee.office_id),
-      processPartner(knex, personioEmployee.department_id),
+      processPartner(knex, partnerConverter, personioEmployee.department_id),
     ]);
 
     return converter.convert(personioEmployee)({
@@ -50,9 +59,13 @@ async function processOffice(knex: Knex, officeId: string) {
   return maybeOffice ? maybeOffice.id : 0;
 }
 
-async function processPartner(knex: Knex, partnerId: string) {
+async function processPartner(
+  knex: Knex,
+  partnerConverter: PersonioEmployeePartnerConverter,
+  partnerId: string,
+) {
   const maybePartner = await knex<PartnerRecord>('partners')
-    .where('name', sanitisePartner(partnerId))
+    .where('name', partnerConverter.sanitisePartner(partnerId))
     .first();
 
   return maybePartner?.id;

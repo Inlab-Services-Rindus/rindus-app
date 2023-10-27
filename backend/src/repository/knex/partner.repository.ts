@@ -3,12 +3,16 @@ import { Knex } from 'knex';
 import { Partner } from '@/models/business/Partner';
 import { PartnerRepository } from '@/repository/partner.repository';
 import { PartnerRecord } from '@/models/service/PartnerRecord';
+import { PartnerRecordConverter } from '@/models/service/converters/PartnerRecord.converter';
 
 export class KnexPartnerRepository implements PartnerRepository {
   private readonly knex: Knex;
 
+  private readonly partnerConverter: PartnerRecordConverter;
+
   constructor(knex: Knex) {
     this.knex = knex;
+    this.partnerConverter = new PartnerRecordConverter();
   }
 
   public async all(): Promise<Partner[]> {
@@ -18,14 +22,8 @@ export class KnexPartnerRepository implements PartnerRepository {
       'logo_url',
     );
 
-    return partnerRecords.map((record) => this.recordToPartner(record));
-  }
-
-  private recordToPartner(partnerRecord: PartnerRecord): Partner {
-    return {
-      id: partnerRecord.id.toFixed(),
-      name: partnerRecord.name,
-      logoUrl: partnerRecord.logo_url,
-    };
+    return partnerRecords.map((record) =>
+      this.partnerConverter.convert(record),
+    );
   }
 }

@@ -78,10 +78,7 @@ export function Header() {
           className="button__logo"
         >
           <img
-            src={
-              userProfileData &&
-              `${config.backendUrl}${userProfileData.profilePictureUrl}`
-            }
+            src={userProfileData && `${userProfileData.profilePictureUrl}`}
           />
         </button>
       </div>

@@ -12,9 +12,6 @@ export interface User extends LoggedInUser {
   email: string;
   position?: string;
   birthday?: string;
-}
-
-export interface WithBirthday {
   isBirthday: boolean;
 }
 

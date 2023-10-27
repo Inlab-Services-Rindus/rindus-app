@@ -1,4 +1,3 @@
-import { config } from '@/config/config';
 import { Employee } from '@/model/Employee';
 import Tab from '@/molecules/tab/Tab';
 import '@/organisms/people-tab/PeopleTab.scss';
@@ -19,14 +18,6 @@ export function PeopleTab({
     console.log('clicked');
   }
 
-  function profilePictureUrl(employee: Employee) {
-    if (employee.profilePictureUrl.startsWith('/')) {
-      return `${config.backendUrl}${employee.profilePictureUrl}`;
-    } else {
-      return employee.profilePictureUrl;
-    }
-  }
-
   return (
     <Tab
       isLoading={isPeopleLoading}
@@ -39,7 +30,7 @@ export function PeopleTab({
         <UserCard
           onClick={handleClick}
           key={index}
-          profilePictureUrl={profilePictureUrl(employee)}
+          profilePictureUrl={employee.profilePictureUrl}
           firstName={employee.firstName}
           isBirthday={employee.isBirthday}
         />

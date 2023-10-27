@@ -1,10 +1,9 @@
-import { isBirthday } from '@/helpers/WithBirthdayHelper';
 import { IndexUser, ShowUser } from '@/models/api/User';
 import {
-  IndexUserConverter,
   ShowUserConverter,
+  UserConverter,
 } from '@/models/api/converters/User.converter';
-import { User, WithBirthday } from '@/models/business/User';
+import { User } from '@/models/business/User';
 import { LanguageRepository } from '@/repository/language.repository';
 import { UserRepository } from '@/repository/user.repository';
 
@@ -13,7 +12,7 @@ export class UserPrograms {
 
   private readonly languageRepository: LanguageRepository;
 
-  private readonly indexUserConverter: IndexUserConverter;
+  private readonly userConverter: UserConverter;
 
   private readonly showUserConverter: ShowUserConverter;
 
@@ -23,22 +22,19 @@ export class UserPrograms {
   ) {
     this.userRepository = userRepository;
     this.languageRepository = languageRepository;
-    this.indexUserConverter = new IndexUserConverter();
+    this.userConverter = new UserConverter();
     this.showUserConverter = new ShowUserConverter();
   }
 
   public async index(mockBirthdays: boolean): Promise<IndexUser[]> {
     const users = await this.userRepository.all();
 
-    return this.enrichIsBirthday(users, mockBirthdays).map((user) =>
-      this.indexUserConverter.convert(user),
+    return this.mockIsBirthday(users, mockBirthdays).map((user) =>
+      this.userConverter.convert(user),
     );
   }
 
-  private enrichIsBirthday(
-    users: User[],
-    mockBirthdays: boolean,
-  ): (User & WithBirthday)[] {
+  private mockIsBirthday(users: User[], mockBirthdays: boolean): User[] {
     return users.map((user, index) => {
       let mockBirthday = false;
       if (mockBirthdays && index < 3) {
@@ -47,7 +43,7 @@ export class UserPrograms {
 
       return {
         ...user,
-        isBirthday: mockBirthday || isBirthday(user.birthday),
+        isBirthday: mockBirthday || user.isBirthday,
       };
     });
   }
