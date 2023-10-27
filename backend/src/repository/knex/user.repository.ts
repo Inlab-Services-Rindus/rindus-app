@@ -1,70 +1,99 @@
 import { Knex } from 'knex';
 
-import { User } from '@/models/business/User';
+import { LoggedInUser, User, WithInfo } from '@/models/business/User';
 import { UserRepository } from '@/repository/user.repository';
-import { UserRecord } from '@/models/service/UserRecord';
+import {
+  LoggedInUserRecord,
+  UserRecord,
+  WithOffice,
+  WithPartner,
+} from '@/models/service/UserRecord';
+import {
+  LoggedInUserConverter,
+  UserConverter,
+  UserWithInfoConverter,
+} from '@/models/service/converters/UserRecord.converter';
+import { toRecordId } from '@/helpers/RecordConverterHelper';
 
 export class KnexUserRepository implements UserRepository {
   private readonly knex: Knex;
 
+  private readonly userConverter: UserConverter;
+  private readonly loggedInConverter: LoggedInUserConverter;
+  private readonly userWithInfoConverter: UserWithInfoConverter;
+
   constructor(knex: Knex) {
     this.knex = knex;
+    this.userConverter = new UserConverter();
+    this.loggedInConverter = new LoggedInUserConverter();
+    this.userWithInfoConverter = new UserWithInfoConverter();
   }
 
-  public findUserByEmail(email: string): Promise<User | undefined> {
-    return this.knex<UserRecord>('users')
-      .select('id', 'first_name', 'last_name', 'email', 'profile_picture_url')
+  async all(): Promise<User[]> {
+    const userRecords = await this.knex('users');
+
+    return userRecords.map((record) => this.userConverter.convert(record));
+  }
+
+  async findUserByEmail(email: string): Promise<LoggedInUser | undefined> {
+    const maybeRecord = await this.selectLoggedInUserRecord()
       .where('email', email)
-      .first()
-      .then((userRecord) =>
-        userRecord ? this.recordToUser(userRecord) : undefined,
-      );
+      .first();
+
+    return this.toLoggedInUser(maybeRecord);
   }
 
-  public findUserById(id: string): Promise<User | undefined> {
-    return this.knex<UserRecord>('users')
-      .select('id', 'first_name', 'last_name', 'email', 'profile_picture_url')
-      .where('id', Number(id))
-      .first()
-      .then((userRecord) =>
-        userRecord ? this.recordToUser(userRecord) : undefined,
-      );
+  async findUserById(id: string): Promise<LoggedInUser | undefined> {
+    const maybeUserId = toRecordId(id);
+
+    if (!maybeUserId) {
+      return undefined;
+    }
+
+    const maybeRecord = await this.selectLoggedInUserRecord()
+      .where('id', maybeUserId)
+      .first();
+
+    return this.toLoggedInUser(maybeRecord);
   }
 
-  public all(): Promise<User[]> {
-    return this.knex<UserRecord>('users')
+  private selectLoggedInUserRecord() {
+    return this.knex('users').select('id', 'picture_url');
+  }
+
+  private toLoggedInUser(record: LoggedInUserRecord | undefined) {
+    return record ? this.loggedInConverter.convert(record) : undefined;
+  }
+
+  async findUserWithInfoById(
+    id: string,
+  ): Promise<(User & WithInfo) | undefined> {
+    const maybeUserId = toRecordId(id);
+
+    if (!maybeUserId) {
+      return undefined;
+    }
+
+    const maybeRecord = await this.knex<UserRecord & WithOffice & WithPartner>({
+      u: 'users',
+    })
+      .leftJoin({ p: 'partners' }, 'u.partner_id', 'p.id')
+      .leftJoin({ o: 'offices' }, 'u.office_id', 'o.id')
       .select(
-        'id',
+        { id: 'u.id' },
         'first_name',
         'last_name',
         'email',
-        'profile_picture_url',
-        'birthday',
+        { office_name: 'o.name' },
+        { partner_name: 'p.name' },
+        'position',
+        'picture_url',
       )
-      .then((userRecords) =>
-        userRecords.map((record) => this.recordToUser(record)),
-      );
-  }
+      .where('u.id', maybeUserId)
+      .first();
 
-  private recordToUser(userRecord: UserRecord): User {
-    return {
-      id: userRecord.id.toFixed(),
-      firstName: userRecord.first_name,
-      lastName: userRecord.last_name,
-      email: userRecord.email,
-      profilePictureUrl: this.mapAvatarUrl(userRecord.profile_picture_url),
-      birthday: userRecord.birthday,
-    };
-  }
-
-  private mapAvatarUrl(personioUrl?: string) {
-    const personioImageServer = 'https://images.personio.de/';
-    if (personioUrl && personioUrl.includes(personioImageServer)) {
-      return personioUrl
-        .replace(personioImageServer, '/avatars/')
-        .replace('small', 'large');
-    } else {
-      return personioUrl;
-    }
+    return maybeRecord
+      ? this.userWithInfoConverter.convert(maybeRecord)
+      : undefined;
   }
 }

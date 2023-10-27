@@ -1,92 +1,176 @@
-[
-  {
-    "first_name": "Agata Edyta",
-    "last_name": "Wesolowska",
-    "email": "agata.wesolowska@rindus.de",
-    "office_id": "Málaga",
-    "department_id": "IT Auxmoney",
-    "position": "UX / UI Designer",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/db023f97d2d3da8951212d2812b4738eab6472a4.jpg",
-    "birthday": "Dec 15"
-  },
-  {
-    "first_name": "Aridane",
-    "last_name": "Martin Falcón",
-    "email": "aridane.m.falcon@rindus.de",
-    "office_id": "Málaga",
-    "department_id": "IT Douglas",
-    "position": "Frontend Developer",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/d13a13c2dd8657a2722124849633f3a77aa691e9.jpg",
-    "birthday": "Aug 05"
-  },
-  {
-    "first_name": "Antonio Jesus",
-    "last_name": "Morales Morales",
-    "email": "antonio.morales@rindus.de",
-    "office_id": "Málaga",
-    "department_id": "IT Douglas",
-    "position": "Scrum Master",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/992b4d177b295b83b6fc6d3c8e2ddd7d56e83fb8.jpg",
-    "birthday": "Mar 50"
-  },
-  {
-    "first_name": "Pedro",
-    "last_name": "Domínguez Aguilera",
-    "email": "pedro.dominguez@rindus.de",
-    "office_id": "Málaga",
-    "department_id": "IT Douglas",
-    "position": "Frontend developer",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/6ae0728a103471fcf356ed3edddfbca22a249f8c.jpg",
-    "birthday": "Oct 15"
-  },
-  {
-    "first_name": "Cristina",
-    "last_name": "Aguilar Gutiérrez del Álamo",
-    "email": "cristina.aguilar@rindus.de",
-    "office_id": "Málaga",
-    "department_id": "People and Culture",
-    "position": "Senior IT Recruiter",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/8e7b2e23fc5a06713fb805392aa2c581ba53314c.jpg",
-    "birthday": "Nov 24"
-  },
-  {
-    "first_name": "Adrián",
-    "last_name": "González Leiva",
-    "email": "adrian.gonzalez@rindus.de",
-    "office_id": "Málaga",
-    "department_id": "IT Douglas",
-    "position": "Scala Developer",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/70ea8090cf0bf9e0927815b4cbbe17162f4e0788.png",
-    "birthday": "Aug 13"
-  },
-  {
-    "first_name": "Tiziana",
-    "last_name": "Bonanomi",
-    "email": "tiziana.bonanomi@rindus.de",
-    "office_id": "Málaga",
-    "department_id": "IT Auxmoney",
-    "position": "Scrum Master",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/280837fc79659c90d02cacd723dc8ccde169212e.png",
-    "birthday": "Dec 21"
-  },
-  {
-    "first_name": "Dominikus",
-    "last_name": "Schweighart",
-    "email": "dominikus.schweighart@rindus.de",
-    "office_id": "München",
-    "department_id": "Management",
-    "position": "Managing Partner",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/2cb7270eae53e2b2a22244158956f4cf8da0abf8.jpg",
-    "birthday": "Apr 29"
-  },
-  {
-    "first_name": "Rolf",
-    "last_name": "Zipf",
-    "email": "rolf.zipf@rindus.de",
-    "office_id": "München",
-    "department_id": "Management",
-    "position": "Managing Partner",
-    "profile_picture_url": "https://images.personio.de/v1/images/2217/small/029f303bf6975e5b28a8c15fca34c255038c9d0a.png",
-    "birthday": "Dec 23"
+{
+  "data": {
+    "items": [
+      {
+        "id": 307658,
+        "data": {
+          "first_name": "Adrián",
+          "last_name": "González Leiva",
+          "email": "adrian.gonzalez@rindus.de",
+          "office_id": "Málaga",
+          "department_id": "IT Douglas",
+          "position": "Scala Developer",
+          "full_name": "Adrián González Leiva",
+          "team_id": "Douglas Sunny",
+          "dynamic_87778": "Aug 13",
+          "dynamic_1298673": "A Team Captain  |  team.captain@rindus.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://images.personio.de/v1/images/2217/small/70ea8090cf0bf9e0927815b4cbbe17162f4e0788.png"
+        }
+      },
+      {
+        "id": 3261732,
+        "data": {
+          "first_name": "Agata Edyta",
+          "last_name": "Wesolowska",
+          "email": "agata.wesolowska@rindus.de",
+          "office_id": "Málaga",
+          "department_id": "IT Auxmoney",
+          "position": "UX / UI Designer",
+          "full_name": "Agata Edyta Wesolowska",
+          "team_id": "",
+          "dynamic_87778": "Dec 15",
+          "dynamic_1298673": "A Team Captain  |  team.captain@rindus.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English, Polish",
+          "profile_picture_url": "https://images.personio.de/v1/images/2217/small/db023f97d2d3da8951212d2812b4738eab6472a4.jpg"
+        }
+      },
+      {
+        "id": 4107963,
+        "data": {
+          "first_name": "Antonio Jesus",
+          "last_name": "Morales Morales",
+          "email": "antonio.morales@rindus.de",
+          "office_id": "Málaga",
+          "department_id": "IT Douglas",
+          "position": "Scrum Master",
+          "full_name": "Antonio Jesus Morales Morales",
+          "team_id": "Douglas Sunny",
+          "dynamic_87778": "Mar 30",
+          "dynamic_1298673": "A Team Captain  |  team.captain@rindus.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://images.personio.de/v1/images/2217/small/992b4d177b295b83b6fc6d3c8e2ddd7d56e83fb8.jpg"
+        }
+      },
+      {
+        "id": 9794067,
+        "data": {
+          "first_name": "Aridane",
+          "last_name": "Martin Falcón",
+          "email": "aridane.m.falcon@rindus.de",
+          "office_id": "Málaga",
+          "department_id": "IT Douglas",
+          "position": "Frontend Developer",
+          "full_name": "Aridane Martin Falcón",
+          "team_id": "Douglas Yoda",
+          "dynamic_87778": "Aug 05",
+          "dynamic_1298673": "A Team Captain  |  team.captain@rindus.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://images.personio.de/v1/images/2217/small/d13a13c2dd8657a2722124849633f3a77aa691e9.jpg"
+        }
+      },
+      {
+        "id": 3287993,
+        "data": {
+          "first_name": "Cristina",
+          "last_name": "Aguilar Gutiérrez del Álamo",
+          "email": "cristina.aguilar@rindus.de",
+          "office_id": "Málaga",
+          "department_id": "People and Culture",
+          "position": "Senior IT Recruiter",
+          "full_name": "Cristina Aguilar Gutiérrez del Álamo",
+          "team_id": "Talent Attraction",
+          "dynamic_87778": "Nov 24",
+          "dynamic_1298673": "",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://images.personio.de/v1/images/2217/small/8e7b2e23fc5a06713fb805392aa2c581ba53314c.jpg"
+        }
+      },
+      {
+        "id": 775829,
+        "data": {
+          "first_name": "Dominikus",
+          "last_name": "Schweighart",
+          "email": "dominikus.schweighart@rindus.de",
+          "office_id": "München",
+          "department_id": "Management",
+          "position": "Managing Partner",
+          "full_name": "Dominikus Schweighart",
+          "team_id": "People & Culture",
+          "dynamic_87778": "Apr 29",
+          "dynamic_1298673": "",
+          "dynamic_1300584": "German, English, Italian",
+          "profile_picture_url": "https://images.personio.de/v1/images/2217/small/2cb7270eae53e2b2a22244158956f4cf8da0abf8.jpg"
+        }
+      },
+      {
+        "id": 9886017,
+        "data": {
+          "first_name": "Pedro",
+          "last_name": "Domínguez Aguilera",
+          "email": "pedro.dominguez@rindus.de",
+          "office_id": "Málaga",
+          "department_id": "IT Douglas",
+          "position": "Frontend developer",
+          "full_name": "Pedro Domínguez Aguilera",
+          "team_id": "Douglas Yoda",
+          "dynamic_87778": "Oct 15",
+          "dynamic_1298673": "A Team Captain  |  team.captain@rindus.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://images.personio.de/v1/images/2217/small/6ae0728a103471fcf356ed3edddfbca22a249f8c.jpg"
+        }
+      },
+      {
+        "id": 1055919,
+        "data": {
+          "first_name": "Tiziana",
+          "last_name": "Bonanomi",
+          "email": "tiziana.bonanomi@rindus.de",
+          "office_id": "Málaga",
+          "department_id": "IT Auxmoney",
+          "position": "Scrum Master",
+          "full_name": "Tiziana Bonanomi",
+          "team_id": "",
+          "dynamic_87778": "Dec 21",
+          "dynamic_1298673": "A Team Captain  |  team.captain@rindus.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Italian, Spanish, English",
+          "profile_picture_url": "https://images.personio.de/v1/images/2217/small/280837fc79659c90d02cacd723dc8ccde169212e.png"
+        }
+      },
+      {
+        "id": 3531139,
+        "data": {
+          "first_name": "A Team",
+          "last_name": "Captain",
+          "email": "team.captain@rindus.de",
+          "office_id": "Málaga",
+          "department_id": "People and Culture",
+          "position": "Senior People Partner",
+          "full_name": "Team Captain",
+          "team_id": "A Team Captain",
+          "dynamic_87778": "Jan 22",
+          "dynamic_1298673": "",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/TC"
+        }
+      },
+      {
+        "id": 121947,
+        "data": {
+          "first_name": "Rolf",
+          "last_name": "Zipf",
+          "email": "rolf.zipf@rindus.de",
+          "office_id": "München",
+          "department_id": "Management",
+          "position": "Managing Partner",
+          "full_name": "Rolf Zipf",
+          "team_id": "People & Culture",
+          "dynamic_87778": "Dec 23",
+          "dynamic_1298673": "",
+          "dynamic_1300584": "German, English, Spanish",
+          "profile_picture_url": "https://images.personio.de/v1/images/2217/small/029f303bf6975e5b28a8c15fca34c255038c9d0a.png"
+        }
+      }
+    ]
   }
-]
+}
