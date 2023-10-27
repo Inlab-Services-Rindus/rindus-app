@@ -22,7 +22,9 @@ export const getCommonConfig = (
     maxAge: 86400000,
   },
   app: {
+    domain: processVariables.DOMAIN || 'localhost',
     port: parseNumber(processVariables.PORT) || 3000,
+    url: processVariables.URL,
     google: {
       clientId:
         '794492959607-21m9v38tca8f0i957p9bk67li2g7nt9b.apps.googleusercontent.com',

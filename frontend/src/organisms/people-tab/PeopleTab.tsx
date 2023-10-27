@@ -1,4 +1,3 @@
-import { config } from '@/config/config';
 import { Employee } from '@/model/Employee';
 import Tab from '@/molecules/tab/Tab';
 import AvatarTile from '@/organisms/avatar-tile/AvatarTile';
@@ -31,7 +30,7 @@ export function PeopleTab({
         <AvatarTile
           onClick={handleClick}
           key={index}
-          profilePictureUrl={`${config.backendUrl}${employee.profilePictureUrl}`}
+          profilePictureUrl={employee.profilePictureUrl}
           firstName={employee.firstName}
           isBirthday={employee.isBirthday}
         />
