@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
 import SearchBox from '@/atoms/search-box/SearchBox';
+import { config } from '@/config/config';
 import useFetch from '@/hooks/fetch/useFetch';
 import useToast from '@/hooks/toast/useToast';
-import { Employee } from '@/model/Employee';
-import UserCard from '@/organisms/user-card/UserCard';
+import { Result } from '@/model/Result';
+import SearchResults from '@/organisms/search-results/SearchResults';
 
 import { useDebounce } from 'use-debounce';
 
@@ -15,17 +16,17 @@ export function Search() {
 
   const { showToastError } = useToast();
 
-  const shouldFetchData = !!debouncedQuery;
-
-  const { data: people } = useFetch<Employee[]>({
+  const { data: people } = useFetch<Result[]>({
     onErrorCallback: () => {
-      shouldFetchData
-        ? showToastError('An error occurred while processing your request.')
-        : '';
+      showToastError('An error occurred while processing your request.');
     },
-    url: shouldFetchData
-      ? `https://rickandmortyapi.com/api/character/?name=${query}`
-      : '',
+    options: {
+      // headers: {
+      //   'X-Mock-Birthdays': 'true',
+      // },
+      credentials: 'include',
+    },
+    url: `${config.backendUrl}/search?query=${query}`,
     deps: debouncedQuery,
   });
 
@@ -35,24 +36,10 @@ export function Search() {
     setQuery(newValue);
   };
 
-  const handleClick = () => {};
-
   return (
     <>
-      <SearchBox
-        inputHandler={handleInput}
-        inputValue={inputValue}
-        clickHandler={handleClick}
-      />
-      {(people as any)?.results.map(
-        (person: { name: string | number | boolean | null | undefined }) => (
-          <UserCard
-            key={person.name}
-            profilePictureUrl={person.image}
-            firstName={person.name}
-          />
-        ),
-      )}
+      <SearchBox inputHandler={handleInput} inputValue={inputValue} />
+      <SearchResults results={people} />
     </>
   );
 }

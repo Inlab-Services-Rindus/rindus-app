@@ -4,7 +4,7 @@ import '@/organisms/avatar/Avatar.scss';
 
 interface AvatarProps {
   profilePictureUrl: string;
-  firstName: string;
+  firstName?: string;
   isBirthday?: boolean;
   isCaptain?: boolean;
   className?: string;

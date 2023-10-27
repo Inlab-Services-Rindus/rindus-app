@@ -3,12 +3,11 @@ import '@/atoms/search-box/SearchBox.scss';
 interface Props {
   inputHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
   inputValue: string;
-  clickHandler: (event: React.MouseEvent<HTMLInputElement>) => void;
+  clickHandler?: (event: React.MouseEvent<HTMLInputElement>) => void;
 }
 
 export default function SearchBox({
   inputHandler,
-  clickHandler,
   inputValue,
 }: Props): JSX.Element {
   return (
@@ -19,7 +18,6 @@ export default function SearchBox({
         className="searchbox__input"
         value={inputValue}
         onChange={inputHandler}
-        onClick={clickHandler}
       ></input>
       <svg
         width="20"
