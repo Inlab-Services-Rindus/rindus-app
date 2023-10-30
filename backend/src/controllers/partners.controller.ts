@@ -1,16 +1,15 @@
+import { PartnerRepository } from '@/repository/partner.repository';
 import { Request, Response } from 'express';
 
-import { PartnerPrograms } from '@/programs/partner.programs';
-
 export class PartnersController {
-  private readonly partnerPrograms: PartnerPrograms;
+  private readonly partnerRepository: PartnerRepository;
 
-  constructor(partnerPrograms: PartnerPrograms) {
-    this.partnerPrograms = partnerPrograms;
+  constructor(partnerRepository: PartnerRepository) {
+    this.partnerRepository = partnerRepository;
   }
 
   public async index(_request: Request, response: Response) {
-    const partners = await this.partnerPrograms.index();
+    const partners = await this.partnerRepository.all();
 
     return response.send(partners);
   }

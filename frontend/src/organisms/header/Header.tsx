@@ -5,7 +5,6 @@ import Back from '@/atoms/buttons/back/Back';
 import LogoutButton from '@/atoms/buttons/logout/LogoutButton';
 import Mag from '@/atoms/buttons/mag/Mag';
 import RindusLogo from '@/atoms/buttons/rindus-logo/RindusLogo';
-import { config } from '@/config/config';
 import { SVGColorGreen, SVGColorWhite } from '@/constants/svgColor';
 import { AuthContext } from '@/context/auth/Auth';
 import '@/organisms/header/Header.scss';
@@ -78,10 +77,7 @@ export function Header() {
           className="button__logo"
         >
           <img
-            src={
-              userProfileData &&
-              `${config.backendUrl}${userProfileData.profilePictureUrl}`
-            }
+            src={userProfileData && `${userProfileData.profilePictureUrl}`}
           />
         </button>
       </div>

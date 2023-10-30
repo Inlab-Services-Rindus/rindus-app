@@ -1,7 +1,8 @@
-import { User } from '@/models/business/User';
+import { LoggedInUser, User, WithInfo } from '@/models/business/User';
 
 export interface UserRepository {
-  findUserByEmail: (_email: string) => Promise<User | undefined>;
-  findUserById: (_id: string) => Promise<User | undefined>;
-  all: () => Promise<User[]>;
+  all(): Promise<User[]>;
+  findUserByEmail(_email: string): Promise<LoggedInUser | undefined>;
+  findUserById(_id: string): Promise<LoggedInUser | undefined>;
+  findUserWithInfoById(_id: string): Promise<(User & WithInfo) | undefined>;
 }

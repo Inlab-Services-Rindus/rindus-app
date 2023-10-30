@@ -4,9 +4,10 @@ import '@/organisms/avatar/Avatar.scss';
 
 interface AvatarProps {
   profilePictureUrl: string;
-  firstName: string;
+  firstName?: string;
   isBirthday?: boolean;
   isCaptain?: boolean;
+  className?: string;
 }
 
 export function Avatar({
@@ -14,11 +15,12 @@ export function Avatar({
   isBirthday,
   isCaptain,
   profilePictureUrl,
+  className = 'avatar',
 }: AvatarProps): JSX.Element {
   function renderBadge() {
     if (isBirthday) {
       return (
-        <div className="avatar__badge">
+        <div className={`${className}-picture__badge`}>
           <BirthdayCake />
         </div>
       );
@@ -26,7 +28,7 @@ export function Avatar({
 
     if (isCaptain) {
       return (
-        <div className="avatar__badge">
+        <div className={`${className}-picture__badge`}>
           <CaptainHat />
         </div>
       );
@@ -34,9 +36,9 @@ export function Avatar({
   }
 
   return (
-    <div className="avatar">
+    <div className={`${className}-picture`}>
       <img
-        className="avatar__img"
+        className={`${className}-picture__img`}
         src={profilePictureUrl}
         alt={`${firstName}'s profile`}
       />

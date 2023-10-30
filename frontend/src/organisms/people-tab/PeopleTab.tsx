@@ -1,8 +1,7 @@
-import { config } from '@/config/config';
 import { Employee } from '@/model/Employee';
 import Tab from '@/molecules/tab/Tab';
+import AvatarTile from '@/organisms/avatar-tile/AvatarTile';
 import '@/organisms/people-tab/PeopleTab.scss';
-import UserCard from '@/organisms/user-card/UserCard';
 
 interface PeopleTabProps {
   people?: Employee[];
@@ -28,10 +27,10 @@ export function PeopleTab({
       shouldRefresh={!isPeopleLoading && !people?.length}
     >
       {people?.map((employee, index) => (
-        <UserCard
+        <AvatarTile
           onClick={handleClick}
           key={index}
-          profilePictureUrl={`${config.backendUrl}${employee.profilePictureUrl}`}
+          profilePictureUrl={employee.profilePictureUrl}
           firstName={employee.firstName}
           isBirthday={employee.isBirthday}
         />

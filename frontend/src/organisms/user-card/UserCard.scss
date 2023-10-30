@@ -1,27 +1,38 @@
 @import '@/assets/scss/_fonts.scss';
+@import '@/assets/scss/_colors.scss';
 
 .user-card {
   display: flex;
-  flex-direction: column;
+  padding: 12px 16px;
   align-items: center;
-  margin: 0;
-  padding: 0;
+  gap: 20px;
+  justify-content: flex-start;
+  margin: 0px 16px;
+  border-bottom: 1px solid $rindus-light-gray;
 
-  &__name {
+  &__info {
     color: var(--Gray-Dark, #303140);
-    text-align: center;
+    text-align: flex-start;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__info-name {
+    @include text($font-poppins-regular, 16px, 600, 22px);
+  }
+
+  &__info-position {
     @include text($font-poppins-regular, 14px, 400, 16px);
-    padding-bottom: 12px;
   }
 }
 
-@media (min-width: 450px) {
-  .user-card {
-    width: 250px;
-    height: 250px;
+.user-card-picture {
+  display: flex;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
 
-    &__name {
-      font-size: 20px;
-    }
+  &__img {
+    border-radius: 104px;
   }
 }

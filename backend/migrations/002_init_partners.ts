@@ -4,7 +4,7 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('partners', function (table) {
     table.increments();
     table.string('name').notNullable();
-    table.string('picture_url');
+    table.string('logo_url');
     table.timestamps(false, true);
   });
 }

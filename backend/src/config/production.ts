@@ -1,5 +1,6 @@
 import { Config } from '@/config/config.type';
 
-export const productionConfig: Partial<Config> = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const productionConfig = (_commonConfig: Config): Partial<Config> => ({
   logLevel: 'info',
-};
+});
