@@ -1,5 +1,27 @@
 .partners-tab {
   &__container {
+    display: flex;
+    padding: 0px 16px;
+    justify-content: space-evenly;
+    gap: 8px;
+    flex-wrap: wrap;
     margin-top: 23px;
+  }
+}
+.partner-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.partner-image {
+  width: 250px;
+  height: 250px;
+  border-radius: 12px;
+  overflow: hidden;
+
+  @media (max-width: 540px) {
+    width: 104px;
+    height: 104px;
   }
 }
