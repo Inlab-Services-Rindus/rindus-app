@@ -19,7 +19,7 @@ export function PartnersTab({ partners, isPartnersLoading }: PartnersTabProps) {
           <li key={index}>
             <ul>
               <img
-                src={partner.pictureUrl}
+                src={partner.logoUrl}
                 style={{ height: '50px', width: '50px' }}
               ></img>
               <span>{` ${partner.name}`}</span>

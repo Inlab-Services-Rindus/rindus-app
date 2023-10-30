@@ -1,65 +1,61 @@
-import { User } from '@/models/api/User';
-import { User as BusinessUser } from '@/models/business/User';
+import { IndexUser, ShowUser } from '@/models/api/User';
+import {
+  ShowUserConverter,
+  UserConverter,
+} from '@/models/api/converters/User.converter';
+import { User } from '@/models/business/User';
+import { LanguageRepository } from '@/repository/language.repository';
 import { UserRepository } from '@/repository/user.repository';
 
 export class UserPrograms {
-  private readonly userRepository;
+  private readonly userRepository: UserRepository;
 
-  constructor(userRepository: UserRepository) {
+  private readonly languageRepository: LanguageRepository;
+
+  private readonly userConverter: UserConverter;
+
+  private readonly showUserConverter: ShowUserConverter;
+
+  constructor(
+    userRepository: UserRepository,
+    languageRepository: LanguageRepository,
+  ) {
     this.userRepository = userRepository;
+    this.languageRepository = languageRepository;
+    this.userConverter = new UserConverter();
+    this.showUserConverter = new ShowUserConverter();
   }
 
-  public async index(mockBirthdays: boolean): Promise<User[]> {
+  public async index(mockBirthdays: boolean): Promise<IndexUser[]> {
     const users = await this.userRepository.all();
 
-    const today = new Date();
-    return users.map((businessUser, index) => {
+    return this.mockIsBirthday(users, mockBirthdays).map((user) =>
+      this.userConverter.convert(user),
+    );
+  }
+
+  private mockIsBirthday(users: User[], mockBirthdays: boolean): User[] {
+    return users.map((user, index) => {
       let mockBirthday = false;
       if (mockBirthdays && index < 3) {
         mockBirthday = true;
       }
-      return this.mapApiUser(businessUser, today, mockBirthday);
+
+      return {
+        ...user,
+        isBirthday: mockBirthday || user.isBirthday,
+      };
     });
   }
 
-  private mapApiUser(
-    businessUser: BusinessUser,
-    today: Date,
-    mockBirthday: boolean,
-  ): User {
-    return {
-      firstName: businessUser.firstName,
-      lastName: businessUser.lastName,
-      email: businessUser.email,
-      profilePictureUrl: businessUser.profilePictureUrl,
-      isBirthday: mockBirthday || this.isBirthday(businessUser, today),
-    };
-  }
+  public async show(userId: string): Promise<ShowUser | undefined> {
+    const [maybeUser, languages] = await Promise.all([
+      this.userRepository.findUserWithInfoById(userId),
+      this.languageRepository.userLanguagesById(userId),
+    ]);
 
-  private isBirthday(businessUser: BusinessUser, today: Date): boolean {
-    if (!businessUser.birthday) {
-      return false;
-    }
-
-    const months: { [x: string]: number } = {
-      Jan: 1,
-      Feb: 2,
-      Mar: 3,
-      Apr: 4,
-      May: 5,
-      Jun: 6,
-      Jul: 7,
-      Aug: 8,
-      Sep: 9,
-      Oct: 10,
-      Nov: 11,
-      Dec: 12,
-    };
-
-    const [monthName, dayString] = businessUser.birthday.split(' ');
-    const birthdayMonth = months[monthName];
-    const birthdayDay = Number(dayString);
-
-    return birthdayDay === today.getDay() && birthdayMonth === today.getMonth();
+    return maybeUser
+      ? this.showUserConverter.convert([maybeUser, languages])
+      : undefined;
   }
 }

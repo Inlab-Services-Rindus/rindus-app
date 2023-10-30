@@ -16,9 +16,6 @@ interface AuthContextType {
 
 interface userProfileData {
   id: string;
-  firstName: string;
-  lastName?: string;
-  email: string;
   profilePictureUrl?: string;
 }
 
@@ -39,9 +36,6 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
   const [userProfileData, setUserProfileData] = useState<userProfileData>({
     id: '',
-    firstName: '',
-    lastName: '',
-    email: '',
     profilePictureUrl: '',
   });
 

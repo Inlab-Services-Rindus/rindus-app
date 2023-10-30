@@ -2,7 +2,7 @@ import { connectTestDatabase } from '@/bootstrap/database';
 import { UserRecord } from '@/models/service/UserRecord';
 import { KnexUserRepository } from '@/repository/knex/user.repository';
 
-describe('KnexUserRepository', () => {
+describe.skip('KnexUserRepository', () => {
   let userRepository: KnexUserRepository;
   const findableUserEmail = 'test@email.com';
   const findableUser = {

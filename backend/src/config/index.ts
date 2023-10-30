@@ -11,20 +11,23 @@ function getConfig(): Config {
 
   dotenvConfig();
 
+  const commonConfig = getCommonConfig(
+    process.env as unknown as ProcessVariables,
+  );
   let envConfig: Partial<Config>;
   switch (environment) {
     case 'development':
-      envConfig = developmentConfig;
+      envConfig = developmentConfig(commonConfig);
       break;
     case 'production':
-      envConfig = productionConfig;
+      envConfig = productionConfig(commonConfig);
       break;
     default:
-      envConfig = localConfig;
+      envConfig = localConfig(commonConfig);
   }
 
   return {
-    ...getCommonConfig(process.env as unknown as ProcessVariables),
+    ...commonConfig,
     ...envConfig,
   };
 }
