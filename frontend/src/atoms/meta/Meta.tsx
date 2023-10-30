@@ -1,41 +1,34 @@
 import { Helmet } from 'react-helmet-async';
 
+import { metaConstants } from '@/constants/meta';
+
 export function Meta() {
   return (
     <Helmet>
-      <title>Rindus App</title>
-      <meta
-        name="description"
-        content="Join our vibrant community and connect with fellow 'rinders.' Explore talents, languages, and tech together, fostering bonds and sparking innovation!"
-      />
+      <title>{metaConstants.TITLE}</title>
+      <meta name="description" content={metaConstants.DESCRIPTION} />
 
       {/* Meta tags for Meta, Linkedin, WhatsApp */}
-      <meta property="og:title" content="Rindus App" />
-      <meta
-        property="og:description"
-        content="Join our vibrant community and connect with fellow 'rinders.' Explore talents, languages, and tech together, fostering bonds and sparking innovation!"
-      />
+      <meta property="og:title" content={metaConstants.TITLE} />
+      <meta property="og:description" content={metaConstants.DESCRIPTION} />
       <meta
         property="og:image"
         content="%PUBLIC_URL%/images/meta-rindus-app.webp"
       />
-      <meta property="og:url" content="URL of your webpage" />
+      <meta property="og:url" content={metaConstants.URL} />
       <meta property="og:image" content="" />
 
       {/* Tags for Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@_rindus_" />
-      <meta name="twitter:title" content="Rindus App" />
-      <meta
-        name="twitter:description"
-        content="Join our vibrant community and connect with fellow 'rinders.' Explore talents, languages, and tech together, fostering bonds and sparking innovation!"
-      />
+      <meta name="twitter:site" content={metaConstants.TWITTER_PROFILE} />
+      <meta name="twitter:title" content={metaConstants.TITLE} />
+      <meta name="twitter:description" content={metaConstants.DESCRIPTION} />
       <meta
         name="twitter:image"
         content="%PUBLIC_URL%/images/meta-rindus-app.webp"
       />
 
-      <link rel="canonical" href="www.app.rindus.de" />
+      <link rel="canonical" href={metaConstants.URL} />
     </Helmet>
   );
 }
