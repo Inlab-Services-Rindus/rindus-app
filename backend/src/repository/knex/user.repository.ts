@@ -14,6 +14,7 @@ import {
   UserWithInfoConverter,
 } from '@/models/service/converters/UserRecord.converter';
 import { toRecordId } from '@/helpers/RecordConverterHelper';
+import { sortByBirthday } from '@/helpers/WithBirthdayHelper';
 
 export class KnexUserRepository implements UserRepository {
   private readonly knex: Knex;
@@ -32,7 +33,12 @@ export class KnexUserRepository implements UserRepository {
   async all(): Promise<User[]> {
     const userRecords = await this.knex('users');
 
-    return userRecords.map((record) => this.userConverter.convert(record));
+    const users = userRecords.map((record) =>
+      this.userConverter.convert(record),
+    );
+    const sortedUsers = sortByBirthday(users);
+
+    return sortedUsers;
   }
 
   async findUserByEmail(email: string): Promise<LoggedInUser | undefined> {

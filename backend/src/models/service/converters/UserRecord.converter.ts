@@ -1,5 +1,5 @@
 import { config } from '@/config';
-import { isBirthday } from '@/helpers/WithBirthdayHelper';
+import { isBirthday, parseBirthday } from '@/helpers/WithBirthdayHelper';
 import { Converter } from '@/models/Converter';
 import { LoggedInUser, User, WithInfo } from '@/models/business/User';
 import {
@@ -57,7 +57,7 @@ export class UserConverter implements Converter<UserRecord, User> {
       fullName,
       email: source.email,
       position: source.position,
-      birthday,
+      birthday: parseBirthday(birthday),
       isBirthday: isBirthday(birthday),
     };
   }

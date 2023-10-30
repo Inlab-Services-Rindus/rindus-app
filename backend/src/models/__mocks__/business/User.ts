@@ -7,6 +7,6 @@ export const mockUser: User = {
   fullName: 'Foo Bar Jones',
   email: 'foo-barjones@rindus.de',
   pictureUrl: '/avatars/v1/images/2217/large/foo-barjones.jpg',
-  birthday: 'Jan 1',
+  birthday: new Date(2023, 0, 1),
   isBirthday: false,
 };
