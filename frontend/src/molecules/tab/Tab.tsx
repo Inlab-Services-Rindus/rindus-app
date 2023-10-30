@@ -25,7 +25,6 @@ const Tab = ({
   }
 
   if (refresh && shouldRefresh) {
-    console.log('hi!!');
     return <Retry refresh={refresh} />;
   }
 
