@@ -25,3 +25,8 @@ export interface UserResult extends LoggedInUser {
   isBirthday: boolean;
   position?: string;
 }
+
+export interface PaginatedIndex {
+  users: IndexUser[];
+  totalPages: number;
+}

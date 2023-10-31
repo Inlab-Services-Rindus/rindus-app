@@ -9,6 +9,7 @@ import {
   ShowUser,
   User as ApiUser,
   UserResult,
+  PaginatedIndex,
 } from '@/models/api/User';
 import { fromRecordId } from '@/helpers/RecordConverterHelper';
 import { Language } from '@/models/business/Language';
@@ -80,6 +81,25 @@ export class UserResultConverter
       fullName: source.fullName,
       position: source.position,
       isBirthday: source.isBirthday,
+    };
+  }
+}
+
+export class PaginatedIndexConverter
+  implements Converter<[BusinessUser[], number], PaginatedIndex>
+{
+  private readonly userConverter: UserConverter;
+
+  constructor() {
+    this.userConverter = new UserConverter();
+  }
+
+  convert(source: [BusinessUser[], number]): PaginatedIndex {
+    const [users, totalPages] = source;
+
+    return {
+      users: users.map((user) => this.userConverter.convert(user)),
+      totalPages,
     };
   }
 }

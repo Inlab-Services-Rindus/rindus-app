@@ -22,17 +22,38 @@ export class KnexUserRepository implements UserRepository {
   private readonly loggedInConverter: LoggedInUserConverter;
   private readonly userWithInfoConverter: UserWithInfoConverter;
 
+  private static readonly PAGE_SIZE = 18;
+
   constructor(knex: Knex) {
     this.knex = knex;
     this.userConverter = new UserConverter();
     this.loggedInConverter = new LoggedInUserConverter();
     this.userWithInfoConverter = new UserWithInfoConverter();
   }
-
   async all(): Promise<User[]> {
     const userRecords = await this.knex('users');
 
     return userRecords.map((record) => this.userConverter.convert(record));
+  }
+
+  async page(page: number): Promise<User[]> {
+    const userRecords = await this.knex('users')
+      .offset((page - 1) * KnexUserRepository.PAGE_SIZE)
+      .limit(KnexUserRepository.PAGE_SIZE);
+
+    return userRecords.map((record) => this.userConverter.convert(record));
+  }
+
+  async totalPages(): Promise<number> {
+    const maybeRecord = await this.knex('users')
+      .count<Record<string, number>>()
+      .first();
+
+    if (maybeRecord) {
+      return Math.ceil(maybeRecord.count / KnexUserRepository.PAGE_SIZE);
+    }
+
+    return 0;
   }
 
   async findUserByEmail(email: string): Promise<LoggedInUser | undefined> {

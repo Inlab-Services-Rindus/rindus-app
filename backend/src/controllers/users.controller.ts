@@ -14,9 +14,21 @@ export class UsersController {
   public async index(request: Request, response: Response) {
     const mockBirthdays =
       request.headers[UsersController.MOCK_BIRTHDAYS_HTTP_HEADER.toLowerCase()];
-    const users = await this.userPrograms.index(!!mockBirthdays);
+    const page = this.parsePage(request);
+
+    const users = await this.userPrograms.index(!!mockBirthdays, page);
 
     return response.send(users);
+  }
+
+  private parsePage(request: Request) {
+    const queryStringPage = request.query.page;
+
+    if (typeof queryStringPage === 'string') {
+      return Number(queryStringPage);
+    } else {
+      return 1;
+    }
   }
 
   public async show(request: Request, response: Response) {

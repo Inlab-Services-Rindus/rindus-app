@@ -1,5 +1,6 @@
-import { IndexUser, ShowUser } from '@/models/api/User';
+import { IndexUser, PaginatedIndex, ShowUser } from '@/models/api/User';
 import {
+  PaginatedIndexConverter,
   ShowUserConverter,
   UserConverter,
 } from '@/models/api/converters/User.converter';
@@ -14,6 +15,8 @@ export class UserPrograms {
 
   private readonly userConverter: UserConverter;
 
+  private readonly paginatedIndexConverter: PaginatedIndexConverter;
+
   private readonly showUserConverter: ShowUserConverter;
 
   constructor(
@@ -24,17 +27,33 @@ export class UserPrograms {
     this.languageRepository = languageRepository;
     this.userConverter = new UserConverter();
     this.showUserConverter = new ShowUserConverter();
+    this.paginatedIndexConverter = new PaginatedIndexConverter();
   }
 
-  public async index(mockBirthdays: boolean): Promise<IndexUser[]> {
-    const users = await this.userRepository.all();
+  public async index(
+    mockBirthdays: boolean,
+    page: number,
+  ): Promise<PaginatedIndex> {
+    const [users, totalPages] = await Promise.all([
+      this.userRepository.page(page),
+      this.userRepository.totalPages(),
+    ]);
 
-    return this.mockIsBirthday(users, mockBirthdays).map((user) =>
-      this.userConverter.convert(user),
-    );
+    return this.paginatedIndexConverter.convert([
+      this.mockIsBirthday(users, mockBirthdays, page),
+      totalPages,
+    ]);
   }
 
-  private mockIsBirthday(users: User[], mockBirthdays: boolean): User[] {
+  private mockIsBirthday(
+    users: User[],
+    mockBirthdays: boolean,
+    page: number,
+  ): User[] {
+    if (page > 1) {
+      return users;
+    }
+
     return users.map((user, index) => {
       let mockBirthday = false;
       if (mockBirthdays && index < 3) {
