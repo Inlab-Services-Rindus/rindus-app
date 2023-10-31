@@ -14,19 +14,11 @@ export function PartnersTab({ partners, isPartnersLoading }: PartnersTabProps) {
       className="partners-tab__container"
       dataTestId="partners-tab"
     >
-      <ul>
-        {partners?.map((partner, index) => (
-          <li key={index}>
-            <ul>
-              <img
-                src={partner.logoUrl}
-                style={{ height: '50px', width: '50px' }}
-              ></img>
-              <span>{` ${partner.name}`}</span>
-            </ul>
-          </li>
-        ))}
-      </ul>
+      {partners?.map((partner, index) => (
+        <div className="partner-card" key={index}>
+          <img className="partner-image" src={partner.logoUrl}></img>
+        </div>
+      ))}
     </Tab>
   );
 }
