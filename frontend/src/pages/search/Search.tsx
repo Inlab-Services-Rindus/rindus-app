@@ -1,11 +1,13 @@
 import { useState } from 'react';
 
 import SearchBox from '@/atoms/search-box/SearchBox';
+import TagResult from '@/atoms/tag-result/TagResult';
 import { config } from '@/config/config';
 import useFetch from '@/hooks/fetch/useFetch';
 import useToast from '@/hooks/toast/useToast';
 import { Result } from '@/model/Result';
 import SearchResults from '@/organisms/search-results/SearchResults';
+import '@/pages/search/Search.scss';
 
 import { useDebounce } from 'use-debounce';
 
@@ -36,9 +38,20 @@ export function Search() {
     setQuery(newValue);
   };
 
+  const handleTagClick = (tagName: string) => {
+    console.log('estoy aqui', tagName);
+    setQuery(tagName);
+  };
+
   return (
     <>
-      <SearchBox inputHandler={handleInput} inputValue={inputValue} />
+      <div className="search-container">
+        <SearchBox inputHandler={handleInput} inputValue={inputValue} />
+      </div>
+      <TagResult
+        tagName="scrum"
+        handleClick={(tagName) => handleTagClick(tagName)}
+      />
       <SearchResults results={people} />
     </>
   );
