@@ -1,6 +1,6 @@
 import { Config } from '@/config/config.type';
 
-export const localConfig = (commonConfig: Config): Partial<Config> => ({
+export const getLocalConfig = (commonConfig: Config): Partial<Config> => ({
   app: {
     ...commonConfig.app,
     url:

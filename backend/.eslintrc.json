@@ -18,6 +18,7 @@
     ],
     "rules": {
         "no-unused-vars": ["error", { "args": "all", "argsIgnorePattern": "^_" }],
+        "@typescript-eslint/no-unused-vars": ["error", { "args": "all", "argsIgnorePattern": "^_" }],
         "no-console": "warn"
     }
 }

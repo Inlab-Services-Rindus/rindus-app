@@ -1,9 +1,9 @@
 import { Knex } from 'knex';
 
 import { parsePersonioJSONFile } from '@seeds/helper';
-import { PartnerRecord } from '@/models/service/PartnerRecord';
+import { PartnerRecord } from '@/models/service/database/PartnerRecord';
 import { Insertable, distinctRecords } from '@/helpers/RecordConverterHelper';
-import { PersonioEmployeePartnerConverter } from '@/models/service/converters/seeds/Personio.converter';
+import { PersonioEmployeePartnerConverter } from '@/converters/service/seeds/Personio.converter';
 
 export async function seed(knex: Knex): Promise<void> {
   await knex('partners').del();

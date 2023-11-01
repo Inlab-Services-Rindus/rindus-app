@@ -1,8 +1,6 @@
-import { Enumerable } from '@/models/service/Record';
+import { Enumerable } from '@/models/service/database/Record';
 
 export type Insertable<T> = Omit<T, 'id'>;
-
-export const fromRecordId = (id: number): string => id.toFixed();
 
 export const toRecordId = (id: string): number | undefined => {
   const number = Number(id);

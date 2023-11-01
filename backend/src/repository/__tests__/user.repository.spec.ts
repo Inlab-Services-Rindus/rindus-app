@@ -1,5 +1,5 @@
 import { connectTestDatabase } from '@/bootstrap/database';
-import { UserRecord } from '@/models/service/UserRecord';
+import { UserRecord } from '@/models/service/database/UserRecord';
 import { KnexUserRepository } from '@/repository/knex/user.repository';
 
 describe.skip('KnexUserRepository', () => {

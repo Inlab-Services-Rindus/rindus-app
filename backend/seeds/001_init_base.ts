@@ -1,9 +1,9 @@
 import { Knex } from 'knex';
 
 import { parsePersonioJSONFile } from '@seeds/helper';
-import { OfficeRecord } from '@/models/service/OfficeRecord';
+import { OfficeRecord } from '@/models/service/database/OfficeRecord';
 import { distinctRecords } from '@/helpers/RecordConverterHelper';
-import { EmployeeLanguagesConverter } from '@/models/service/converters/seeds/Personio.converter';
+import { EmployeeLanguagesConverter } from '@/converters/service/seeds/Personio.converter';
 
 export async function seed(knex: Knex): Promise<void> {
   await knex('languages').del();

@@ -2,8 +2,8 @@ import { Knex } from 'knex';
 
 import { Partner } from '@/models/business/Partner';
 import { PartnerRepository } from '@/repository/partner.repository';
-import { PartnerRecord } from '@/models/service/PartnerRecord';
-import { PartnerRecordConverter } from '@/models/service/converters/PartnerRecord.converter';
+import { PartnerRecord } from '@/models/service/database/PartnerRecord';
+import { PartnerRecordConverter } from '@/converters/service/PartnerRecord.converter';
 
 export class KnexPartnerRepository implements PartnerRepository {
   private readonly knex: Knex;

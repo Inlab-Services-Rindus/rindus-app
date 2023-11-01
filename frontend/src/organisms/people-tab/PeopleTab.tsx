@@ -8,7 +8,7 @@ import AvatarTile from '@/organisms/avatar-tile/AvatarTile';
 import '@/organisms/people-tab/PeopleTab.scss';
 
 interface PaginatedEmployees {
-  users: Employee[];
+  data: Employee[];
   totalPages: number;
 }
 
@@ -36,7 +36,7 @@ export function PeopleTab() {
     fetch(`${config.backendUrl}/users?page=${page}`, { credentials: 'include' })
       .then((response) => response.json() as Promise<PaginatedEmployees>)
       .then((pagination) => {
-        setPeople([...people, ...pagination.users]);
+        setPeople([...people, ...pagination.data]);
         if (page === 1) {
           setTotalPages(pagination.totalPages);
         }
