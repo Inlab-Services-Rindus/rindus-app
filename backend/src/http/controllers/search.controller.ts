@@ -1,38 +1,58 @@
+import { SuggestionsConverter } from '@/converters/api/Search.converter';
 import { UserResultConverter } from '@/converters/api/User.converter';
-import { UserResult } from '@/models/api/search/Search';
-import { UserSearch } from '@/services/search';
+import { SearchPrograms } from '@/programs/search.programs';
 import { Request, Response } from 'express';
 
 export class SearchController {
-  private readonly userSearchService: UserSearch;
+  private readonly searchPrograms: SearchPrograms;
 
   private readonly userResultConverter: UserResultConverter;
 
-  constructor(userSearchService: UserSearch) {
-    this.userSearchService = userSearchService;
+  private readonly suggestionsConverter: SuggestionsConverter;
+
+  constructor(searchPrograms: SearchPrograms) {
+    this.searchPrograms = searchPrograms;
     this.userResultConverter = new UserResultConverter();
+    this.suggestionsConverter = new SuggestionsConverter();
   }
 
   public async suggestions(request: Request, response: Response) {
-    const results = (await this.doSearch(request)).slice(0, 5);
+    const maybeQuery = this.parseQuery(request);
 
-    return response.send(results);
+    if (maybeQuery) {
+      const results = await this.searchPrograms.suggestions(maybeQuery);
+
+      const suggestions = this.suggestionsConverter.convert(results);
+
+      return response.send(suggestions);
+    }
+
+    return response.send([]);
   }
 
   public async search(request: Request, response: Response) {
-    const results = await this.doSearch(request);
+    const maybeQuery = this.parseQuery(request);
 
-    return response.send(results);
-  }
+    if (maybeQuery) {
+      const users = await this.searchPrograms.search(maybeQuery);
 
-  private async doSearch(request: Request): Promise<UserResult[]> {
-    const query = request.query.query;
-    if (typeof query !== 'string') {
-      return Promise.resolve([]);
+      const results = users.map((user) =>
+        this.userResultConverter.convert(user),
+      );
+
+      return response.send(results);
     }
 
-    const results = await this.userSearchService.search(query);
+    return response.send([]);
+  }
 
-    return results.map((user) => this.userResultConverter.convert(user));
+  private parseQuery(request: Request) {
+    const query = request.query.query;
+
+    if (typeof query !== 'string') {
+      return undefined;
+    }
+
+    return query;
   }
 }

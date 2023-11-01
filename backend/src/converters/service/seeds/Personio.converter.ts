@@ -35,7 +35,16 @@ export class EmployeeLanguagesConverter
   implements Converter<PersonioEmployee, string[]>
 {
   convert(source: PersonioEmployee): string[] {
-    return source.dynamic_1300584.split(',').map((lang) => lang.trim());
+    const rawLanguages = source.dynamic_1300584;
+    const sanitisedLanguages = rawLanguages
+      .toLowerCase()
+      .replace(/,/g, ' ')
+      .replace(/\./g, ' ');
+
+    return sanitisedLanguages
+      .split(/[ ]+/g)
+      .map((lang) => lang.trim())
+      .filter((lang) => !isEmpty(lang));
   }
 }
 
