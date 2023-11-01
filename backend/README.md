@@ -7,7 +7,7 @@ API for Rindus App
 - Docker desktop
 - Node ^18.XX.X (& npm)
 
-## Start backend alone
+## Start application
 
 ```shell
 $ docker compose --env-file .env.docker up  -d

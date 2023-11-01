@@ -1,3 +1,5 @@
+import { HelmetProvider } from 'react-helmet-async';
+
 import App from '@/App';
 
 import { screen, render } from '@testing-library/react';
@@ -17,21 +19,33 @@ vi.mock('@/context/auth/Auth', async () => {
 });
 
 describe('App', () => {
-  it('should render loading', () => {
-    render(<App />);
+  test('renders App component with HelmetProvider', () => {
+    it('should render loading', () => {
+      render(<App />);
 
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
-  });
+      expect(screen.getByTestId('loader')).toBeInTheDocument();
+    });
 
-  it('should render Toast', () => {
-    const { container } = render(<App />);
+    it('should render HelmetProvider', () => {
+      const { container } = render(
+        <HelmetProvider>
+          <App />
+        </HelmetProvider>,
+      );
 
-    expect(container.querySelector('#toast-container')).toBeInTheDocument();
-  });
+      expect(container).toBeInTheDocument();
+    });
 
-  it('should render Header', () => {
-    render(<App />);
+    it('should render Toast', () => {
+      const { container } = render(<App />);
 
-    expect(screen.getByTestId('header-login')).toBeInTheDocument();
+      expect(container.querySelector('#toast-container')).toBeInTheDocument();
+    });
+
+    it('should render Header', () => {
+      render(<App />);
+
+      expect(screen.getByTestId('header-login')).toBeInTheDocument();
+    });
   });
 });

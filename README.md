@@ -8,6 +8,17 @@
 $ scripts/start.sh
 ```
 
+#### With real data
+
+By default the project will scaffold with specific data. If you want to start the application with the whole Persoio database:
+
+1. Get the JSON export of Personio (see [the following README](backend/seeds/README.md))
+2. Run again the same command:
+
+```shell
+$ scripts/start.sh
+```
+
 ### Backend only
 
 See `backend/README.md`
