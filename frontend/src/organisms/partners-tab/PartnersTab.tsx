@@ -1,13 +1,17 @@
+import { config } from '@/config/config';
+import useFetch from '@/hooks/fetch/useFetch';
 import { Partner } from '@/model/Partner';
 import Tab from '@/molecules/tab/Tab';
 import '@/organisms/partners-tab/PartnersTab.scss';
 
-interface PartnersTabProps {
-  partners?: Partner[];
-  isPartnersLoading: boolean;
-}
+export function PartnersTab() {
+  const { data: partners, isLoading: isPartnersLoading } = useFetch<Partner[]>({
+    options: {
+      credentials: 'include',
+    },
+    url: `${config.backendUrl}/partners`,
+  });
 
-export function PartnersTab({ partners, isPartnersLoading }: PartnersTabProps) {
   return (
     <Tab
       isLoading={isPartnersLoading}

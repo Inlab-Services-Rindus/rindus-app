@@ -43,7 +43,7 @@ export class SessionController {
 
   public async softLogin(request: Request, response: Response) {
     if (!request.cookies['connect.sid']) {
-      return response.sendStatus(400);
+      return response.sendStatus(204);
     }
 
     const maybeUserId = request.session?.userId;

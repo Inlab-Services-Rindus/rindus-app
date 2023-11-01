@@ -6,7 +6,7 @@ interface AvatarTileProps {
   isBirthday?: boolean;
   isCaptain?: boolean;
   profilePictureUrl: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export default function AvatarTile({
