@@ -7,7 +7,7 @@ interface UserCardProps {
   isCaptain?: boolean;
   profilePictureUrl: string;
   position: string;
-  onClick?: () => void;
+  handleClick: (query: string) => void;
 }
 
 export default function UserCard({
@@ -16,10 +16,10 @@ export default function UserCard({
   isCaptain,
   profilePictureUrl,
   position,
-  onClick,
+  handleClick,
 }: UserCardProps): JSX.Element {
   return (
-    <div onClick={onClick} className="user-card">
+    <div onClick={() => handleClick(fullName)} className="user-card">
       <div className="user-card__img">
         <Avatar
           profilePictureUrl={profilePictureUrl}

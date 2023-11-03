@@ -21,6 +21,7 @@
     width: 100%;
     text-indent: 38px;
     outline: none;
+    color: var(--Gray-Medium, #6e768d);
 
     input::placeholder {
       @include text($font-poppins-regular, 16px, 400, 22px);

@@ -1,13 +1,17 @@
 @import '@/assets/scss/_colors.scss';
 @import '@/assets/scss/_fonts.scss';
 
-.tag-result {
+.tag {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: baseline;
   padding: 12px 16px;
   margin: 0px 16px;
   border-bottom: 1px solid $rindus-light-gray;
+  @include text($font-poppins-regular, 12px, 400, 16px);
+  color: var(--Gray-Neutral, #a5a5aa);
+  gap: 16px;
 
   &__button {
     display: flex;
@@ -16,11 +20,10 @@
     justify-content: center;
     align-items: center;
     gap: 8px;
-    color: var(--Gray-Neutral, #a5a5aa);
     text-align: center;
-    @include text($font-poppins-regular, 12px, 400, 16px);
     font-style: normal;
     border-radius: 4px;
     border: 1px solid var(--Gray-Neutral, #a5a5aa);
+    color: var(--Gray-Neutral, #a5a5aa);
   }
 }
