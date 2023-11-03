@@ -13,7 +13,7 @@ export function Header() {
   const location = useLocation();
   const { isLoggedIn, userProfileData } = useContext(AuthContext);
 
-  const isSearchPage = location.pathname === '/search';
+  const isHomePage = location.pathname === '/';
   const isProfilePage = location.pathname === '/profile';
 
   const handleSearchNavigate = () => {
@@ -57,7 +57,7 @@ export function Header() {
 
   return (
     <header className="header__container--logged" data-testid="header-logged">
-      {!isSearchPage ? (
+      {isHomePage ? (
         <div className="search">
           <Search onClick={handleSearchNavigate} />
         </div>
