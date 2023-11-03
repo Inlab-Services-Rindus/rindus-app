@@ -37,24 +37,6 @@ export function Header() {
       </header>
     );
 
-  if (isProfilePage) {
-    return (
-      <header className="header__container--logged" data-testid="header-logged">
-        <div className="back">
-          <Back />
-        </div>
-
-        <div className="rindusLogo">
-          <RindusLogo onClick={handleLogo} />
-        </div>
-
-        <div className="logout">
-          <LogoutButton />
-        </div>
-      </header>
-    );
-  }
-
   return (
     <header className="header__container--logged" data-testid="header-logged">
       {isHomePage ? (
@@ -71,17 +53,23 @@ export function Header() {
         <RindusLogo onClick={handleLogo} />
       </div>
 
-      <div className="profile">
-        <button
-          onClick={handleProfileNavigate}
-          data-testid="profile"
-          className="profile__button"
-        >
-          <img
-            src={userProfileData && `${userProfileData.profilePictureUrl}`}
-          />
-        </button>
-      </div>
+      {isProfilePage ? (
+        <div className="logout">
+          <LogoutButton />
+        </div>
+      ) : (
+        <div className="profile">
+          <button
+            onClick={handleProfileNavigate}
+            data-testid="profile"
+            className="profile__button"
+          >
+            <img
+              src={userProfileData && `${userProfileData.profilePictureUrl}`}
+            />
+          </button>
+        </div>
+      )}
     </header>
   );
 }
