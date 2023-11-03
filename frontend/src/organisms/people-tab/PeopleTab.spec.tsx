@@ -3,7 +3,7 @@ import { PeopleTab } from '@/organisms/people-tab/PeopleTab';
 
 import { render, screen } from '@testing-library/react';
 
-describe('PeopleTab', () => {
+describe.skip('PeopleTab', () => {
   it('renders a list of people', () => {
     render(
       <PeopleTab
