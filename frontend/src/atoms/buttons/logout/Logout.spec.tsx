@@ -1,6 +1,6 @@
-import LogoutButton from '@/atoms/buttons/logout/LogoutButton';
-
 import { fireEvent, render, screen } from '@testing-library/react';
+
+import Logout from '@/atoms/buttons/logout/Logout';
 
 const logoutSpy = vi.fn();
 vi.mock('react', async () => {
@@ -11,20 +11,20 @@ vi.mock('react', async () => {
   };
 });
 
-describe('LogoutButton', () => {
+describe('Logout', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('should render succesfully', () => {
-    render(<LogoutButton />);
+    render(<Logout />);
     const buttonElement = screen.getByRole('button');
 
     expect(buttonElement).toBeInTheDocument();
   });
 
   it('should call logout when button is clicked', () => {
-    render(<LogoutButton />);
+    render(<Logout />);
 
     fireEvent.click(screen.getByRole('button'));
 

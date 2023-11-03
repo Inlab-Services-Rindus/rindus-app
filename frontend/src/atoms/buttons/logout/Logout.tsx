@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 
-import logoutIcon from '@/assets/logout.svg';
-import '@/atoms/buttons/logout/LogoutButton.scss';
+import logoutIcon from '@/assets/icons/Logout_24.svg';
+import '@/atoms/buttons/logout/Logout.scss';
 import { AuthContext } from '@/context/auth/Auth';
 
-export default function LogoutButton() {
+export default function Logout() {
   const { logout } = useContext(AuthContext);
 
   return (

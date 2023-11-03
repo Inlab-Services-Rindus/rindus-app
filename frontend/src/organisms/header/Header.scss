@@ -1,64 +1,48 @@
 @use '@scss/colors' as *;
 
 header {
-  height: 4rem;
+  height: 56px;
   background-color: $rindus-green;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
 
-  .button__logo {
-    border: none;
-    background-color: transparent;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    margin: 0;
-    cursor: pointer;
-
-    &--white {
-      background-color: white;
-    }
-    &--green {
-      background-color: $rindus-green;
-    }
-  }
-
-  .left {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
-  }
-
-  .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 10;
-  }
-
-  .right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-
-    img {
-      object-fit: fill;
-      height: 100%;
-      clip-path: circle(50% at 50% 50%);
-    }
-  }
-
+  .search,
   .back {
-    flex-grow: 1;
     display: flex;
     align-items: center;
+    margin-left: 16px;
+    flex-grow: 1;
+    width: 40px;
+    height: 40px;
+  }
+
+  .rindusLogo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .profile {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-right: 16px;
+    flex-grow: 1;
+
+    .profile__button {
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      img {
+        object-fit: fill;
+        height: 100%;
+        clip-path: circle(50% at 50% 50%);
+      }
+    }
   }
 
   .logout {
@@ -66,5 +50,8 @@ header {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    width: 40px;
+    height: 40px;
+    margin-right: 16px;
   }
 }

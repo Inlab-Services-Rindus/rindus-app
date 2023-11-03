@@ -1,5 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 
+import arrowBack from '@/assets/icons/Arrow_back_24.svg';
+import '@/atoms/buttons/back/Back.scss';
+
 export default function Back() {
   const navigate = useNavigate();
 
@@ -9,23 +12,12 @@ export default function Back() {
 
   return (
     <button
-      className="button__logo"
+      className="back__button"
       data-testid="back"
       onClick={handleBack}
       type="button"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-      >
-        <path
-          d="M7.825 13L13.425 18.6L12 20L4 12L12 4L13.425 5.4L7.825 11H20V13H7.825Z"
-          fill="white"
-        />
-      </svg>
+      <img alt="SVG back" src={arrowBack} />
     </button>
   );
 }
