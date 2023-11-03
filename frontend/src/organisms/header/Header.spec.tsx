@@ -1,6 +1,6 @@
-import { Header } from '@/organisms/header/Header';
-
 import { render, screen } from '@testing-library/react';
+
+import { Header } from '@/organisms/header/Header';
 
 let isLoggedInSpy = true;
 
@@ -37,7 +37,7 @@ describe('Header', () => {
       render(<Header />);
 
       expect(screen.getByTestId('header-login')).toBeInTheDocument();
-      expect(screen.getByTestId('logo')).toBeInTheDocument();
+      expect(screen.getByTestId('rindusLogo')).toBeInTheDocument();
       expect(screen.getAllByRole('button')).toHaveLength(1);
     });
 
@@ -46,7 +46,7 @@ describe('Header', () => {
 
       render(<Header />);
 
-      screen.getByTestId('logo').click();
+      screen.getByTestId('rindusLogo').click();
 
       expect(useNavigateSpy).not.toHaveBeenCalled();
     });
@@ -58,15 +58,15 @@ describe('Header', () => {
         render(<Header />);
 
         expect(screen.getByTestId('header-logged')).toBeInTheDocument();
-        expect(screen.getByTestId('logo')).toBeInTheDocument();
-        expect(screen.getByTestId('mag')).toBeInTheDocument();
+        expect(screen.getByTestId('rindusLogo')).toBeInTheDocument();
+        expect(screen.getByTestId('search')).toBeInTheDocument();
         expect(screen.getByTestId('profile')).toBeInTheDocument();
       });
 
-      it('should call navigate when Mag button is clicked', () => {
+      it('should call navigate when Search button is clicked', () => {
         render(<Header />);
 
-        screen.getByTestId('mag').click();
+        screen.getByTestId('search').click();
 
         expect(useNavigateSpy).toHaveBeenCalledWith('/search');
       });
@@ -74,7 +74,7 @@ describe('Header', () => {
       it('should call navigate when Logo button is clicked', () => {
         render(<Header />);
 
-        screen.getByTestId('logo').click();
+        screen.getByTestId('rindusLogo').click();
 
         expect(useNavigateSpy).toHaveBeenCalledWith('/');
       });
