@@ -13,6 +13,7 @@ export function Header() {
   const location = useLocation();
   const { isLoggedIn, userProfileData } = useContext(AuthContext);
 
+  const isSearchPage = location.pathname === '/search';
   const isProfilePage = location.pathname === '/profile';
 
   const handleSearchNavigate = () => {
@@ -56,9 +57,15 @@ export function Header() {
 
   return (
     <header className="header__container--logged" data-testid="header-logged">
-      <div className="search">
-        <Search onClick={handleSearchNavigate} />
-      </div>
+      {!isSearchPage ? (
+        <div className="search">
+          <Search onClick={handleSearchNavigate} />
+        </div>
+      ) : (
+        <div className="back">
+          <Back />
+        </div>
+      )}
 
       <div className="rindusLogo">
         <RindusLogo onClick={handleLogo} />
