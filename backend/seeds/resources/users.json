@@ -170,6 +170,295 @@
           "dynamic_1300584": "German, English, Spanish",
           "profile_picture_url": "https://images.personio.de/v1/images/2217/small/029f303bf6975e5b28a8c15fca34c255038c9d0a.png"
         }
+      },
+      {
+        "id": 4,
+        "data": {
+          "first_name": "Laura",
+          "last_name": "Smith",
+          "email": "laura.smith@mail.de",
+          "office_id": "London",
+          "department_id": "Finance",
+          "position": "Financial Analyst",
+          "full_name": "Laura Smith",
+          "team_id": "Finance Team",
+          "dynamic_87778": "Dec 19",
+          "dynamic_1298673": "Finance Analyst  |  analyst@mail.de  |  +44 XXXX XXXXXX",
+          "dynamic_1300584": "English",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/LS"
+        }
+      },
+      {
+        "id": 5,
+        "data": {
+          "first_name": "Elena",
+          "last_name": "López",
+          "email": "elena.lopez@mail.de",
+          "office_id": "Barcelona",
+          "department_id": "Human Resources",
+          "position": "HR Manager",
+          "full_name": "Elena López",
+          "team_id": "HR Team",
+          "dynamic_87778": "Jan 22",
+          "dynamic_1298673": "HR Director  |  director@mail.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, Catalan, English",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/EL"
+        }
+      },
+      {
+        "id": 6,
+        "data": {
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": "john.doe@mail.de",
+          "office_id": "New York",
+          "department_id": "Sales",
+          "position": "Sales Representative",
+          "full_name": "John Doe",
+          "team_id": "Sales Team",
+          "dynamic_87778": "Nov 20",
+          "dynamic_1298673": "Sales Rep  |  rep@mail.de  |  +1 XXX XXX-XXXX",
+          "dynamic_1300584": "English, Spanish",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/JD"
+        }
+      },
+      {
+        "id": 7,
+        "data": {
+          "first_name": "Marta",
+          "last_name": "Gómez",
+          "email": "marta.gomez@mail.de",
+          "office_id": "Madrid",
+          "department_id": "Engineering",
+          "position": "Software Engineer",
+          "full_name": "Marta Gómez",
+          "team_id": "Engineering Team",
+          "dynamic_87778": "Oct 21",
+          "dynamic_1298673": "Software Engineer  |  engineer@mail.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/MG"
+        }
+      },
+      {
+        "id": 8,
+        "data": {
+          "first_name": "David",
+          "last_name": "Kim",
+          "email": "david.kim@mail.de",
+          "office_id": "Los Angeles",
+          "department_id": "Marketing",
+          "position": "Marketing Specialist",
+          "full_name": "David Kim",
+          "team_id": "Marketing Team",
+          "dynamic_87778": "Sep 19",
+          "dynamic_1298673": "Marketing Specialist  |  specialist@mail.de  |  +1 XXX XXX-XXXX",
+          "dynamic_1300584": "English, Korean",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/DK"
+        }
+      },
+      {
+        "id": 9,
+        "data": {
+          "first_name": "Ana",
+          "last_name": "Martínez",
+          "email": "ana.martinez@mail.de",
+          "office_id": "Barcelona",
+          "department_id": "Human Resources",
+          "position": "HR Coordinator",
+          "full_name": "Ana Martínez",
+          "team_id": "HR Team",
+          "dynamic_87778": "Feb 20",
+          "dynamic_1298673": "HR Coordinator  |  coordinator@mail.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English, French",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/AM"
+        }
+      },
+      {
+        "id": 10,
+        "data": {
+          "first_name": "Mark",
+          "last_name": "Johnson",
+          "email": "mark.johnson@mail.de",
+          "office_id": "Chicago",
+          "department_id": "Finance",
+          "position": "Financial Analyst",
+          "full_name": "Mark Johnson",
+          "team_id": "Finance Team",
+          "dynamic_87778": "Mar 21",
+          "dynamic_1298673": "Finance Analyst  |  analyst@mail.de  |  +1 XXX XXX-XXXX",
+          "dynamic_1300584": "English, Spanish",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/MJ"
+        }
+      },
+      {
+        "id": 11,
+        "data": {
+          "first_name": "Sara",
+          "last_name": "García",
+          "email": "sara.garcia@mail.de",
+          "office_id": "Madrid",
+          "department_id": "Engineering",
+          "position": "Software Engineer",
+          "full_name": "Sara García",
+          "team_id": "Engineering Team",
+          "dynamic_87778": "Jun 20",
+          "dynamic_1298673": "Software Engineer  |  engineer@mail.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/SG"
+        }
+      },
+      {
+        "id": 12,
+        "data": {
+          "first_name": "Michael",
+          "last_name": "Brown",
+          "email": "michael.brown@mail.de",
+          "office_id": "Los Angeles",
+          "department_id": "Marketing",
+          "position": "Marketing Coordinator",
+          "full_name": "Michael Brown",
+          "team_id": "Marketing Team",
+          "dynamic_87778": "Apr 19",
+          "dynamic_1298673": "Marketing Coordinator  |  coordinator@mail.de  |  +1 XXX XXX-XXXX",
+          "dynamic_1300584": "English, Spanish",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/MB"
+        }
+      },
+      {
+        "id": 13,
+        "data": {
+          "first_name": "Isabel",
+          "last_name": "Rodríguez",
+          "email": "isabel.rodriguez@mail.de",
+          "office_id": "Barcelona",
+          "department_id": "Sales",
+          "position": "Sales Representative",
+          "full_name": "Isabel Rodríguez",
+          "team_id": "Sales Team",
+          "dynamic_87778": "Nov 21",
+          "dynamic_1298673": "Sales Rep  |  rep@mail.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/IR"
+        }
+      },
+      {
+        "id": 14,
+        "data": {
+          "first_name": "Robert",
+          "last_name": "Wilson",
+          "email": "robert.wilson@mail.de",
+          "office_id": "New York",
+          "department_id": "Engineering",
+          "position": "Software Engineer",
+          "full_name": "Robert Wilson",
+          "team_id": "Engineering Team",
+          "dynamic_87778": "Dec 20",
+          "dynamic_1298673": "Software Engineer  |  engineer@mail.de  |  +1 XXX XXX-XXXX",
+          "dynamic_1300584": "English, Spanish",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/RW"
+        }
+      },
+      {
+        "id": 15,
+        "data": {
+          "first_name": "Maria",
+          "last_name": "López",
+          "email": "maria.lopez@mail.de",
+          "office_id": "Madrid",
+          "department_id": "Marketing",
+          "position": "Marketing Specialist",
+          "full_name": "Maria López",
+          "team_id": "Marketing Team",
+          "dynamic_87778": "Oct 19",
+          "dynamic_1298673": "Marketing Specialist  |  specialist@mail.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/ML"
+        }
+      },
+      {
+        "id": 16,
+        "data": {
+          "first_name": "James",
+          "last_name": "Miller",
+          "email": "james.miller@mail.de",
+          "office_id": "Los Angeles",
+          "department_id": "Human Resources",
+          "position": "HR Coordinator",
+          "full_name": "James Miller",
+          "team_id": "HR Team",
+          "dynamic_87778": "Jan 20",
+          "dynamic_1298673": "HR Coordinator  |  coordinator@mail.de  |  +1 XXX XXX-XXXX",
+          "dynamic_1300584": "English, Spanish",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/JM"
+        }
+      },
+      {
+        "id": 17,
+        "data": {
+          "first_name": "Julia",
+          "last_name": "González",
+          "email": "julia.gonzalez@mail.de",
+          "office_id": "Barcelona",
+          "department_id": "Finance",
+          "position": "Financial Analyst",
+          "full_name": "Julia González",
+          "team_id": "Finance Team",
+          "dynamic_87778": "Mar 22",
+          "dynamic_1298673": "Finance Analyst  |  analyst@mail.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/JG"
+        }
+      },
+      {
+        "id": 18,
+        "data": {
+          "first_name": "Daniel",
+          "last_name": "Brown",
+          "email": "daniel.brown@mail.de",
+          "office_id": "Chicago",
+          "department_id": "Engineering",
+          "position": "Software Engineer",
+          "full_name": "Daniel Brown",
+          "team_id": "Engineering Team",
+          "dynamic_87778": "May 21",
+          "dynamic_1298673": "Software Engineer  |  engineer@mail.de  |  +1 XXX XXX-XXXX",
+          "dynamic_1300584": "English, Spanish",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/DB"
+        }
+      },
+      {
+        "id": 19,
+        "data": {
+          "first_name": "Lucía",
+          "last_name": "Martínez",
+          "email": "lucia.martinez@mail.de",
+          "office_id": "Madrid",
+          "department_id": "Marketing",
+          "position": "Marketing Coordinator",
+          "full_name": "Lucía Martínez",
+          "team_id": "Marketing Team",
+          "dynamic_87778": "Apr 20",
+          "dynamic_1298673": "Marketing Coordinator  |  coordinator@mail.de  |  +34 XXX XXXXXX",
+          "dynamic_1300584": "Spanish, English",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/LM"
+        }
+      },
+      {
+        "id": 20,
+        "data": {
+          "first_name": "Matthew",
+          "last_name": "Taylor",
+          "email": "matthew.taylor@mail.de",
+          "office_id": "Los Angeles",
+          "department_id": "Human Resources",
+          "position": "HR Manager",
+          "full_name": "Matthew Taylor",
+          "team_id": "HR Team",
+          "dynamic_87778": "Feb 19",
+          "dynamic_1298673": "HR Manager  |  manager@mail.de  |  +1 XXX XXX-XXXX",
+          "dynamic_1300584": "English, Spanish",
+          "profile_picture_url": "https://avatar-service-platform.personio.de/MT"
+        }
       }
     ]
   }
