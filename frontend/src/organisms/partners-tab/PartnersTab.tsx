@@ -1,26 +1,32 @@
-import { config } from '@/config/config';
-import useFetch from '@/hooks/fetch/useFetch';
-import { Partner } from '@/model/Partner';
+import { useContext, useEffect } from 'react';
+
+import { StoreContext } from '@/context/store/Store';
 import Tab from '@/molecules/tab/Tab';
 import '@/organisms/partners-tab/PartnersTab.scss';
 
 export function PartnersTab() {
-  const { data: partners, isLoading: isPartnersLoading } = useFetch<Partner[]>({
-    options: {
-      credentials: 'include',
-    },
-    url: `${config.backendUrl}/partners`,
-  });
+  const {
+    partners: { data, isLoading },
+    getPartners,
+  } = useContext(StoreContext);
+
+  useEffect(() => {
+    getPartners();
+  }, []);
 
   return (
     <Tab
-      isLoading={isPartnersLoading}
+      isLoading={isLoading}
       className="partners-tab__container"
       dataTestId="partners-tab"
     >
-      {partners?.map((partner, index) => (
+      {data?.map((partner, index) => (
         <div className="partner-card" key={index}>
-          <img className="partner-image" src={partner.logoUrl}></img>
+          <img
+            className="partner-image"
+            src={partner.logoUrl}
+            loading="lazy"
+          ></img>
         </div>
       ))}
     </Tab>

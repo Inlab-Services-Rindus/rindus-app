@@ -38,6 +38,7 @@ export function Avatar({
   return (
     <div className={`${className}-picture`}>
       <img
+        loading="lazy"
         className={`${className}-picture__img`}
         src={profilePictureUrl}
         alt={`${firstName}'s profile`}
