@@ -1,5 +1,5 @@
 import { connectTestDatabase } from '@/bootstrap/database';
-import { PartnerRecord } from '@/models/service/PartnerRecord';
+import { PartnerRecord } from '@/models/service/database/PartnerRecord';
 import { KnexPartnerRepository } from '@/repository/knex/partner.repository';
 
 describe.skip('KnexPartnerRepository', () => {

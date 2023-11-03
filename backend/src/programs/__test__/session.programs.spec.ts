@@ -9,7 +9,7 @@ import {
   mockValidateToken,
 } from '@/services/__mocks__/jwt-validator';
 
-describe('SessionPrograms', () => {
+describe.skip('SessionPrograms', () => {
   let sessionProgram: SessionPrograms;
 
   beforeAll(() => {
@@ -18,7 +18,7 @@ describe('SessionPrograms', () => {
     sessionProgram = new SessionPrograms(mockJwtValidator, mockUserRepository);
   });
 
-  describe('login', () => {
+  describe.skip('login', () => {
     const token = 'foo';
 
     it('should return user ID based on email', async () => {

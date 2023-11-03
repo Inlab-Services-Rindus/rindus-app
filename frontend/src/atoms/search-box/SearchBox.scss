@@ -5,36 +5,32 @@
   padding: 20px 16px;
   justify-content: center;
   align-items: center;
-  align-self: center;
-
-  width: 296px;
-  height: 36px;
+  position: relative;
+  width: 100%;
+  height: 52px;
 
   &__input {
-    position: relative;
     display: flex;
-    height: 36px;
-    padding: 0px 10px;
+    height: 52px;
+    padding: 0px 16px;
     align-items: center;
-    gap: 10px;
     align-self: stretch;
-    border-radius: 36px;
+    border-radius: 8px;
     background: #f7f8fc;
     border: none;
     width: 100%;
-    height: 100%;
-    text-indent: 25px;
+    text-indent: 38px;
     outline: none;
+    color: var(--Gray-Medium, #6e768d);
 
     input::placeholder {
       @include text($font-poppins-regular, 16px, 400, 22px);
       color: #303140;
       font-style: normal;
-      padding-left: 25px;
     }
   }
   &__icon {
-    left: 55px;
+    left: 34px;
     position: absolute;
   }
 }

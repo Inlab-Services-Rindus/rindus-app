@@ -4,11 +4,11 @@ import { parsePersonioJSONFile } from '@seeds/helper';
 import {
   PersonioEmployeeConverter,
   PersonioEmployeePartnerConverter,
-} from '@/models/service/converters/seeds/Personio.converter';
+} from '@/converters/service/seeds/Personio.converter';
 import { Employee } from '@/models/service/seeds/Personio';
-import { OfficeRecord } from '@/models/service/OfficeRecord';
-import { PartnerRecord } from '@/models/service/PartnerRecord';
-import { UserRecord } from '@/models/service/UserRecord';
+import { OfficeRecord } from '@/models/service/database/OfficeRecord';
+import { PartnerRecord } from '@/models/service/database/PartnerRecord';
+import { UserRecord } from '@/models/service/database/UserRecord';
 import { Insertable } from '@/helpers/RecordConverterHelper';
 
 export async function seed(knex: Knex): Promise<void> {
@@ -65,7 +65,7 @@ async function processPartner(
   partnerId: string,
 ) {
   const maybePartner = await knex<PartnerRecord>('partners')
-    .where('name', partnerConverter.sanitisePartner(partnerId))
+    .where('name', partnerConverter.sanitiseDepartmentId(partnerId))
     .first();
 
   return maybePartner?.id;

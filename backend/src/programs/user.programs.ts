@@ -1,37 +1,25 @@
-import { IndexUser, ShowUser } from '@/models/api/User';
-import {
-  ShowUserConverter,
-  UserConverter,
-} from '@/models/api/converters/User.converter';
-import { User } from '@/models/business/User';
-import { LanguageRepository } from '@/repository/language.repository';
+import { Page } from '@/models/business/Pagination';
+import { User, WithInfo, WithLanguages } from '@/models/business/User';
 import { UserRepository } from '@/repository/user.repository';
 
 export class UserPrograms {
   private readonly userRepository: UserRepository;
 
-  private readonly languageRepository: LanguageRepository;
-
-  private readonly userConverter: UserConverter;
-
-  private readonly showUserConverter: ShowUserConverter;
-
-  constructor(
-    userRepository: UserRepository,
-    languageRepository: LanguageRepository,
-  ) {
+  constructor(userRepository: UserRepository) {
     this.userRepository = userRepository;
-    this.languageRepository = languageRepository;
-    this.userConverter = new UserConverter();
-    this.showUserConverter = new ShowUserConverter();
   }
 
-  public async index(mockBirthdays: boolean): Promise<IndexUser[]> {
-    const users = await this.userRepository.all();
+  public async index(
+    mockBirthdays: boolean,
+    page: number,
+  ): Promise<Page<User>> {
+    const usersPage = await this.userRepository.page(page);
+    const { data: users } = usersPage;
 
-    return this.mockIsBirthday(users, mockBirthdays).map((user) =>
-      this.userConverter.convert(user),
-    );
+    return {
+      ...usersPage,
+      data: page > 1 ? this.mockIsBirthday(users, mockBirthdays) : users,
+    };
   }
 
   private mockIsBirthday(users: User[], mockBirthdays: boolean): User[] {
@@ -48,14 +36,9 @@ export class UserPrograms {
     });
   }
 
-  public async show(userId: string): Promise<ShowUser | undefined> {
-    const [maybeUser, languages] = await Promise.all([
-      this.userRepository.findUserWithInfoById(userId),
-      this.languageRepository.userLanguagesById(userId),
-    ]);
-
-    return maybeUser
-      ? this.showUserConverter.convert([maybeUser, languages])
-      : undefined;
+  public async show(
+    userId: number,
+  ): Promise<(User & WithInfo & WithLanguages) | undefined> {
+    return this.userRepository.findUserWithInfo(userId);
   }
 }

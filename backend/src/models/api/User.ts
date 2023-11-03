@@ -1,7 +1,4 @@
-export interface LoggedInUser {
-  id: string;
-  profilePictureUrl: string;
-}
+import { LoggedInUser } from '@/models/api/LoggedInUser';
 
 export interface User extends LoggedInUser {
   firstName: string;
@@ -9,19 +6,4 @@ export interface User extends LoggedInUser {
   fullName: string;
   email: string;
   isBirthday: boolean;
-}
-
-export interface IndexUser extends User {}
-
-export interface ShowUser extends User {
-  languages: string[];
-  office: string;
-  partner?: string;
-  position?: string;
-}
-
-export interface UserResult extends LoggedInUser {
-  fullName: string;
-  isBirthday: boolean;
-  position?: string;
 }
