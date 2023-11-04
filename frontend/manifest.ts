@@ -2,31 +2,46 @@ import { VitePWAOptions } from 'vite-plugin-pwa';
 
 export const manifestForPlugin: Partial<VitePWAOptions> = {
   registerType: 'autoUpdate',
-  includeAssets: ['rindusLogo.svg'],
+  includeAssets: ['/LOGO_Size_192px.png'],
   manifest: {
-    name: 'Rindus App',
-    short_name: 'Rindus App',
+    name: 'Rindus',
+    short_name: 'Rindus',
     description: 'Rindus app for employees.',
     icons: [
       {
-        src: '/rindusLogo192.png',
+        src: '/LOGO_Size_192px.png',
         sizes: '192x192',
         type: 'image/png',
+        purpose: 'maskable',
       },
       {
-        src: '/rindusLogo512.png',
+        src: '/LOGO_Size_512px.png',
         sizes: '512x512',
         type: 'image/png',
+        purpose: 'maskable',
       },
       {
-        src: '/rindusLogo180.png',
+        src: '/LOGO_Size_180px.png',
         sizes: '180x180',
         type: 'image/png',
         purpose: 'apple touch icon',
       },
+
+      {
+        src: '/LOGO_Size_512px.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/LOGO_Size_512px.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
     ],
-    display: 'standalone',
-    scope: '/',
-    start_url: '/',
+  },
+  devOptions: {
+    enabled: true,
   },
 };
