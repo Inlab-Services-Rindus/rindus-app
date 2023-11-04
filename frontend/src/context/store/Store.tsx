@@ -11,7 +11,6 @@ interface PaginatedEmployees {
 
 interface EmployeeData {
   data: Employee[];
-  isLoading: boolean;
   hasMore: boolean;
   lastPage: number;
   totalPages: number;
@@ -32,7 +31,6 @@ interface StoreContextType {
 export const StoreContext = createContext<StoreContextType>({
   employees: {
     data: [],
-    isLoading: false,
     hasMore: false,
     lastPage: 0,
     totalPages: 0,
@@ -52,7 +50,6 @@ interface StoreProviderProps {
 export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
   const [employeeData, setEmployeeData] = useState<EmployeeData>({
     data: [],
-    isLoading: false,
     hasMore: true,
     totalPages: 0,
     lastPage: 0,
@@ -65,7 +62,6 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
   const getEmployees = (first?: boolean) => {
     if (employeeData.data.length === 0 || (!first && employeeData.hasMore)) {
       const page = employeeData.lastPage + 1;
-      setEmployeeData({ ...employeeData, isLoading: true });
 
       fetch(`${config.backendUrl}/users?page=${page}`, {
         credentials: 'include',
@@ -75,7 +71,6 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
           setEmployeeData({
             ...employeeData,
             data: [...employeeData.data, ...result.data],
-            isLoading: false,
             hasMore: result.totalPages > page,
             totalPages: result.totalPages,
             lastPage: page,

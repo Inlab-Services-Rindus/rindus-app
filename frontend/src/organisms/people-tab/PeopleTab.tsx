@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { StoreContext } from '@/context/store/Store';
@@ -7,13 +7,20 @@ import AvatarTile from '@/organisms/avatar-tile/AvatarTile';
 import '@/organisms/people-tab/PeopleTab.scss';
 
 export function PeopleTab() {
+  const [isLoading, setIsLoading] = useState(false);
   const {
-    employees: { data, isLoading, hasMore },
+    employees: { data, hasMore },
     getEmployees,
   } = useContext(StoreContext);
 
+  const actionGetEmployees = async (first?: boolean) => {
+    setIsLoading(true);
+    await getEmployees(first);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
-    getEmployees(true);
+    actionGetEmployees(true);
   }, []);
 
   function handleClick() {
@@ -30,7 +37,7 @@ export function PeopleTab() {
       <InfiniteScroll
         className="people-tab__container"
         dataLength={data.length}
-        next={getEmployees}
+        next={actionGetEmployees}
         hasMore={hasMore}
         loader={<h4>Loading...</h4>}
       >
