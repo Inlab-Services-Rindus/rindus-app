@@ -16,9 +16,6 @@ interface AuthContextType {
 
 interface userProfileData {
   id: string;
-  firstName: string;
-  lastName?: string;
-  email: string;
   profilePictureUrl?: string;
 }
 
@@ -39,9 +36,6 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
   const [userProfileData, setUserProfileData] = useState<userProfileData>({
     id: '',
-    firstName: '',
-    lastName: '',
-    email: '',
     profilePictureUrl: '',
   });
 
@@ -86,11 +80,13 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     setIsLoading(false);
 
     if (response.ok) {
-      const user = await response.json();
+      if (response.status === 200) {
+        const user = await response.json();
 
-      setIsLoggedIn(true);
-      setUserProfileData(user);
-      navigate('/');
+        setIsLoggedIn(true);
+        setUserProfileData(user);
+        navigate('/');
+      }
     } else {
       if (response.status !== 400) {
         showToastError('Login expired');

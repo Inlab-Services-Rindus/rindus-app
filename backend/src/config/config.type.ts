@@ -8,6 +8,8 @@ export interface ProcessVariables {
   NODE_ENV: Environment;
   PORT?: string;
   LOG_LEVEL?: LogLevel;
+  DOMAIN?: string;
+  URL?: string;
   DB_HOST: string;
   DB_USER: string;
   DB_PASSWORD: string;
@@ -40,6 +42,8 @@ export interface Session {
 
 export interface App {
   port: number;
+  domain: string;
+  url?: string;
   google: Google;
 }
 

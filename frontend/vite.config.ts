@@ -18,6 +18,10 @@ export default defineConfig({
         find: '@scss',
         replacement: path.resolve(projectRootDir, 'src/assets/scss'),
       },
+      {
+        find: '@helpers',
+        replacement: path.resolve(projectRootDir, 'src/helpers'),
+      },
     ],
   },
   test: {

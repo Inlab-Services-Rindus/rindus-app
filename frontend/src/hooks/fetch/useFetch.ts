@@ -4,9 +4,10 @@ import { AuthContext } from '@/context/auth/Auth';
 import useToast from '@/hooks/toast/useToast';
 
 export interface useFetchProps {
-  onErrorCallback: () => void;
+  onErrorCallback?: () => void;
   url: string;
   options?: RequestInit;
+  deps?: string;
 }
 
 export interface useFetchReturn<T> {
@@ -19,6 +20,7 @@ export default function useFetch<T>({
   onErrorCallback,
   url,
   options,
+  deps = '',
 }: useFetchProps): useFetchReturn<T> {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,14 +38,14 @@ export default function useFetch<T>({
           await logout();
           showToastWarning('Please, login to continue');
         } else {
-          onErrorCallback();
+          onErrorCallback?.();
         }
       } else {
         const data = await response.json();
         setData(data);
       }
     } catch (error) {
-      onErrorCallback();
+      onErrorCallback?.();
     } finally {
       setIsLoading(false);
     }
@@ -51,7 +53,7 @@ export default function useFetch<T>({
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [deps]);
 
   const refresh = () => {
     fetchData();

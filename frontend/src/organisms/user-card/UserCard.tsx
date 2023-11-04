@@ -1,31 +1,36 @@
+import { Avatar } from '@/organisms/avatar/Avatar';
 import '@/organisms/user-card/UserCard.scss';
 
 interface UserCardProps {
-  firstName: string;
-  lastName: string;
+  fullName: string;
+  isBirthday?: boolean;
+  isCaptain?: boolean;
   profilePictureUrl: string;
-  onClick: () => void;
+  position: string;
+  handleClick: (query: string) => void;
 }
 
 export default function UserCard({
-  firstName,
-  lastName,
+  fullName,
+  isBirthday,
+  isCaptain,
   profilePictureUrl,
-  onClick,
+  position,
+  handleClick,
 }: UserCardProps): JSX.Element {
   return (
-    <div onClick={onClick} className="user-card">
-      <div>
-        <img
-          className="user-card__img"
-          src={profilePictureUrl}
-          alt={`${firstName}'s profile`}
+    <div onClick={() => handleClick(fullName)} className="user-card">
+      <div className="user-card__img">
+        <Avatar
+          profilePictureUrl={profilePictureUrl}
+          isBirthday={isBirthday}
+          isCaptain={isCaptain}
+          className="user-card"
         />
       </div>
-      <div className="user-card__overlay"></div>
-      <div className="user-card__name">
-        <span>{firstName}</span>
-        <span>{lastName}</span>
+      <div className="user-card__info">
+        <span className="user-card__info-name">{fullName}</span>
+        <span className="user-card__info-position">{position}</span>
       </div>
     </div>
   );

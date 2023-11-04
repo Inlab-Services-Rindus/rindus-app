@@ -1,4 +1,4 @@
-import { User } from '@/model/business/User';
+import { LoggedInUser } from '@/models/business/User';
 import { UserRepository } from '@/repository/user.repository';
 import { JwtValidator } from '@/services/jwt-validator';
 
@@ -12,7 +12,7 @@ export class SessionPrograms {
     this.userRepository = userRepository;
   }
 
-  public async login(jwt: string): Promise<User | undefined> {
+  public async login(jwt: string): Promise<LoggedInUser | undefined> {
     const email = await this.jwtValidator.validateToken(jwt);
 
     if (email !== undefined) {

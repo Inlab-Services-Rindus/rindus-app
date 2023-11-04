@@ -1,31 +1,56 @@
-import { config } from '@/config/config';
-import { Employee } from '@/model/Employee';
+import { useContext, useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+
+import { StoreContext } from '@/context/store/Store';
+import Tab from '@/molecules/tab/Tab';
+import AvatarTile from '@/organisms/avatar-tile/AvatarTile';
 import '@/organisms/people-tab/PeopleTab.scss';
-import UserCard from '@/organisms/user-card/UserCard';
 
-interface PeopleTabProps {
-  people: Employee[];
-}
+export function PeopleTab() {
+  const [isLoading, setIsLoading] = useState(false);
+  const {
+    employees: { data, hasMore },
+    getEmployees,
+  } = useContext(StoreContext);
 
-export function PeopleTab({ people }: PeopleTabProps) {
+  const actionGetEmployees = async (first?: boolean) => {
+    setIsLoading(true);
+    await getEmployees(first);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    actionGetEmployees(true);
+  }, []);
+
   function handleClick() {
     console.log('clicked');
   }
 
   return (
-    <section data-testid="people-tab">
-      <h1>PeopleTab</h1>
-      <div className="people-tab__container">
-        {people?.map((employee, index) => (
-          <UserCard
+    <Tab
+      isLoading={isLoading}
+      dataTestId="people-tab"
+      refresh={() => {}}
+      shouldRefresh={!isLoading && !data.length}
+    >
+      <InfiniteScroll
+        className="people-tab__container"
+        dataLength={data.length}
+        next={actionGetEmployees}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+      >
+        {data?.map((employee, index) => (
+          <AvatarTile
             onClick={handleClick}
             key={index}
-            profilePictureUrl={`${config.backendUrl}${employee.profilePictureUrl}`}
+            profilePictureUrl={employee.profilePictureUrl}
             firstName={employee.firstName}
-            lastName={employee.lastName}
+            isBirthday={employee.isBirthday}
           />
         ))}
-      </div>
-    </section>
+      </InfiniteScroll>
+    </Tab>
   );
 }
