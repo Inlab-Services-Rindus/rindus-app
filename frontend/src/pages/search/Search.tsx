@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import SearchBox from '@/atoms/search-box/SearchBox';
 import Tag from '@/atoms/tag/Tag';
 import { config } from '@/config/config';
-import { SearchItem, SearchResponse, UserItem } from '@/model/Result';
+import { setTagsAndUsers } from '@/helpers/searchHelpers';
+import type { SearchResponse, UserItem } from '@/model/Result';
 import Retry from '@/organisms/retry/Retry';
 import UserCard from '@/organisms/user-card/UserCard';
 import '@/pages/search/Search.scss';
@@ -22,22 +23,6 @@ export function Search(): JSX.Element {
   const [debouncedQuery] = useDebounce(query, 400);
   const noResults = !tags.length && !users.length;
 
-  const setTagsAndUsers = (data: SearchItem[]) => {
-    const tagNames: string[] = [];
-    const userItems: UserItem[] = [];
-
-    data.forEach((item: SearchItem) => {
-      if (item.type === 'keyword' && typeof item.data === 'string') {
-        tagNames.push(item.data);
-      } else if (item.type === 'freetext' && Array.isArray(item.data)) {
-        userItems.push(...item.data);
-      }
-    });
-
-    setTags(tagNames);
-    setUsers(userItems);
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,7 +33,9 @@ export function Search(): JSX.Element {
           },
         );
         const data = (await response.json()) as SearchResponse;
-        setTagsAndUsers(data);
+        const { tagNames, userItems } = setTagsAndUsers(data);
+        setTags(tagNames);
+        setUsers(userItems);
       } catch (error) {
         setError(error);
         console.error('Error fetching suggestions:', error);
