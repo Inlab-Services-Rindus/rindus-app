@@ -5,6 +5,7 @@ import SearchBox from '@/atoms/search-box/SearchBox';
 import Tag from '@/atoms/tag/Tag';
 import { config } from '@/config/config';
 import { SearchItem, SearchResponse, UserItem } from '@/model/Result';
+import Retry from '@/organisms/retry/Retry';
 import UserCard from '@/organisms/user-card/UserCard';
 import '@/pages/search/Search.scss';
 
@@ -17,20 +18,24 @@ export function Search(): JSX.Element {
   const [tags, setTags] = useState<string[]>([]);
   const [users, setUsers] = useState<UserItem[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
+  const [error, setError] = useState<unknown>('');
   const [debouncedQuery] = useDebounce(query, 400);
+  const noResults = !tags.length && !users.length;
 
   const setTagsAndUsers = (data: SearchItem[]) => {
-    const tags: string[] = [];
+    const tagNames: string[] = [];
+    const userItems: UserItem[] = [];
 
     data.forEach((item: SearchItem) => {
       if (item.type === 'keyword' && typeof item.data === 'string') {
-        tags.push(item.data);
+        tagNames.push(item.data);
       } else if (item.type === 'freetext' && Array.isArray(item.data)) {
-        setUsers(item.data);
+        userItems.push(...item.data);
       }
     });
 
-    setTags(tags);
+    setTags(tagNames);
+    setUsers(userItems);
   };
 
   useEffect(() => {
@@ -45,13 +50,17 @@ export function Search(): JSX.Element {
         const data = (await response.json()) as SearchResponse;
         setTagsAndUsers(data);
       } catch (error) {
+        setError(error);
         console.error('Error fetching suggestions:', error);
       }
     };
 
-    fetchData();
-    setTags([]);
-    setUsers([]);
+    if (debouncedQuery) {
+      fetchData();
+    } else {
+      setTags([]);
+      setUsers([]);
+    }
   }, [debouncedQuery]);
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,16 +74,18 @@ export function Search(): JSX.Element {
     navigate(`/search/${query}`);
   };
 
-  return (
-    <>
-      <div className="search-container">
-        <SearchBox inputHandler={handleInput} inputValue={inputValue} />
-      </div>
+  const renderResults = () => (
+    <div style={{ width: '100%' }}>
       {search && (
-        <Tag key={Math.random()} handleClick={handleClick} tag={search} />
+        <Tag
+          key={search}
+          handleClick={handleClick}
+          tag={search}
+          noResults={noResults}
+        />
       )}
       {tags?.map((item: string) => (
-        <Tag key={Math.random()} handleClick={handleClick} tag={item} />
+        <Tag key={item} handleClick={handleClick} tag={item} />
       ))}
       {users?.map((user: UserItem) => (
         <UserCard
@@ -85,6 +96,15 @@ export function Search(): JSX.Element {
           position={user.position}
         />
       ))}
+    </div>
+  );
+
+  return (
+    <>
+      <div className="search-container">
+        <SearchBox inputHandler={handleInput} inputValue={inputValue} />
+      </div>
+      {error ? <Retry refresh={() => navigate('/search')} /> : renderResults()}
     </>
   );
 }

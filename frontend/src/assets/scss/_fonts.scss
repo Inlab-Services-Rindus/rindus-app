@@ -22,7 +22,6 @@ $font-poppins-regular: 'Poppins', sans-serif;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 100%;
 }
 
 @mixin multiline-text-ellipsis($number-of-lines: 2) {
