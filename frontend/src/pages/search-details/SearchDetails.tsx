@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
+import SearchBox from '@/atoms/search-box/SearchBox';
 import Tag from '@/atoms/tag/Tag';
 import { config } from '@/config/config';
 import type { UserItem } from '@/model/Result';
@@ -24,8 +25,15 @@ export function SearchDetails(): JSX.Element {
     }
   }, []);
 
+  const handleInput = () => {
+    console.log('value');
+  };
+
   return (
     <>
+      <div className="search-container">
+        <SearchBox inputHandler={handleInput} inputValue={query} />
+      </div>
       <Tag
         tagLabel="Results for:"
         handleClick={() => console.log('hola')}
