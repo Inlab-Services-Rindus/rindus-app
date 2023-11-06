@@ -1,0 +1,33 @@
+@use '@scss/colors' as *;
+
+.tabPanel {
+  &__button-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $rindus-light-gray;
+  }
+
+  &__button {
+    position: relative;
+    background: transparent;
+    color: black;
+    padding: 8px 16px;
+
+    &--active {
+      color: white;
+    }
+  }
+
+  &__button-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    background: $rindus-green;
+    mix-blend-mode: multiply;
+  }
+}

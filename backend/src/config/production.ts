@@ -1,5 +1,7 @@
 import { Config } from '@/config/config.type';
 
-export const productionConfig: Partial<Config> = {
+export const getProductionConfig = (
+  _commonConfig: Config,
+): Partial<Config> => ({
   logLevel: 'info',
-};
+});

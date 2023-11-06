@@ -1,5 +1,6 @@
 import knexSessionStore from 'connect-session-knex';
 import session from 'express-session';
+import cookieParser from 'cookie-parser';
 
 import { Express } from 'express';
 import { Knex } from 'knex';
@@ -8,11 +9,19 @@ import { config, isLiveEnvironment } from '@/config';
 
 declare module 'express-session' {
   interface SessionData {
-    userId: string;
+    userId: number;
   }
 }
 
+export const cookieConfig = (isLiveEnv: boolean): session.CookieOptions => ({
+  httpOnly: isLiveEnv,
+  maxAge: config.sessions.maxAge,
+  secure: isLiveEnv,
+  sameSite: isLiveEnv ? 'none' : 'lax',
+});
+
 export const httpSessions = (app: Express, knex: Knex): Express => {
+  app.use(cookieParser());
   const store = new (knexSessionStore(session))({
     knex,
   });
@@ -21,17 +30,11 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
   app.use(
     session({
       secret: config.sessions.secret,
-      cookie: {
-        httpOnly: isLiveEnv,
-        maxAge: config.sessions.maxAge,
-        secure: isLiveEnv,
-        sameSite: 'lax',
-        domain: '.rindus.de',
-      },
       proxy: isLiveEnv,
+      cookie: cookieConfig(isLiveEnv),
       store,
       resave: false,
-      saveUninitialized: true,
+      saveUninitialized: false,
     }),
   );
 

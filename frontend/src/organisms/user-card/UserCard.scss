@@ -1,0 +1,38 @@
+@import '@/assets/scss/_fonts.scss';
+@import '@/assets/scss/_colors.scss';
+
+.user-card {
+  display: flex;
+  padding: 12px 16px;
+  align-items: center;
+  gap: 20px;
+  justify-content: flex-start;
+  margin: 0px 16px;
+  border-bottom: 1px solid $rindus-light-gray;
+
+  &__info {
+    color: var(--Gray-Dark, #303140);
+    text-align: flex-start;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__info-name {
+    @include text($font-poppins-regular, 16px, 600, 22px);
+  }
+
+  &__info-position {
+    @include text($font-poppins-regular, 14px, 400, 16px);
+  }
+}
+
+.user-card-picture {
+  display: flex;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+
+  &__img {
+    border-radius: 104px;
+  }
+}

@@ -1,8 +1,8 @@
 import { config as dotenvConfig } from 'dotenv';
 import { Config, Environment, ProcessVariables } from '@/config/config.type';
-import { localConfig } from '@/config/local';
-import { developmentConfig } from '@/config/development';
-import { productionConfig } from '@/config/production';
+import { getLocalConfig } from '@/config/local';
+import { getDevelopmentConfig } from '@/config/development';
+import { getProductionConfig } from '@/config/production';
 import { getCommonConfig } from '@/config/common';
 
 function getConfig(): Config {
@@ -11,20 +11,23 @@ function getConfig(): Config {
 
   dotenvConfig();
 
+  const commonConfig = getCommonConfig(
+    process.env as unknown as ProcessVariables,
+  );
   let envConfig: Partial<Config>;
   switch (environment) {
     case 'development':
-      envConfig = developmentConfig;
+      envConfig = getDevelopmentConfig(commonConfig);
       break;
     case 'production':
-      envConfig = productionConfig;
+      envConfig = getProductionConfig(commonConfig);
       break;
     default:
-      envConfig = localConfig;
+      envConfig = getLocalConfig(commonConfig);
   }
 
   return {
-    ...getCommonConfig(process.env as unknown as ProcessVariables),
+    ...commonConfig,
     ...envConfig,
   };
 }

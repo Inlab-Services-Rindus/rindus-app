@@ -9,10 +9,11 @@
     "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@seeds/*": ["./seeds/*"],
     }
   },
-  "include": ["src/**/*", "tests/*.ts", "*.ts"],
+  "include": ["src/**/*", "tests/*.ts", "seeds/**/*.ts", "*.ts"],
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   }
