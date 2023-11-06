@@ -35,7 +35,6 @@ class SuggestionUserConverter implements Converter<User, SuggestionUser> {
   convert(source: User): SuggestionUser {
     return {
       id: source.id,
-      fullName: source.fullName,
       position: source.position,
     };
   }

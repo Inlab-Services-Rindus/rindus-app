@@ -7,6 +7,5 @@ export interface Suggestion {
 
 export interface SuggestionUser {
   id: number;
-  fullName: string;
   position?: string;
 }

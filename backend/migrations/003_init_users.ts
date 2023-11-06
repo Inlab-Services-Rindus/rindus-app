@@ -11,7 +11,7 @@ export async function up(knex: Knex): Promise<void> {
     table.foreign('office_id').references('offices.id').onDelete('cascade');
     table.integer('partner_id').unsigned(); // Null for Rindus people - not belonging to any partner
     table.foreign('partner_id').references('partners.id').onDelete('cascade');
-    table.string('position');
+    table.string('position').notNullable();
     table.string('birthday');
     table.timestamps(false, true);
   });

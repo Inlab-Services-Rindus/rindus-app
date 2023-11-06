@@ -4,10 +4,10 @@ import { Converter } from '@/converters/Converter';
 import { LoggedInUser, User, WithInfo } from '@/models/business/User';
 import {
   LoggedInUserRecord,
+  UserProfileQueryRecord,
   UserRecord,
-  WithOffice,
-  WithPartner,
 } from '@/models/service/database/UserRecord';
+import { WithPartnerRecordConverter } from '@/converters/service/PartnerRecord.converter';
 
 export class LoggedInUserConverter
   implements Converter<LoggedInUserRecord, LoggedInUser>
@@ -46,15 +46,12 @@ export class UserConverter implements Converter<UserRecord, User> {
   }
 
   convert(source: UserRecord): User {
-    const fullName =
-      source.first_name + (source.last_name ? ` ${source.last_name}` : '');
     const birthday = source.birthday;
 
     return {
       ...this.loggedInUserConverter.convert(source),
       firstName: source.first_name,
       lastName: source.last_name,
-      fullName,
       email: source.email,
       position: source.position,
       birthday,
@@ -64,19 +61,21 @@ export class UserConverter implements Converter<UserRecord, User> {
 }
 
 export class UserWithInfoConverter
-  implements Converter<UserRecord & WithOffice & WithPartner, User & WithInfo>
+  implements Converter<UserProfileQueryRecord, User & WithInfo>
 {
   private readonly userConverter: UserConverter;
+  private readonly withPartnerRecordRecordConverter: WithPartnerRecordConverter;
 
   constructor() {
     this.userConverter = new UserConverter();
+    this.withPartnerRecordRecordConverter = new WithPartnerRecordConverter();
   }
 
-  convert(source: UserRecord & WithOffice & WithPartner): User & WithInfo {
+  convert(source: UserProfileQueryRecord): User & WithInfo {
     return {
       ...this.userConverter.convert(source),
       office: source.office_name,
-      partner: source.partner_name,
+      partner: this.withPartnerRecordRecordConverter.convert({ ...source }),
     };
   }
 }

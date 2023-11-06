@@ -9,9 +9,8 @@ import {
 import { UserRepository } from '@/repository/user.repository';
 import {
   LoggedInUserRecord,
+  UserProfileQueryRecord,
   UserRecord,
-  WithOffice,
-  WithPartner,
 } from '@/models/service/database/UserRecord';
 import {
   LoggedInUserConverter,
@@ -129,7 +128,7 @@ export class KnexUserRepository implements UserRepository {
   private async userWithInfo(
     id: number,
   ): Promise<(User & WithInfo) | undefined> {
-    const maybeRecord = await this.knex<UserRecord & WithOffice & WithPartner>({
+    const maybeRecord = await this.knex<UserProfileQueryRecord>({
       u: 'users',
     })
       .leftJoin({ p: 'partners' }, 'u.partner_id', 'p.id')
@@ -140,7 +139,9 @@ export class KnexUserRepository implements UserRepository {
         'last_name',
         'email',
         { office_name: 'o.name' },
+        { partner_id: 'p.id' },
         { partner_name: 'p.name' },
+        { partner_logo_url: 'p.logo_url' },
         'position',
         'picture_url',
       )

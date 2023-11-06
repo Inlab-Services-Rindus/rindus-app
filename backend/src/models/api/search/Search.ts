@@ -1,7 +1,6 @@
-import { LoggedInUser } from '@/models/api/LoggedInUser';
+import { MinimalUser } from '@/models/api/User';
 
-export interface UserResult extends LoggedInUser {
-  fullName: string;
+export interface UserResult extends MinimalUser {
   isBirthday: boolean;
   position?: string;
 }
