@@ -52,5 +52,5 @@ export interface Google {
 }
 
 export interface Cors {
-  origin: string;
+  origin: string | string[] | RegExp;
 }

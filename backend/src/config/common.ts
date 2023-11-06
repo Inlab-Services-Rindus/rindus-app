@@ -31,6 +31,7 @@ export const getCommonConfig = (
     },
   },
   cors: {
-    origin: 'http://localhost:5173',
+    // Frontend app | swagger-editor | swagger-ui
+    origin: /http:\/\/localhost:(5173|8888|3080)/,
   },
 });

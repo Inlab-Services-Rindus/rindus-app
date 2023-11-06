@@ -1,0 +1,348 @@
+openapi: 3.1.0
+info:
+  title: Rindus backend API
+  description: |
+    This is the backend API for the Rindus app
+  version: 0.0.1
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: sessions
+    description: Session management
+  - name: users
+    description: Opertations about users
+  - name: partners
+    description: Operations about partners
+  - name: Searches
+    description: Search and suggestions engine
+  - name: Other
+    description: Other useful operations
+paths:
+  /:
+    get:
+      summary: Hello World
+      operationId: helloWorld
+      responses:
+        "200":
+          description: Says hello
+          content:
+            text/plain:
+              schema:
+                const: "Hello World!"
+  /login:
+    post:
+      tags:
+        - sessions
+      summary: Login given user
+      operationId: login
+      requestBody:
+        $ref: "#/components/requestBodies/Login"
+      responses:
+        200:
+          description: User was succesfully logged in
+          $ref: "#/components/responses/LoggedInUser"
+        401:
+          description: Incorrect JWT was provided
+          $ref: "#/components/responses/Unauthorized"
+  /soft-login:
+    post:
+      tags:
+        - sessions
+      summary: Recovers users' session via cookie
+      operationId: softLogin
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: User session was found
+          $ref: "#/components/responses/LoggedInUser"
+        204:
+          description: No session present in request
+        401:
+          $ref: "#/components/responses/Unauthorized"
+  /logout:
+    post:
+      tags:
+        - sessions
+      summary: Destroys user session
+      operationId: logout
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: User session was destroyed
+  /users:
+    get:
+      tags:
+        - users
+      summary: Returns pagination of all users
+      operationId: listUsers
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: Page of users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsersIndexPage"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+  /users/{userId}:
+    get:
+      tags:
+        - users
+      summary: Return given user
+      operationId: showUser
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the requested user
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Requested user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+  /partners:
+    get:
+      tags:
+        - partners
+      summary: Return all partners
+      operationId: listPartners
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: All partners
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartnersIndex"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+  /partners/{partnerId}:
+    get:
+      tags:
+        - partners
+      summary: Return requested partner
+      operationId: showPartner
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: partnerId
+          in: path
+          description: The ID of the requested partner
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Requested partner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartnerProfile"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+  /partners/{partnerId}/members:
+    get:
+      tags:
+        - partners
+      summary: Return requested partner members
+      operationId: showPartnerMembers
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: partnerId
+          in: path
+          description: The ID of the requested partner
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Requested partner members
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartnerMembers"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+components:
+  schemas:
+    LoggedInUser:
+      type: object
+      id:
+        type:
+          $ref: "#/components/schemas/UserId"
+      profilePictureUrl:
+        type: string
+        format: url
+        examples:
+          [
+            "http://localhost:3000/avatars/v1/images/2217/large/70ea8090cf0bf9e0927815b4cbbe17162f4e0788.png",
+            "https://avatar-service-platform.personio.de/AS",
+          ]
+    UsersIndexPage:
+      type: object
+      properties:
+        data:
+          type: array
+          minItems: 0
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/IndexUser"
+        totalPages:
+          type: integer
+          format: int64
+          examples: [12]
+    IndexUser:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/UserId"
+        firstName:
+          type: string
+          examples: ["Foo"]
+    UserProfile:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/UserId"
+        firstName:
+          type: string
+          examples: ["John"]
+        lastName:
+          type: string
+          examples: ["Doe"]
+        profilePictureUrl:
+          type: string
+          format: url
+          examples: ["https://avatar-service-platform.personio.de/JD"]
+        position:
+          type: string
+          examples: ["API Engineer"]
+        partner:
+          type: string
+          examples: ["OBI"]
+        partnerLogo:
+          type: string
+          format: url
+          examples: ["http://localhost:3000/images/partners/obi.svg"]
+        email:
+          type: string
+          format: email
+          examples: ["john.doe@rindus.de"]
+        slackTag:
+          type: string
+          examples: ["A342AB33"]
+        slackProfileUrl:
+          type: string
+          format: url
+          examples: ["https://a1marketing.slack.com/team/A342AB33"]
+        languages:
+          type: array
+          items:
+            type: string
+            examples: ["Spanish"]
+    PartnersIndex:
+      type: array
+      items:
+        $ref: "#/components/schemas/IndexPartner"
+    IndexPartner:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/PartnerId"
+        name:
+          type: string
+          format:
+          examples: ["Douglas"]
+        logoUrl:
+          type: string
+          format: uri
+          examples: ["http://localhost:3000/images/partners/douglas.svg"]
+    PartnerProfile:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/PartnerId"
+        name:
+          type: string
+          format:
+          examples: ["Douglas"]
+        logoUrl:
+          type: string
+          format: uri
+          examples: ["http://localhost:3000/images/partners/douglas.svg"]
+    PartnerMembers:
+      type: object
+      properties:
+        members:
+          type: array
+          items:
+            $ref: "#/components/schemas/Member"
+        captains:
+          type: array
+          items:
+            $ref: "#/components/schemas/Member"
+    Member:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/UserId"
+        firstName:
+          type: string
+        lastName:
+          type: string
+        position:
+          type: string
+        profilePictureUrl:
+          type: string
+          format: url
+    UserId:
+      type: integer
+      format: int64
+      examples: [10]
+    PartnerId:
+      type: integer
+      format: int64
+      examples: [10]
+  requestBodies:
+    Login:
+      description: Google provided user's JWT token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              jwt:
+                type: string
+                format: jwt
+  responses:
+    Unauthorized:
+      description: Not valid auth mechanism was provided
+      content:
+        text/plain:
+          schema:
+            const: "Unauthorized"
+    LoggedInUser:
+      description: Retrieved user session info
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LoggedInUser"
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      name: connect.sid
+      in: cookie
