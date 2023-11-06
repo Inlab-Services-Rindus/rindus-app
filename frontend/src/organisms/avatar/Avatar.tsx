@@ -2,12 +2,13 @@ import { BirthdayCake } from '@/atoms/badges/BirthdayCake';
 import { CaptainHat } from '@/atoms/badges/CaptainHat';
 import '@/organisms/avatar/Avatar.scss';
 
+export type AvatarSize = 'small' | 'medium' | 'large';
 interface AvatarProps {
   profilePictureUrl: string;
   firstName?: string;
   isBirthday?: boolean;
   isCaptain?: boolean;
-  className?: string;
+  size?: AvatarSize;
 }
 
 export function Avatar({
@@ -15,12 +16,12 @@ export function Avatar({
   isBirthday,
   isCaptain,
   profilePictureUrl,
-  className = 'avatar',
+  size = 'medium',
 }: AvatarProps): JSX.Element {
   function renderBadge() {
     if (isBirthday) {
       return (
-        <div className={`${className}-picture__badge`}>
+        <div className="avatar-picture__badge">
           <BirthdayCake />
         </div>
       );
@@ -28,7 +29,7 @@ export function Avatar({
 
     if (isCaptain) {
       return (
-        <div className={`${className}-picture__badge`}>
+        <div className="avatar-picture__badge">
           <CaptainHat />
         </div>
       );
@@ -36,10 +37,10 @@ export function Avatar({
   }
 
   return (
-    <div className={`${className}-picture`}>
+    <div className={`avatar-picture avatar-picture--${size}`}>
       <img
         loading="lazy"
-        className={`${className}-picture__img`}
+        className={'avatar-picture__img'}
         src={profilePictureUrl}
         alt={`${firstName}'s profile`}
       />

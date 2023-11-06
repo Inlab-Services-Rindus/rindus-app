@@ -1,13 +1,10 @@
 .avatar-picture {
   margin: 0;
-  width: 104px;
-  height: 104px;
-  padding-bottom: 12px;
   position: relative;
+  overflow: hidden;
 
   &__img {
     box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
-    border-radius: 104px;
     width: 100%;
     height: 100%;
   }
@@ -16,16 +13,22 @@
     right: 0px;
     bottom: 0px;
   }
-}
 
-@media (min-width: 450px) {
-  .avatar-picture {
-    width: 210px;
-    height: 210px;
+  &--small {
+    width: 56px;
+    height: 56px;
+    border-radius: 56px;
+  }
 
-    &__badge {
-      right: 15px;
-      bottom: 15px;
-    }
+  &--medium {
+    width: 72px;
+    height: 72px;
+    border-radius: 72px;
+  }
+
+  &--large {
+    width: 104px;
+    height: 104px;
+    border-radius: 104px;
   }
 }

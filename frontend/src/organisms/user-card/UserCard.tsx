@@ -1,4 +1,4 @@
-import { Avatar } from '@/organisms/avatar/Avatar';
+import { Avatar, AvatarSize } from '@/organisms/avatar/Avatar';
 import '@/organisms/user-card/UserCard.scss';
 
 interface UserCardProps {
@@ -8,6 +8,7 @@ interface UserCardProps {
   profilePictureUrl: string;
   position: string;
   handleClick: (query: string) => void;
+  size?: AvatarSize;
 }
 
 export default function UserCard({
@@ -17,6 +18,7 @@ export default function UserCard({
   profilePictureUrl,
   position,
   handleClick,
+  size,
 }: UserCardProps): JSX.Element {
   return (
     <div onClick={() => handleClick(fullName)} className="user-card">
@@ -25,7 +27,7 @@ export default function UserCard({
           profilePictureUrl={profilePictureUrl}
           isBirthday={isBirthday}
           isCaptain={isCaptain}
-          className="user-card"
+          size={size}
         />
       </div>
       <div className="user-card__info">
