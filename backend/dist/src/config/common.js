@@ -28,8 +28,7 @@ const getCommonConfig = (processVariables) => ({
         },
     },
     cors: {
-        // Frontend app | swagger-editor | swagger-ui
-        origin: /http:\/\/localhost:(5173|8888|3080)/,
+        origin: 'https://app.rindus.de',
     },
 });
 exports.getCommonConfig = getCommonConfig;
