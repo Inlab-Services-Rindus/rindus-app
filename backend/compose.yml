@@ -54,6 +54,7 @@ services:
       - ./openapi.yml:/app/openapi.yml
     environment:
       - SWAGGER_JSON=/app/openapi.yml
+      - WITH_CREDENTIALS=true
 
 volumes:
   db-storage:
