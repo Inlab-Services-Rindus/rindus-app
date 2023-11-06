@@ -27,7 +27,7 @@ export function Header() {
   };
 
   const handleProfileNavigate = () => {
-    navigate('/profile');
+    navigate(`/profile/${userProfileData?.id}`);
   };
 
   if (!isLoggedIn)
