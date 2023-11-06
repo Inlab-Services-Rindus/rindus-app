@@ -3,14 +3,11 @@
 $marginRightLogo: 5px;
 $greyFontColor: #6e768d;
 
-
 .profile {
   display: grid;
   top: 56px;
   font-family: 'Poppins', sans-serif;
-    gap: 24px;
-
-
+  gap: 24px;
 
   &__avatar {
     display: flex;
@@ -29,7 +26,8 @@ $greyFontColor: #6e768d;
       line-height: 22px;
       letter-spacing: 0em;
       padding-top: 16px;
-      font-weight: bold;
+      padding-bottom: 3px;
+      font-weight: 600;
       color: #303140;
     }
 
@@ -37,7 +35,6 @@ $greyFontColor: #6e768d;
       font-size: 14px;
       line-height: 16px;
       color: #6e768d;
-
     }
   }
 
@@ -80,7 +77,7 @@ $greyFontColor: #6e768d;
           margin-bottom: 2px;
         }
         &__name {
-          font-weight: bold;
+          font-weight: 700;
           font-size: 14px;
         }
       }
@@ -92,6 +89,11 @@ $greyFontColor: #6e768d;
       color: $greyFontColor;
       width: 100%;
 
+      &__link {
+        text-decoration: none;
+        color: #6e768d;
+      }
+
       &__adress {
         margin-right: $marginRightLogo;
         font-size: 14px;
@@ -99,14 +101,13 @@ $greyFontColor: #6e768d;
     }
   }
 
-
-  &__section-title-container{
+  &__section-title-container {
     padding: 12px 16px 12px 16px;
     color: #303140;
     font-size: 16px;
   }
 
-  &__tags-container{
+  &__tags-container {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -118,14 +119,11 @@ $greyFontColor: #6e768d;
     gap: 12px;
   }
 
-  &__tags{
+  &__tags {
     border: solid;
     font-size: 12px;
-    color: $greyFontColor ;
+    color: $greyFontColor;
     border-radius: 4px;
     padding: 4px 8px 4px 8px;
-
-
-
   }
 }

@@ -1,10 +1,12 @@
 import { Link, useParams } from 'react-router-dom';
+
 import email from '@/assets/email.svg';
 import slack from '@/assets/slack.svg';
 import Loader from '@/atoms/loader/Loader';
 import { config } from '@/config/config';
 import useFetch from '@/hooks/fetch/useFetch';
 import { EmployeeProfile } from '@/model/Employee';
+import AvatarTile from '@/organisms/avatar-tile/AvatarTile';
 import '@/pages/profile/Profile.scss';
 
 export function Profile() {
@@ -25,11 +27,13 @@ export function Profile() {
     <>
       <div className="profile">
         <div className="profile__avatar">
-          <img
-            className="profile__avatar__img"
-            src={profile?.profilePictureUrl}
-            alt=""
+        <AvatarTile
+            key={profile?.id}
+            profilePictureUrl={profile?.profilePictureUrl??''}
+            isBirthday={profile?.isBirthday??false}
+            // isCaptain={profile?.isCaptain}
           />
+
           <span className="profile__avatar__fullName">
             {profile?.firstName} {profile?.lastName}
           </span>
@@ -66,14 +70,14 @@ export function Profile() {
                 alt=""
                 className="profile__information__account__logo"
               />
-              <Link to={profile?.slack.profileUrl ?? ''}>
+              <Link
+                className="profile__information__account__link"
+                to={profile?.slack.profileUrl ?? ''}
+              >
                 <span className="profile__information__account__adress">
                   {profile?.slack.name}
                 </span>
               </Link>
-              <span className="profile__information__account__adress">
-                {profile?.slack.name}
-              </span>
             </div>
           </div>
         </div>
@@ -84,7 +88,7 @@ export function Profile() {
           <div className="profile__tags-container">
             {profile?.languages.map((language, index) => (
               <div key={index} className="profile__tags">
-                {language}
+                {language.charAt(0).toUpperCase() + language.slice(1)}
               </div>
             ))}
           </div>
