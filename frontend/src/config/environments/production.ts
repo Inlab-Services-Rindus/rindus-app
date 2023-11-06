@@ -1,5 +1,7 @@
 import { AppConfig } from '@/model/Config';
 
+const backendUrl = import.meta.env.BACKEND_URL;
+
 export const prodConfig = (): AppConfig => ({
-  backendUrl: 'https://warwick-headless-chicken-monster-mjxp.1.ie-1.fl0.io',
+  backendUrl,
 });
