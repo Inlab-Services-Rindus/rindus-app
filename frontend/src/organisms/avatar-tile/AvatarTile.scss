@@ -4,24 +4,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0;
-  padding: 0;
+  padding-bottom: 12px;
+  gap: 4px;
 
   &__name {
     color: var(--Gray-Dark, #303140);
     text-align: center;
+    padding: 4px;
     @include text($font-poppins-regular, 14px, 400, 16px);
-    padding-bottom: 12px;
-  }
-}
-
-@media (min-width: 450px) {
-  .avatar-tile {
-    width: 250px;
-    height: 250px;
-
-    &__name {
-      font-size: 20px;
-    }
   }
 }

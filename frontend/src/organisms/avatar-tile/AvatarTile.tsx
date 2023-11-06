@@ -20,6 +20,7 @@ export default function AvatarTile({
     <div onClick={onClick} className="avatar-tile">
       <div>
         <Avatar
+          size="large"
           profilePictureUrl={profilePictureUrl}
           firstName={firstName}
           isBirthday={isBirthday}

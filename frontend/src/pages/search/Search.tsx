@@ -83,6 +83,7 @@ export function Search(): JSX.Element {
           profilePictureUrl={user.profilePictureUrl}
           fullName={user.fullName}
           position={user.position}
+          size="small"
         />
       ))}
     </>
