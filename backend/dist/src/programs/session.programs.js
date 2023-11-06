@@ -19,7 +19,7 @@ class SessionPrograms {
         return __awaiter(this, void 0, void 0, function* () {
             const email = yield this.jwtValidator.validateToken(jwt);
             if (email !== undefined) {
-                const user = yield this.userRepository.findUser(email);
+                const user = yield this.userRepository.findUserByEmail(email);
                 if (user !== undefined) {
                     return user;
                 }

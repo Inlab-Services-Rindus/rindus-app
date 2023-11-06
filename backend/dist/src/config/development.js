@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.developmentConfig = void 0;
-exports.developmentConfig = {
-    cors: {
-        origin: 'https://rindus-app-nine.vercel.app',
-    },
-};
+exports.getDevelopmentConfig = void 0;
+const getDevelopmentConfig = (commonConfig) => ({
+    cors: Object.assign(Object.assign({}, commonConfig.cors), { origin: 'https://app.rindus.de' }),
+});
+exports.getDevelopmentConfig = getDevelopmentConfig;

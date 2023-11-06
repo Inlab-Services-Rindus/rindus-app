@@ -22,7 +22,7 @@ exports.TestDatabaseFileName = './integration-db.sqlite';
 exports.testKnexConfig = {
     client: 'sqlite3',
     useNullAsDefault: true,
-    // Uncomment to debug Knex queries
+    // Uncomment to debug Knex queries. Also DEBUG=knex:* can be used
     // debug: true,
     connection: {
         filename: exports.TestDatabaseFileName,
