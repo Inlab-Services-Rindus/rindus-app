@@ -2,7 +2,7 @@ import '@/organisms/avatar-tile/AvatarTile.scss';
 import { Avatar } from '@/organisms/avatar/Avatar';
 
 interface AvatarTileProps {
-  firstName: string;
+  firstName?: string;
   isBirthday?: boolean;
   isCaptain?: boolean;
   profilePictureUrl: string;
@@ -27,9 +27,11 @@ export default function AvatarTile({
           isCaptain={isCaptain}
         />
       </div>
-      <div className="avatar-tile__name">
-        <span>{firstName}</span>
-      </div>
+      {firstName && (
+        <div className="avatar-tile__name">
+          <span>{firstName}</span>
+        </div>
+      )}
     </div>
   );
 }
