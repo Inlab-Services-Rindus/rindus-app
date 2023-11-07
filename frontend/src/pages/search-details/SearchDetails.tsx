@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import SearchBox from '@/atoms/search-box/SearchBox';
 import Tag from '@/atoms/tag/Tag';
 import { config } from '@/config/config';
-import { UserItem } from '@/model/Result';
+import type { UserItem } from '@/model/Result';
 import UserCard from '@/organisms/user-card/UserCard';
 import '@/pages/search-details/SearchDetails.scss';
 
