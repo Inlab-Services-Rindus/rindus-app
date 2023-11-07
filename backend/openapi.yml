@@ -259,7 +259,7 @@ components:
               properties:
                 name:
                   type: string
-                  examples: ["sara.corrales"]
+                  examples: ["john.doe"]
                 profileUrl:
                   type: string
                   format: url

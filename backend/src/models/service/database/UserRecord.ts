@@ -1,6 +1,7 @@
 import { WithOfficeRecord } from '@/models/service/database/OfficeRecord';
 import { WithPartnerRecord } from '@/models/service/database/PartnerRecord';
 import { Identifiable } from '@/models/service/database/Record';
+import { WithSlackInfoRecord } from '@/models/service/database/SlackInfoRecord';
 import { Knex } from 'knex';
 
 export interface LoggedInUserRecord extends Identifiable {
@@ -19,6 +20,7 @@ export interface UserRecord extends LoggedInUserRecord {
 
 export type UserProfileQueryRecord = UserRecord &
   Partial<WithPartnerRecord> &
+  WithSlackInfoRecord &
   WithOfficeRecord;
 
 declare module 'knex/types/tables' {

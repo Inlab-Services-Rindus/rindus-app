@@ -49,7 +49,7 @@ export class ShowUserConverter
       office: source.office,
       department: this.departmentConverter.convert(source.partner),
       languages: source.languages,
-      slack: { name: 'user.name', profileUrl: 'https://google.es' },
+      slack: { name: source.slack.name, profileUrl: source.slack.profileUrl },
     };
   }
 }

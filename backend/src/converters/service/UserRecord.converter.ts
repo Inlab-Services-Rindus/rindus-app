@@ -63,6 +63,7 @@ export class UserConverter implements Converter<UserRecord, User> {
 export class UserWithInfoConverter
   implements Converter<UserProfileQueryRecord, User & WithInfo>
 {
+  private static readonly SLACK_URL = 'https://rindus.slack.com/team/';
   private readonly userConverter: UserConverter;
   private readonly withPartnerRecordRecordConverter: WithPartnerRecordConverter;
 
@@ -72,10 +73,17 @@ export class UserWithInfoConverter
   }
 
   convert(source: UserProfileQueryRecord): User & WithInfo {
+    const slackId = source.slack_id;
+
     return {
       ...this.userConverter.convert(source),
       office: source.office_name,
       partner: this.withPartnerRecordRecordConverter.convert({ ...source }),
+      slack: {
+        name: source.slack_name,
+        slackId,
+        profileUrl: `${UserWithInfoConverter.SLACK_URL}${slackId}`,
+      },
     };
   }
 }
