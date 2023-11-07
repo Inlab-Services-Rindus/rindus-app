@@ -58,8 +58,9 @@ export function Profile() {
             <Link
               className="account__link"
               to={profile?.slack.profileUrl ?? ''}
+              target="_blank"
             >
-              <span className="account__address">{profile?.slack.name}</span>
+              <span className="account__address">@{profile?.slack.name}</span>
             </Link>
           </div>
         </div>
@@ -72,6 +73,10 @@ export function Profile() {
               <div key={index} className="languages__tags">
                 {language.charAt(0).toUpperCase() + language.slice(1)}
               </div>
+              /* <Tag
+            key={profile?.id}
+            tag={language.charAt(0).toUpperCase() + language.slice(1) ?? ''}
+            /> */
             ))}
           </div>
         </div>
