@@ -25,69 +25,51 @@ export function Profile() {
 
   return (
     <>
-      <div className="profile">
-        <div className="profile__avatar">
-        <AvatarTile
+      <div className="profile-container">
+        <div className="avatar">
+          <AvatarTile
             key={profile?.id}
-            profilePictureUrl={profile?.profilePictureUrl??''}
-            isBirthday={profile?.isBirthday??false}
+            profilePictureUrl={profile?.profilePictureUrl ?? ''}
+            isBirthday={profile?.isBirthday ?? false}
             // isCaptain={profile?.isCaptain}
           />
 
-          <span className="profile__avatar__fullName">
+          <span className="avatar__fullName">
             {profile?.firstName} {profile?.lastName}
           </span>
-          <span className="profile__avatar__position">{profile?.position}</span>
+          <span className="avatar__position">{profile?.position}</span>
         </div>
-        <div className="profile__information-container">
-          <div className="profile__information">
-            <div className="profile__information__partner">
-              <img
-                src={profile?.department?.logoUrl}
-                className="profile__information__partner__logo"
-              />
-              <div className="profile__information__partner__info">
-                <span className="profile__information__partner__info__title">
-                  Department
-                </span>
-                <span className="profile__information__partner__info__name">
-                  {profile?.department?.name}
-                </span>
-              </div>
-            </div>
-            <div className="profile__information__account">
-              <img
-                src={email}
-                className="profile__information__account__logo"
-              />
-              <span className="profile__information__account__adress">
-                {profile?.email}
+        <div className="information-container">
+          <div className="partner">
+            <img src={profile?.department?.logoUrl} className="partner__logo" />
+            <div className="partner__info">
+              <span className="partner__info__title">Department</span>
+              <span className="partner__info__name">
+                {profile?.department?.name}
               </span>
             </div>
-            <div className="profile__information__account">
-              <img
-                src={slack}
-                alt=""
-                className="profile__information__account__logo"
-              />
-              <Link
-                className="profile__information__account__link"
-                to={profile?.slack.profileUrl ?? ''}
-              >
-                <span className="profile__information__account__adress">
-                  {profile?.slack.name}
-                </span>
-              </Link>
-            </div>
+          </div>
+          <div className="account">
+            <img src={email} className="account__logo" />
+            <span className="account__address">{profile?.email}</span>
+          </div>
+          <div className="account">
+            <img src={slack} alt="" className="account__logo" />
+            <Link
+              className="account__link"
+              to={profile?.slack.profileUrl ?? ''}
+            >
+              <span className="account__address">{profile?.slack.name}</span>
+            </Link>
           </div>
         </div>
-        <div className="profile__languages">
-          <div className="profile__section-title-container">
-            <span className="profile__section-title">Languages:</span>
+        <div className="languages">
+          <div className="languages__title-container">
+            <span className="languages__title">Languages:</span>
           </div>
-          <div className="profile__tags-container">
+          <div className="languages__tags-container">
             {profile?.languages.map((language, index) => (
-              <div key={index} className="profile__tags">
+              <div key={index} className="languages__tags">
                 {language.charAt(0).toUpperCase() + language.slice(1)}
               </div>
             ))}
