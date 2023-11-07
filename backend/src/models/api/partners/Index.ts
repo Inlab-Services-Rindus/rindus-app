@@ -1,7 +1,5 @@
+import { Partner } from '@/models/api/Partner';
+
 export type PartnersIndex = IndexPartner[];
 
-export interface IndexPartner {
-  id: number;
-  name: string;
-  logoUrl: string;
-}
+export interface IndexPartner extends Partner {}

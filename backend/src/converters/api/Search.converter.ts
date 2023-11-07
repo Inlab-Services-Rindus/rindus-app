@@ -1,4 +1,5 @@
 import { Converter } from '@/converters/Converter';
+import { UserConverter } from '@/converters/api/User.converter';
 import { SuggestionUser, Suggestions } from '@/models/api/search/Suggestion';
 import { Suggestion } from '@/models/business/Suggestions';
 import { User } from '@/models/business/User';
@@ -32,10 +33,15 @@ export class SuggestionsConverter
 }
 
 class SuggestionUserConverter implements Converter<User, SuggestionUser> {
+  private readonly userConverter: UserConverter;
+
+  constructor() {
+    this.userConverter = new UserConverter();
+  }
+
   convert(source: User): SuggestionUser {
     return {
-      id: source.id,
-      fullName: source.fullName,
+      ...this.userConverter.convert(source),
       position: source.position,
     };
   }

@@ -1,6 +1,6 @@
 import { Converter } from '@/converters/Converter';
 import { LoggedInUser } from '@/models/business/User';
-import { LoggedInUser as ApiLoggedInUser } from '@/models/api/LoggedInUser';
+import { MinimalUser as ApiLoggedInUser } from '@/models/api/User';
 
 export class LoggedInUserConverter
   implements Converter<LoggedInUser, ApiLoggedInUser>

@@ -1,7 +1,5 @@
-import { LoggedInUser } from '@/models/api/LoggedInUser';
+import { User } from '@/models/api/User';
 
-export interface UserResult extends LoggedInUser {
-  fullName: string;
-  isBirthday: boolean;
-  position?: string;
+export interface UserResult extends User {
+  position: string;
 }

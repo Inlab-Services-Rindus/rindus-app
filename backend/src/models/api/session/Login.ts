@@ -1,3 +1,3 @@
-import { LoggedInUser } from '@/models/api/LoggedInUser';
+import { MinimalUser } from '@/models/api/User';
 
-export interface Login extends LoggedInUser {}
+export interface Login extends MinimalUser {}

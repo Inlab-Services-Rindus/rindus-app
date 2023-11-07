@@ -1,3 +1,7 @@
 *
 !.gitignore
 !users.json
+!slack.json
+production/*
+!production
+!production/.gitkeep

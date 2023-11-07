@@ -5,13 +5,15 @@ import {
   WithLanguages,
 } from '@/models/business/User';
 import { User as ApiUser } from '@/models/api/User';
-import { ShowUser } from '@/models/api/users/Show';
+import { Department, UserProfile } from '@/models/api/users/Show';
 import { UserResult } from '@/models/api/search/Search';
 import { Page } from '@/models/business/Pagination';
-import { UsersIndex } from '@/models/api/users/Index';
+import { UsersIndexPage } from '@/models/api/users/Index';
 import { LoggedInUserConverter } from '@/converters/api/Session.converter';
+import { Partner } from '@/models/business/Partner';
+import { config } from '@/config';
 
-class UserConverter implements Converter<BusinessUser, ApiUser> {
+export class UserConverter implements Converter<BusinessUser, ApiUser> {
   private readonly userLoginConverter: LoggedInUserConverter;
 
   constructor() {
@@ -24,53 +26,65 @@ class UserConverter implements Converter<BusinessUser, ApiUser> {
       email: source.email,
       firstName: source.firstName,
       lastName: source.lastName,
-      fullName: source.fullName,
       isBirthday: source.isBirthday,
     };
   }
 }
 
 export class ShowUserConverter
-  implements Converter<BusinessUser & WithInfo & WithLanguages, ShowUser>
+  implements Converter<BusinessUser & WithInfo & WithLanguages, UserProfile>
 {
   private readonly userConverter: UserConverter;
+  private readonly departmentConverter: DeparmentConverter;
 
   constructor() {
     this.userConverter = new UserConverter();
+    this.departmentConverter = new DeparmentConverter();
   }
 
-  convert(source: BusinessUser & WithInfo & WithLanguages): ShowUser {
+  convert(source: BusinessUser & WithInfo & WithLanguages): UserProfile {
     return {
       ...this.userConverter.convert(source),
       position: source.position,
       office: source.office,
-      partner: source.partner,
+      department: this.departmentConverter.convert(source.partner),
       languages: source.languages,
+      slack: { name: source.slack.name, profileUrl: source.slack.profileUrl },
     };
+  }
+}
+
+export class DeparmentConverter
+  implements Converter<Partner | undefined, Department>
+{
+  convert(source: Partner | undefined): Department {
+    if (source) {
+      return { name: source.name, logoUrl: source.logoUrl };
+    }
+
+    return { name: 'rindus', logoUrl: `${config.app.url}/images/rindus.svg` };
   }
 }
 
 export class UserResultConverter
   implements Converter<BusinessUser, UserResult>
 {
-  private readonly loggedInUserConverter: LoggedInUserConverter;
+  private readonly userConverter: UserConverter;
 
   constructor() {
-    this.loggedInUserConverter = new LoggedInUserConverter();
+    this.userConverter = new UserConverter();
   }
 
   convert(source: BusinessUser): UserResult {
     return {
-      ...this.loggedInUserConverter.convert(source),
-      fullName: source.fullName,
+      ...this.userConverter.convert(source),
       position: source.position,
-      isBirthday: source.isBirthday,
     };
   }
 }
 
 export class UsersIndexConverter
-  implements Converter<Page<BusinessUser>, UsersIndex>
+  implements Converter<Page<BusinessUser>, UsersIndexPage>
 {
   private readonly userConverter: UserConverter;
 
@@ -78,7 +92,7 @@ export class UsersIndexConverter
     this.userConverter = new UserConverter();
   }
 
-  convert(source: Page<BusinessUser>): UsersIndex {
+  convert(source: Page<BusinessUser>): UsersIndexPage {
     return {
       data: source.data.map((user) => this.userConverter.convert(user)),
       totalPages: source.totalPages,

@@ -1,3 +1,5 @@
+import { User } from '@/models/api/User';
+
 export type Suggestions = Suggestion[];
 
 export interface Suggestion {
@@ -5,8 +7,6 @@ export interface Suggestion {
   data: string | SuggestionUser[];
 }
 
-export interface SuggestionUser {
-  id: number;
-  fullName: string;
-  position?: string;
+export interface SuggestionUser extends User {
+  position: string;
 }

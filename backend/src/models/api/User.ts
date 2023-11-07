@@ -1,9 +1,11 @@
-import { LoggedInUser } from '@/models/api/LoggedInUser';
-
-export interface User extends LoggedInUser {
+export interface User extends MinimalUser {
   firstName: string;
   lastName?: string;
-  fullName: string;
   email: string;
   isBirthday: boolean;
+}
+
+export interface MinimalUser {
+  id: number;
+  profilePictureUrl: string;
 }

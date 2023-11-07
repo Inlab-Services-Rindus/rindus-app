@@ -13,9 +13,9 @@ tags:
     description: Opertations about users
   - name: partners
     description: Operations about partners
-  - name: Searches
+  - name: searches
     description: Search and suggestions engine
-  - name: Other
+  - name: other
     description: Other useful operations
 paths:
   /:
@@ -23,7 +23,7 @@ paths:
       summary: Hello World
       operationId: helloWorld
       responses:
-        "200":
+        200:
           description: Says hello
           content:
             text/plain:
@@ -58,6 +58,7 @@ paths:
           $ref: "#/components/responses/LoggedInUser"
         204:
           description: No session present in request
+          $ref: "#/components/responses/NoContent"
         401:
           $ref: "#/components/responses/Unauthorized"
   /logout:
@@ -71,6 +72,7 @@ paths:
       responses:
         200:
           description: User session was destroyed
+          $ref: "#/components/responses/NoContent"
   /users:
     get:
       tags:
@@ -112,6 +114,8 @@ paths:
                 $ref: "#/components/schemas/UserProfile"
         401:
           $ref: "#/components/responses/Unauthorized"
+        404:
+          $ref: "#/components/responses/NotFound"
   /partners:
     get:
       tags:
@@ -153,6 +157,8 @@ paths:
                 $ref: "#/components/schemas/PartnerProfile"
         401:
           $ref: "#/components/responses/Unauthorized"
+        404:
+          $ref: "#/components/responses/NotFound"
   /partners/{partnerId}/members:
     get:
       tags:
@@ -177,21 +183,42 @@ paths:
                 $ref: "#/components/schemas/PartnerMembers"
         401:
           $ref: "#/components/responses/Unauthorized"
+        404:
+          $ref: "#/components/responses/NotFound"
 components:
   schemas:
     LoggedInUser:
       type: object
-      id:
-        type:
-          $ref: "#/components/schemas/UserId"
-      profilePictureUrl:
-        type: string
-        format: url
-        examples:
-          [
-            "http://localhost:3000/avatars/v1/images/2217/large/70ea8090cf0bf9e0927815b4cbbe17162f4e0788.png",
-            "https://avatar-service-platform.personio.de/AS",
-          ]
+      properties:
+        id:
+          type: integer
+          format: int64
+          examples: [10]
+        profilePictureUrl:
+          type: string
+          format: url
+          examples:
+            [
+              "http://localhost:3000/avatars/v1/images/2217/large/70ea8090cf0bf9e0927815b4cbbe17162f4e0788.png",
+            ]
+    User:
+      allOf:
+        - $ref: "#/components/schemas/LoggedInUser"
+        - type: object
+          properties:
+            firstName:
+              type: string
+              examples: ["John"]
+            lastName:
+              type: ["null", string]
+              examples: ["Doe"]
+            email:
+              type: string
+              format: email
+              examples: ["john.doe@rindus.de"]
+            isBirthday:
+              type: boolean
+              examples: ["false"]
     UsersIndexPage:
       type: object
       properties:
@@ -206,117 +233,76 @@ components:
           format: int64
           examples: [12]
     IndexUser:
-      type: object
-      properties:
-        id:
-          $ref: "#/components/schemas/UserId"
-        firstName:
-          type: string
-          examples: ["Foo"]
+      $ref: "#/components/schemas/User"
     UserProfile:
-      type: object
-      properties:
-        id:
-          $ref: "#/components/schemas/UserId"
-        firstName:
-          type: string
-          examples: ["John"]
-        lastName:
-          type: string
-          examples: ["Doe"]
-        profilePictureUrl:
-          type: string
-          format: url
-          examples: ["https://avatar-service-platform.personio.de/JD"]
-        position:
-          type: string
-          examples: ["API Engineer"]
-        partner:
-          type: string
-          examples: ["OBI"]
-        partnerLogo:
-          type: string
-          format: url
-          examples: ["http://localhost:3000/images/partners/obi.svg"]
-        email:
-          type: string
-          format: email
-          examples: ["john.doe@rindus.de"]
-        slackTag:
-          type: string
-          examples: ["A342AB33"]
-        slackProfileUrl:
-          type: string
-          format: url
-          examples: ["https://a1marketing.slack.com/team/A342AB33"]
-        languages:
-          type: array
-          items:
-            type: string
-            examples: ["Spanish"]
+      allOf:
+        - $ref: "#/components/schemas/User"
+        - type: object
+          properties:
+            position:
+              type: string
+              examples: ["API Engineer"]
+            department:
+              type: object
+              properties:
+                name:
+                  type: string
+                  format:
+                  examples: ["Douglas"]
+                logoUrl:
+                  type: string
+                  format: url
+                  examples:
+                    ["http://localhost:3000/images/partners/douglas.svg"]
+            slack:
+              type: object
+              properties:
+                name:
+                  type: string
+                  examples: ["john.doe"]
+                profileUrl:
+                  type: string
+                  format: url
+                  examples: ["https://a1marketing.slack.com/team/A342AB33"]
+            languages:
+              type: array
+              items:
+                type: string
+                examples: ["Spanish"]
     PartnersIndex:
       type: array
       items:
         $ref: "#/components/schemas/IndexPartner"
     IndexPartner:
-      type: object
-      properties:
-        id:
-          $ref: "#/components/schemas/PartnerId"
-        name:
-          type: string
-          format:
-          examples: ["Douglas"]
-        logoUrl:
-          type: string
-          format: uri
-          examples: ["http://localhost:3000/images/partners/douglas.svg"]
+      $ref: "#/components/schemas/Partner"
     PartnerProfile:
-      type: object
-      properties:
-        id:
-          $ref: "#/components/schemas/PartnerId"
-        name:
-          type: string
-          format:
-          examples: ["Douglas"]
-        logoUrl:
-          type: string
-          format: uri
-          examples: ["http://localhost:3000/images/partners/douglas.svg"]
+      $ref: "#/components/schemas/Partner"
     PartnerMembers:
       type: object
       properties:
         members:
           type: array
           items:
-            $ref: "#/components/schemas/Member"
+            $ref: "#/components/schemas/User"
         captains:
           type: array
           items:
-            $ref: "#/components/schemas/Member"
-    Member:
+            $ref: "#/components/schemas/User"
+    Partner:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/UserId"
-        firstName:
+          type: integer
+          format: int64
+          examples: [10]
+        name:
           type: string
-        lastName:
+          format:
+          examples: ["Douglas"]
+        logoUrl:
           type: string
-        position:
-          type: string
-        profilePictureUrl:
-          type: string
-          format: url
-    UserId:
-      type: integer
-      format: int64
-      examples: [10]
-    PartnerId:
-      type: integer
-      format: int64
-      examples: [10]
+          format: uri
+          examples: ["http://localhost:3000/images/partners/douglas.svg"]
   requestBodies:
     Login:
       description: Google provided user's JWT token
@@ -335,6 +321,18 @@ components:
         text/plain:
           schema:
             const: "Unauthorized"
+    NoContent:
+      description: No content returned in body
+      content:
+        plain/text:
+          schema:
+            const: null
+    NotFound:
+      description: Resource not found
+      content:
+        text/plain:
+          schema:
+            const: "Not Found"
     LoggedInUser:
       description: Retrieved user session info
       content:
