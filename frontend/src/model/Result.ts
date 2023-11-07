@@ -6,7 +6,8 @@ export interface TagItem {
 export interface UserItem {
   id: string;
   profilePictureUrl: string;
-  fullName: string;
+  firstName: string;
+  lastName?: string;
   position: string;
 }
 

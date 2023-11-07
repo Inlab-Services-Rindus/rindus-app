@@ -2,7 +2,8 @@ import { Avatar, AvatarSize } from '@/organisms/avatar/Avatar';
 import '@/organisms/user-card/UserCard.scss';
 
 interface UserCardProps {
-  fullName: string;
+  firstName: string;
+  lastName?: string;
   isBirthday?: boolean;
   isCaptain?: boolean;
   profilePictureUrl: string;
@@ -12,7 +13,8 @@ interface UserCardProps {
 }
 
 export default function UserCard({
-  fullName,
+  firstName,
+  lastName,
   isBirthday,
   isCaptain,
   profilePictureUrl,
@@ -20,6 +22,8 @@ export default function UserCard({
   handleClick,
   size,
 }: UserCardProps): JSX.Element {
+  const fullName = `${firstName}${lastName ? ` ${lastName}` : ''}`;
+
   return (
     <div onClick={() => handleClick(fullName)} className="user-card">
       <div className="user-card__img">

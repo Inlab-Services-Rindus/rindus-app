@@ -44,7 +44,8 @@ export function SearchDetails(): JSX.Element {
           handleClick={() => console.log('hola')}
           key={user.id}
           profilePictureUrl={user.profilePictureUrl}
-          fullName={user.fullName}
+          firstName={user.firstName}
+          lastName={user.lastName}
           position={user.position}
         />
       ))}

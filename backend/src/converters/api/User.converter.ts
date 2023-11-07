@@ -13,7 +13,7 @@ import { LoggedInUserConverter } from '@/converters/api/Session.converter';
 import { Partner } from '@/models/business/Partner';
 import { config } from '@/config';
 
-class UserConverter implements Converter<BusinessUser, ApiUser> {
+export class UserConverter implements Converter<BusinessUser, ApiUser> {
   private readonly userLoginConverter: LoggedInUserConverter;
 
   constructor() {
@@ -69,17 +69,16 @@ export class DeparmentConverter
 export class UserResultConverter
   implements Converter<BusinessUser, UserResult>
 {
-  private readonly loggedInUserConverter: LoggedInUserConverter;
+  private readonly userConverter: UserConverter;
 
   constructor() {
-    this.loggedInUserConverter = new LoggedInUserConverter();
+    this.userConverter = new UserConverter();
   }
 
   convert(source: BusinessUser): UserResult {
     return {
-      ...this.loggedInUserConverter.convert(source),
+      ...this.userConverter.convert(source),
       position: source.position,
-      isBirthday: source.isBirthday,
     };
   }
 }

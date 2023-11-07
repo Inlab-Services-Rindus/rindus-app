@@ -81,7 +81,8 @@ export function Search(): JSX.Element {
           handleClick={handleClick}
           key={user.id}
           profilePictureUrl={user.profilePictureUrl}
-          fullName={user.fullName}
+          firstName={user.firstName}
+          lastName={user.lastName}
           position={user.position}
           size="small"
         />
