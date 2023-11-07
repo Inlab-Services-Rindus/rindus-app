@@ -21,11 +21,18 @@ export class KnexPartnerRepository implements PartnerRepository {
   }
 
   public async members(id: number): Promise<PartnerMembers | undefined> {
-    const records = await this.knex({ u: 'users' })
-      .select('*')
-      .where('u.partner_id', id);
+    const [memberRecords, captainRecords] = await Promise.all([
+      this.knex({ u: 'users' }).select('*').where('u.partner_id', id),
+      this.knex({ tc: 'team_captains' })
+        .join({ u: 'users' }, 'tc.user_id', 'u.id')
+        .select('u.*')
+        .where('tc.partner_id', id),
+    ]);
 
-    return this.partnerMembersConverter.convert(records);
+    return this.partnerMembersConverter.convert([
+      memberRecords,
+      captainRecords,
+    ]);
   }
 
   public async findById(id: number): Promise<Partner | undefined> {

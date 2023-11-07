@@ -21,7 +21,7 @@ export class PartnerRecordConverter
 }
 
 export class PartnerMembersConverter
-  implements Converter<UserRecord[], PartnerMembers>
+  implements Converter<[UserRecord[], UserRecord[]], PartnerMembers>
 {
   private readonly userConverter: UserConverter;
 
@@ -29,12 +29,15 @@ export class PartnerMembersConverter
     this.userConverter = new UserConverter();
   }
 
-  convert(source: UserRecord[]): PartnerMembers {
+  convert(source: [UserRecord[], UserRecord[]]): PartnerMembers {
+    const [memberRecords, captainRecords] = source;
     return {
-      members: source.map((userRecord) =>
+      members: memberRecords.map((userRecord) =>
         this.userConverter.convert(userRecord),
       ),
-      captains: [],
+      captains: captainRecords.map((userRecord) =>
+        this.userConverter.convert(userRecord),
+      ),
     };
   }
 }
