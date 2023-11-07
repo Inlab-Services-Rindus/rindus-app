@@ -3,8 +3,10 @@ import {
   PartnerRecord,
   WithPartnerRecord,
 } from '@/models/service/database/PartnerRecord';
-import { Partner } from '@/models/business/Partner';
+import { Partner, PartnerMembers } from '@/models/business/Partner';
 import { config } from '@/config';
+import { UserRecord } from '@/models/service/database/UserRecord';
+import { UserConverter } from '@/converters/service/UserRecord.converter';
 
 export class PartnerRecordConverter
   implements Converter<PartnerRecord, Partner>
@@ -14,6 +16,28 @@ export class PartnerRecordConverter
       id: source.id,
       name: source.name,
       logoUrl: `${config.app.url}${source.logo_url}`,
+    };
+  }
+}
+
+export class PartnerMembersConverter
+  implements Converter<[UserRecord[], UserRecord[]], PartnerMembers>
+{
+  private readonly userConverter: UserConverter;
+
+  constructor() {
+    this.userConverter = new UserConverter();
+  }
+
+  convert(source: [UserRecord[], UserRecord[]]): PartnerMembers {
+    const [memberRecords, captainRecords] = source;
+    return {
+      members: memberRecords.map((userRecord) =>
+        this.userConverter.convert(userRecord),
+      ),
+      captains: captainRecords.map((userRecord) =>
+        this.userConverter.convert(userRecord),
+      ),
     };
   }
 }

@@ -13,6 +13,13 @@ avatarsRouter.use(
       }
       return proxyReqOpts;
     },
+    userResHeaderDecorator(headers) {
+      // recieves an Object of headers, returns an Object of headers.
+      return {
+        ...headers,
+        ['cache-control']: 'public, max-age=0',
+      };
+    },
   }),
 );
 
