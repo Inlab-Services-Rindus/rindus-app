@@ -8,7 +8,7 @@ interface UserCardProps {
   isCaptain?: boolean;
   profilePictureUrl: string;
   position: string;
-  handleClick: (query: string) => void;
+  handleClick?: (query: string) => void;
   size?: AvatarSize;
 }
 
@@ -24,8 +24,14 @@ export default function UserCard({
 }: UserCardProps): JSX.Element {
   const fullName = `${firstName}${lastName ? ` ${lastName}` : ''}`;
 
+  const handleClickCard = () => {
+    if (handleClick) {
+      handleClick(fullName);
+    }
+  };
+
   return (
-    <div onClick={() => handleClick(fullName)} className="user-card">
+    <div onClick={handleClickCard} className="user-card">
       <div className="user-card__img">
         <Avatar
           profilePictureUrl={profilePictureUrl}

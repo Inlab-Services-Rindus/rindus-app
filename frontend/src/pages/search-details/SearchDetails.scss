@@ -1,7 +1,25 @@
 @import '@/assets/scss/_colors.scss';
 @import '@/assets/scss/_fonts.scss';
 
-.search-container {
+.result__container {
   display: flex;
-  width: 100%;
+  flex-direction: column;
+  padding: 0px 16px;
+}
+
+.box__container {
+  padding: 20px 0px;
+}
+
+.result__tag {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid $rindus-light-gray;
+
+  &__text {
+    @include text($font-poppins-regular, 12px, 400, 16px);
+    color: var(--Gray-Neutral, #a5a5aa);
+  }
 }

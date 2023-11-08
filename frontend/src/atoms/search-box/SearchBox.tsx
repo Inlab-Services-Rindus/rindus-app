@@ -1,7 +1,7 @@
 import '@/atoms/search-box/SearchBox.scss';
 
 interface Props {
-  inputHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  inputHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   inputValue: string;
   clickHandler?: (event: React.MouseEvent<HTMLInputElement>) => void;
 }

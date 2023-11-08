@@ -25,23 +25,21 @@ export function SearchDetails(): JSX.Element {
     }
   }, []);
 
-  const handleInput = () => {
-    console.log('value');
-  };
-
   return (
-    <>
-      <div className="search-container">
-        <SearchBox inputHandler={handleInput} inputValue={query} />
+    <div className="result__container">
+      <div className="box__container">
+        <SearchBox inputValue={query} />
       </div>
-      <Tag
-        tagLabel="Results for:"
-        handleClick={() => console.log('hola')}
-        tag={query}
-      />
+      <div className="result__tag">
+        <div>
+          <span className="result__tag__text">Results for: </span>
+        </div>
+        <div>
+          <Tag tag={query.toUpperCase()} />
+        </div>
+      </div>
       {search?.map((user: UserItem) => (
         <UserCard
-          handleClick={() => console.log('hola')}
           key={user.id}
           profilePictureUrl={user.profilePictureUrl}
           firstName={user.firstName}
@@ -49,6 +47,6 @@ export function SearchDetails(): JSX.Element {
           position={user.position}
         />
       ))}
-    </>
+    </div>
   );
 }
