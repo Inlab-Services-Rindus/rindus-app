@@ -25,23 +25,14 @@ export function SearchDetails(): JSX.Element {
     }
   }, []);
 
-  const handleInput = () => {
-    console.log('value');
-  };
-
   return (
     <>
       <div className="search-container">
-        <SearchBox inputHandler={handleInput} inputValue={query} />
+        <SearchBox inputValue={query} />
       </div>
-      <Tag
-        tagLabel="Results for:"
-        handleClick={() => console.log('hola')}
-        tag={query}
-      />
+      <Tag tagLabel="Results for:" tag={query} />
       {search?.map((user: UserItem) => (
         <UserCard
-          handleClick={() => console.log('hola')}
           key={user.id}
           profilePictureUrl={user.profilePictureUrl}
           firstName={user.firstName}

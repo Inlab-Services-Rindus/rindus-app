@@ -21,7 +21,7 @@ export function Search(): JSX.Element {
   const [inputValue, setInputValue] = useState<string>('');
   const [error, setError] = useState<unknown>('');
   const [debouncedQuery] = useDebounce(query, 400);
-  const noResults = !tags.length && !users.length;
+  const [noResults, setNoResults] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +34,9 @@ export function Search(): JSX.Element {
         );
         const data = (await response.json()) as SearchResponse;
         const { tagNames, userItems } = setTagsAndUsers(data);
+        console.log(tagNames, 'esto es lo que se pinta');
+
+        setNoResults(!tagNames.length && !userItems.length);
         setTags(tagNames);
         setUsers(userItems);
       } catch (error) {
@@ -47,6 +50,7 @@ export function Search(): JSX.Element {
     } else {
       setTags([]);
       setUsers([]);
+      setNoResults(false);
     }
   }, [debouncedQuery]);
 
@@ -63,13 +67,8 @@ export function Search(): JSX.Element {
 
   const renderResults = () => (
     <div style={{ width: '100%' }}>
-      {search && (
-        <Tag
-          key={search}
-          handleClick={handleClick}
-          tag={search}
-          noResults={noResults}
-        />
+      {search && !noResults && (
+        <Tag key={search} handleClick={handleClick} tag={search} />
       )}
       {tags?.map((item: string) => (
         <Tag key={item} handleClick={handleClick} tag={item} />
@@ -85,6 +84,11 @@ export function Search(): JSX.Element {
           size="small"
         />
       ))}
+      {noResults && (
+        <div className="tag">
+          <p className="tag__no-result">No results found for {query}.</p>
+        </div>
+      )}
     </div>
   );
 
