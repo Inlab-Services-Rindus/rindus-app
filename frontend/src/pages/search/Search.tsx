@@ -19,13 +19,14 @@ export function Search(): JSX.Element {
   const [tags, setTags] = useState<string[]>([]);
   const [users, setUsers] = useState<UserItem[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
-  const [error, setError] = useState<unknown>('');
+  const [hasError, setHasError] = useState<boolean>(false);
   const [debouncedQuery] = useDebounce(query, 400);
   const [noResults, setNoResults] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setHasError(false);
         const response = await fetch(
           encodeURI(`${config.backendUrl}/suggestions?query=${query}`),
           {
@@ -40,7 +41,7 @@ export function Search(): JSX.Element {
         setTags(tagNames);
         setUsers(userItems);
       } catch (error) {
-        setError(error);
+        setHasError(true);
         console.error('Error fetching suggestions:', error);
       }
     };
@@ -65,14 +66,20 @@ export function Search(): JSX.Element {
     navigate(`/search/${query}`);
   };
 
+  const renderTag = (tagName: string) => (
+    <div key={tagName} className="tag__container">
+      <button className="tag__button" onClick={() => handleClick(tagName)}>
+        <Tag tag={tagName.toUpperCase()} />
+      </button>
+    </div>
+  );
+
   const renderResults = () => (
     <div style={{ width: '100%' }}>
-      {search && !noResults && (
-        <Tag key={search} handleClick={handleClick} tag={search} />
-      )}
-      {tags?.map((item: string) => (
-        <Tag key={item} handleClick={handleClick} tag={item} />
-      ))}
+      <div className="search__tag">
+        {search && renderTag(search)}
+        {tags?.map((item: string) => renderTag(item))}
+      </div>
       {users?.map((user: UserItem) => (
         <UserCard
           handleClick={handleClick}
@@ -84,11 +91,12 @@ export function Search(): JSX.Element {
           size="small"
         />
       ))}
-      {noResults && (
-        <div className="tag">
-          <p className="tag__no-result">No results found for {query}.</p>
-        </div>
-      )}
+    </div>
+  );
+
+  const renderNoResults = () => (
+    <div className="no-result">
+      <p className="no-result__text">No results found for {query}.</p>
     </div>
   );
 
@@ -96,8 +104,10 @@ export function Search(): JSX.Element {
     <>
       <div className="search-container">
         <SearchBox inputHandler={handleInput} inputValue={inputValue} />
+        {hasError && <Retry refresh={() => navigate('/search')} />}
+        {noResults && renderNoResults()}
+        {!noResults && renderResults()}
       </div>
-      {error ? <Retry refresh={() => navigate('/search')} /> : renderResults()}
     </>
   );
 }

@@ -26,11 +26,18 @@ export function SearchDetails(): JSX.Element {
   }, []);
 
   return (
-    <>
-      <div className="search-container">
+    <div className="result__container">
+      <div className="box__container">
         <SearchBox inputValue={query} />
       </div>
-      <Tag tagLabel="Results for:" tag={query} />
+      <div className="result__tag">
+        <div>
+          <span className="result__tag__text">Results for: </span>
+        </div>
+        <div>
+          <Tag tag={query.toUpperCase()} />
+        </div>
+      </div>
       {search?.map((user: UserItem) => (
         <UserCard
           key={user.id}
@@ -40,6 +47,6 @@ export function SearchDetails(): JSX.Element {
           position={user.position}
         />
       ))}
-    </>
+    </div>
   );
 }

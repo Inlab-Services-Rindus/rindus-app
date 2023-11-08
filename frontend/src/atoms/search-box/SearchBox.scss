@@ -2,24 +2,20 @@
 
 .searchbox {
   display: flex;
-  padding: 20px 16px;
   justify-content: center;
   align-items: center;
   position: relative;
-  width: 100%;
-  height: 52px;
 
   &__input {
     display: flex;
     height: 52px;
-    padding: 0px 16px;
     align-items: center;
     align-self: stretch;
     border-radius: 8px;
     background: #f7f8fc;
     border: none;
     width: 100%;
-    text-indent: 38px;
+    text-indent: 46px;
     outline: none;
     color: var(--Gray-Medium, #6e768d);
 
@@ -30,7 +26,7 @@
     }
   }
   &__icon {
-    left: 34px;
+    left: 16px;
     position: absolute;
   }
 }
