@@ -1,14 +1,14 @@
 export interface Employee {
+  id: number;
   firstName: string;
   lastName: string;
   email: string;
   profilePictureUrl: string;
   isBirthday?: boolean;
-  id: string;
 }
 
 export interface EmployeeProfile extends Employee {
-  position?: string;
+  position: string;
   office: string;
   department?: Department;
   languages: string[];
