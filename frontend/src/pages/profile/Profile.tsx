@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import email from '@/assets/email.svg';
 import slack from '@/assets/slack.svg';
 import Loader from '@/atoms/loader/Loader';
+import Tag from '@/atoms/tag/Tag';
 import { config } from '@/config/config';
 import useFetch from '@/hooks/fetch/useFetch';
 import { EmployeeProfile } from '@/model/Employee';
@@ -58,8 +59,9 @@ export function Profile() {
             <Link
               className="account__link"
               to={profile?.slack.profileUrl ?? ''}
+              target="_blank"
             >
-              <span className="account__address">{profile?.slack.name}</span>
+              <span className="account__address">@{profile?.slack.name}</span>
             </Link>
           </div>
         </div>
@@ -68,10 +70,11 @@ export function Profile() {
             <span className="languages__title">Languages:</span>
           </div>
           <div className="languages__tags-container">
-            {profile?.languages.map((language, index) => (
-              <div key={index} className="languages__tags">
-                {language.charAt(0).toUpperCase() + language.slice(1)}
-              </div>
+            {profile?.languages.map((language) => (
+              <Tag
+                key={profile?.id}
+                tag={language.charAt(0).toUpperCase() + language.slice(1) ?? ''}
+              />
             ))}
           </div>
         </div>
