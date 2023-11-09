@@ -14,7 +14,7 @@ export function Header() {
   const { isLoggedIn, userProfileData } = useContext(AuthContext);
 
   const isHomePage = location.pathname === '/';
-  const isProfilePage = location.pathname === '/profile';
+  const isProfilePage = location.pathname === `/profile/${userProfileData?.id}`;
 
   const handleSearchNavigate = () => {
     navigate('/search');
