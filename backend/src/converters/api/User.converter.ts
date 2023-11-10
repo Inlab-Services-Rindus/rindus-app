@@ -62,7 +62,7 @@ export class DeparmentConverter
       return { name: source.name, logoUrl: source.logoUrl };
     }
 
-    return { name: 'rindus', logoUrl: `${config.app.url}/images/rindus.svg` };
+    return { name: 'rindus', logoUrl: `${config.app.url}/images/rindus.jpg` };
   }
 }
 

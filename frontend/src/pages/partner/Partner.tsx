@@ -69,6 +69,7 @@ export default function PartnerInfo() {
             <UserCard
               handleClick={() => console.log('hola')}
               key={employee.id}
+              id={employee.id}
               profilePictureUrl={employee.profilePictureUrl}
               firstName={employee.firstName}
               lastName={employee.lastName}
@@ -81,6 +82,7 @@ export default function PartnerInfo() {
             <UserCard
               handleClick={() => console.log('hola')}
               key={captain.id}
+              id={captain.id}
               profilePictureUrl={captain.profilePictureUrl}
               firstName={captain.firstName}
               lastName={captain.lastName}

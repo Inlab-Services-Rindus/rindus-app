@@ -84,6 +84,7 @@ export function Search(): JSX.Element {
         <UserCard
           handleClick={handleClick}
           key={user.id}
+          id={user.id}
           profilePictureUrl={user.profilePictureUrl}
           firstName={user.firstName}
           lastName={user.lastName}

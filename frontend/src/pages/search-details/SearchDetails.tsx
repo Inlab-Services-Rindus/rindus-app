@@ -40,6 +40,7 @@ export function SearchDetails(): JSX.Element {
       </div>
       {search?.map((user: UserItem) => (
         <UserCard
+          id={user.id}
           key={user.id}
           profilePictureUrl={user.profilePictureUrl}
           firstName={user.firstName}

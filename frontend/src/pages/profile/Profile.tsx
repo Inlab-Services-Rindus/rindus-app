@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import email from '@/assets/email.svg';
 import slack from '@/assets/slack.svg';
@@ -12,6 +12,8 @@ import '@/pages/profile/Profile.scss';
 
 export function Profile() {
   const { id } = useParams();
+
+  const navigate = useNavigate();
 
   const { data: profile, isLoading: isLoading } = useFetch<EmployeeProfile>({
     options: {
@@ -52,7 +54,9 @@ export function Profile() {
           </div>
           <div className="account">
             <img src={email} className="account__logo" />
-            <span className="account__address">{profile?.email}</span>
+            <span className="account__address">
+              <a href={`mailto:${profile?.email}`}>{profile?.email}</a>
+            </span>
           </div>
           <div className="account">
             <img src={slack} alt="" className="account__logo" />
