@@ -18,6 +18,10 @@ export interface UserRecord extends LoggedInUserRecord {
   birthday?: string;
 }
 
+export interface UserViewRecord extends UserRecord {
+  is_birthday: boolean;
+}
+
 export type UserProfileQueryRecord = UserRecord &
   Partial<WithPartnerRecord> &
   WithSlackInfoRecord &

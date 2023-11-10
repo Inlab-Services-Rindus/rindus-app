@@ -12,13 +12,14 @@ export class UserPrograms {
   public async index(
     mockBirthdays: boolean,
     page: number,
+    sessionUserId: number,
   ): Promise<Page<User>> {
-    const usersPage = await this.userRepository.page(page);
+    const usersPage = await this.userRepository.page(page, sessionUserId);
     const { data: users } = usersPage;
 
     return {
       ...usersPage,
-      data: page > 1 ? this.mockIsBirthday(users, mockBirthdays) : users,
+      data: page === 1 ? this.mockIsBirthday(users, mockBirthdays) : users,
     };
   }
 

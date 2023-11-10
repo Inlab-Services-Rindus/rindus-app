@@ -16,6 +16,7 @@ export class PartnerRecordConverter
       id: source.id,
       name: source.name,
       logoUrl: `${config.app.url}${source.logo_url}`,
+      description: source.description,
     };
   }
 }
@@ -55,7 +56,8 @@ export class WithPartnerRecordConverter
     if (
       !source.partner_id ||
       !source.partner_name ||
-      !source.partner_logo_url
+      !source.partner_logo_url ||
+      !source.partner_description
     ) {
       return undefined;
     }
@@ -64,6 +66,7 @@ export class WithPartnerRecordConverter
       id: source.partner_id,
       name: source.partner_name,
       logo_url: source.partner_logo_url,
+      description: source.partner_description,
     });
   }
 }

@@ -8,7 +8,11 @@ import {
 
 export interface UserRepository {
   all(): Promise<User[]>;
-  page(_page: number, _pageSize?: number): Promise<Page<User>>;
+  page(
+    _page: number,
+    sessionUserId: number,
+    _pageSize?: number,
+  ): Promise<Page<User>>;
   findUserByEmail(_email: string): Promise<LoggedInUser | undefined>;
   findUserById(_id: number): Promise<LoggedInUser | undefined>;
   findUserWithInfo(

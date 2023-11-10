@@ -20,6 +20,8 @@ tags:
 paths:
   /:
     get:
+      tags:
+        - other
       summary: Hello World
       operationId: helloWorld
       responses:
@@ -185,6 +187,72 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         404:
           $ref: "#/components/responses/NotFound"
+  /search:
+    get:
+      tags:
+        - searches
+      summary: Search users by given criteria
+      operationId: search
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: keyword
+          in: query
+          description: Tag which is being searched
+          required: false
+          schema:
+            enum:
+              - language
+              - position
+        - name: id
+          in: query
+          description: ID of the tag being searched
+          required: false
+          schema:
+            type: integer
+        - name: query
+          in: query
+          description: "[Alternative] Text to search for in users name"
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: Requested search result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResult"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        400:
+          $ref: "#/components/responses/BadRequest"
+  /suggestions:
+    get:
+      tags:
+        - searches
+      summary: Receive suggestions by given query
+      operationId: suggestions
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: query
+          in: query
+          description: Text to receive suggestions
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Search suggestions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuggestionsResult"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        400:
+          $ref: "#/components/responses/BadRequest"
 components:
   schemas:
     LoggedInUser:
@@ -276,18 +344,33 @@ components:
     IndexPartner:
       $ref: "#/components/schemas/Partner"
     PartnerProfile:
-      $ref: "#/components/schemas/Partner"
+      allOf:
+        - $ref: "#/components/schemas/Partner"
+        - properties:
+            description:
+              type: string
+              examples: ["An incredible partner"]
     PartnerMembers:
       type: object
       properties:
         members:
           type: array
           items:
-            $ref: "#/components/schemas/User"
+            allOf:
+              - $ref: "#/components/schemas/User"
+              - properties:
+                  position:
+                    type: string
+                    examples: ["Scrum Master"]
         captains:
           type: array
           items:
-            $ref: "#/components/schemas/User"
+            allOf:
+              - $ref: "#/components/schemas/User"
+              - properties:
+                  position:
+                    type: string
+                    examples: ["Team Captain"]
     Partner:
       type: object
       properties:
@@ -303,6 +386,59 @@ components:
           type: string
           format: uri
           examples: ["http://localhost:3000/images/partners/douglas.svg"]
+    SearchResult:
+      type: array
+      items:
+        $ref: "#/components/schemas/User"
+    SuggestionsResult:
+      type: array
+      items:
+        anyOf:
+          - $ref: "#/components/schemas/LanguageSuggestion"
+            minItems: 0
+            maxItems: 2
+          - $ref: "#/components/schemas/PositionSuggestion"
+            minItems: 0
+            maxItems: 2
+          - $ref: "#/components/schemas/UserSuggestions"
+            minItems: 0
+            maxItems: 1
+    LanguageSuggestion:
+      type: object
+      properties:
+        type:
+          const: language
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              examples: [10]
+            name:
+              type: string
+              examples: ["spanish"]
+    PositionSuggestion:
+      type: object
+      properties:
+        type:
+          const: position
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              examples: [10]
+            name:
+              type: string
+              examples: ["spanish"]
+    UserSuggestions:
+      type: array
+      items:
+        $ref: "#/components/schemas/User"
+        minItems: 0
+        maxItems: 5
   requestBodies:
     Login:
       description: Google provided user's JWT token
@@ -333,6 +469,12 @@ components:
         text/plain:
           schema:
             const: "Not Found"
+    BadRequest:
+      description: Request malformed
+      content:
+        text/plain:
+          schema:
+            const: "Bad Request"
     LoggedInUser:
       description: Retrieved user session info
       content:

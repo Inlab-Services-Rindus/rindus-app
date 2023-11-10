@@ -11,10 +11,12 @@ import {
   LoggedInUserRecord,
   UserProfileQueryRecord,
   UserRecord,
+  UserViewRecord,
 } from '@/models/service/database/UserRecord';
 import {
   LoggedInUserConverter,
   UserConverter,
+  UserViewConverter,
   UserWithInfoConverter,
 } from '@/converters/service/UserRecord.converter';
 import { Page } from '@/models/business/Pagination';
@@ -25,7 +27,8 @@ export class KnexUserRepository implements UserRepository {
   private readonly knex: Knex;
 
   private readonly userConverter: UserConverter;
-  private readonly userPageConverter: PageConverter<UserRecord, User>;
+  private readonly userViewConverter: UserViewConverter;
+  private readonly userPageConverter: PageConverter<UserViewRecord, User>;
   private readonly loggedInConverter: LoggedInUserConverter;
   private readonly userWithInfoConverter: UserWithInfoConverter;
 
@@ -34,8 +37,9 @@ export class KnexUserRepository implements UserRepository {
   constructor(knex: Knex) {
     this.knex = knex;
     this.userConverter = new UserConverter();
-    this.userPageConverter = new PageConverter<UserRecord, User>(
-      this.userConverter,
+    this.userViewConverter = new UserViewConverter();
+    this.userPageConverter = new PageConverter<UserViewRecord, User>(
+      this.userViewConverter,
     );
     this.loggedInConverter = new LoggedInUserConverter();
     this.userWithInfoConverter = new UserWithInfoConverter();
@@ -48,9 +52,13 @@ export class KnexUserRepository implements UserRepository {
 
   async page(
     page: number,
+    sessionUserId: number,
     pageSize = KnexUserRepository.PAGE_SIZE,
   ): Promise<Page<User>> {
-    const queryUserRecords = this.knex('users')
+    const queryUserRecords = this.knex('users_view')
+      .whereNot('id', sessionUserId)
+      .orderBy('is_birthday', 'desc')
+      .orderBy('first_name', 'asc')
       .offset((page - 1) * pageSize)
       .limit(pageSize);
 
@@ -143,6 +151,7 @@ export class KnexUserRepository implements UserRepository {
         { partner_id: 'p.id' },
         { partner_name: 'p.name' },
         { partner_logo_url: 'p.logo_url' },
+        { partner_description: 'p.description' },
         'position',
         'picture_url',
         { slack_name: 's.name' },

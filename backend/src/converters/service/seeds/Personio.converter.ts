@@ -63,6 +63,7 @@ export class PersonioEmployeePartnerConverter
     return {
       name: partnerName,
       logo_url: this.partnerLogoUrl(partnerName),
+      description: 'A rindus partner',
     };
   }
 

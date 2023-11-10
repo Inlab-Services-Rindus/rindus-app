@@ -56,7 +56,7 @@ export default function PartnerInfo() {
           </div>
           <div className="header__title">
             <h1>{partnerInfo.name}</h1>
-            <h2>Descripcion increible del partner</h2>
+            <h2>{partnerInfo.description}</h2>
           </div>
         </div>
       </div>

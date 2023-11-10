@@ -85,7 +85,10 @@ export class PartnerProfileConverter
   }
 
   convert(source: BusinessPartner): PartnerProfile {
-    return this.partnerConveter.convert(source);
+    return {
+      ...this.partnerConveter.convert(source),
+      description: source.description,
+    };
   }
 }
 

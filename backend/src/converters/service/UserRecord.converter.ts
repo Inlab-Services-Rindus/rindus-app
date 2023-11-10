@@ -6,6 +6,7 @@ import {
   LoggedInUserRecord,
   UserProfileQueryRecord,
   UserRecord,
+  UserViewRecord,
 } from '@/models/service/database/UserRecord';
 import { WithPartnerRecordConverter } from '@/converters/service/PartnerRecord.converter';
 
@@ -56,6 +57,26 @@ export class UserConverter implements Converter<UserRecord, User> {
       position: source.position,
       birthday,
       isBirthday: isBirthday(birthday),
+    };
+  }
+}
+
+export class UserViewConverter implements Converter<UserViewRecord, User> {
+  private readonly loggedInUserConverter: LoggedInUserConverter;
+
+  constructor() {
+    this.loggedInUserConverter = new LoggedInUserConverter();
+  }
+
+  convert(source: UserViewRecord): User {
+    return {
+      ...this.loggedInUserConverter.convert(source),
+      firstName: source.first_name,
+      lastName: source.last_name,
+      email: source.email,
+      position: source.position,
+      birthday: source.birthday,
+      isBirthday: source.is_birthday,
     };
   }
 }

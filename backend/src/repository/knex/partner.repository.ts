@@ -37,7 +37,6 @@ export class KnexPartnerRepository implements PartnerRepository {
 
   public async findById(id: number): Promise<Partner | undefined> {
     const maybeRecord = await this.knex<PartnerRecord>('partners')
-      .select('id', 'name', 'logo_url')
       .where('id', id)
       .first();
 
@@ -45,11 +44,7 @@ export class KnexPartnerRepository implements PartnerRepository {
   }
 
   public async all(): Promise<Partner[]> {
-    const partnerRecords = await this.knex<PartnerRecord>('partners').select(
-      'id',
-      'name',
-      'logo_url',
-    );
+    const partnerRecords = await this.knex<PartnerRecord>('partners');
 
     return partnerRecords.map((record) =>
       this.partnerConverter.convert(record),
