@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import email from '@/assets/email.svg';
 import slack from '@/assets/slack.svg';
