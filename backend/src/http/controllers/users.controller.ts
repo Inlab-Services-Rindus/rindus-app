@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 
 import { UserPrograms } from '@/programs/user.programs';
-import { parsePageQueryParam } from '@/helpers/RequestHelper';
+import {
+  parsePageQueryParam,
+  parsePageSizeQueryParam,
+} from '@/helpers/RequestHelper';
 import { toRecordId } from '@/helpers/RecordConverterHelper';
 import {
   ShowUserConverter,
@@ -27,11 +30,13 @@ export class UsersController {
     const mockBirthdays =
       request.headers[UsersController.MOCK_BIRTHDAYS_HTTP_HEADER.toLowerCase()];
     const page = parsePageQueryParam(request);
+    const pageSize = parsePageSizeQueryParam(request);
     const sessionUserId = request.session.userId as number; // Safe cast because it is a protected route
 
     const users = await this.userPrograms.index(
-      !!mockBirthdays,
       page,
+      pageSize,
+      !!mockBirthdays,
       sessionUserId,
     );
 

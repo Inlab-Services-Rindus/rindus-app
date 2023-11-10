@@ -32,7 +32,8 @@ export class KnexUserRepository implements UserRepository {
   private readonly loggedInConverter: LoggedInUserConverter;
   private readonly userWithInfoConverter: UserWithInfoConverter;
 
-  private static readonly PAGE_SIZE = 18;
+  public static readonly DEFAULT_PAGE = 1;
+  public static readonly PAGE_SIZE = 18;
 
   constructor(knex: Knex) {
     this.knex = knex;
@@ -52,8 +53,8 @@ export class KnexUserRepository implements UserRepository {
 
   async page(
     page: number,
+    pageSize: number,
     sessionUserId: number,
-    pageSize = KnexUserRepository.PAGE_SIZE,
   ): Promise<Page<User>> {
     const queryUserRecords = this.knex('users_view')
       .whereNot('id', sessionUserId)
@@ -73,7 +74,7 @@ export class KnexUserRepository implements UserRepository {
 
     return this.userPageConverter.convert([
       userRecords,
-      this.totalPages(totalRecords),
+      this.totalPages(totalRecords, pageSize),
     ]);
   }
 
@@ -83,9 +84,10 @@ export class KnexUserRepository implements UserRepository {
 
   private totalPages(
     maybeTotalRecords: Record<string, number> | undefined,
+    pageSize: number,
   ): number {
     if (maybeTotalRecords) {
-      return Math.ceil(maybeTotalRecords.count / KnexUserRepository.PAGE_SIZE);
+      return Math.ceil(maybeTotalRecords.count / pageSize);
     }
 
     return 0;

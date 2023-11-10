@@ -10,11 +10,16 @@ export class UserPrograms {
   }
 
   public async index(
-    mockBirthdays: boolean,
     page: number,
+    pageSize: number,
+    mockBirthdays: boolean,
     sessionUserId: number,
   ): Promise<Page<User>> {
-    const usersPage = await this.userRepository.page(page, sessionUserId);
+    const usersPage = await this.userRepository.page(
+      page,
+      pageSize,
+      sessionUserId,
+    );
     const { data: users } = usersPage;
 
     return {

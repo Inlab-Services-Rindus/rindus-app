@@ -9,9 +9,9 @@ import {
 export interface UserRepository {
   all(): Promise<User[]>;
   page(
-    _page: number,
+    page: number,
+    pageSize: number,
     sessionUserId: number,
-    _pageSize?: number,
   ): Promise<Page<User>>;
   findUserByEmail(_email: string): Promise<LoggedInUser | undefined>;
   findUserById(_id: number): Promise<LoggedInUser | undefined>;
