@@ -27,7 +27,10 @@ export async function seed(knex: Knex): Promise<void> {
   const employees = await Promise.all(
     personioData.data.items
       .map((employeeData) => employeeData.data)
-      .filter((data) => data.email.includes('@rindus.de'))
+      .filter(
+        (data) =>
+          data.email.includes('@rindus.de') || data.email.includes('@mail.de'),
+      )
       .map(async (employee) => await processEmployeeBaseData(employee)),
   );
 
