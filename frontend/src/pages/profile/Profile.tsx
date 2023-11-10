@@ -13,8 +13,6 @@ import '@/pages/profile/Profile.scss';
 export function Profile() {
   const { id } = useParams();
 
-  const navigate = useNavigate();
-
   const { data: profile, isLoading: isLoading } = useFetch<EmployeeProfile>({
     options: {
       credentials: 'include',
