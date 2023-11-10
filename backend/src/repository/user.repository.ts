@@ -18,4 +18,5 @@ export interface UserRepository {
   findUserWithInfo(
     _id: number,
   ): Promise<(User & WithInfo & WithLanguages) | undefined>;
+  allPositions(): Promise<string[]>;
 }

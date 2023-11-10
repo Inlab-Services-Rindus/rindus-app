@@ -1,11 +1,8 @@
+import { Language } from '@/models/business/Language';
 import { User } from '@/models/business/User';
 
-export type Suggestion = KeywordSuggestion | UsersSuggestion;
+type Position = string;
 
-export interface KeywordSuggestion {
-  keyword: string;
-}
+export type Suggestions = Suggestion[];
 
-export interface UsersSuggestion {
-  users: User[];
-}
+export type Suggestion = Language | Position | User[];

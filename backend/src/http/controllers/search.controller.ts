@@ -1,4 +1,4 @@
-import { SuggestionsConverter } from '@/converters/api/Search.converter';
+import { SuggestionsResultConverter } from '@/converters/api/Search.converter';
 import { UserResultConverter } from '@/converters/api/User.converter';
 import { SearchPrograms } from '@/programs/search.programs';
 import { Request, Response } from 'express';
@@ -8,12 +8,12 @@ export class SearchController {
 
   private readonly userResultConverter: UserResultConverter;
 
-  private readonly suggestionsConverter: SuggestionsConverter;
+  private readonly suggestionsResultConverter: SuggestionsResultConverter;
 
   constructor(searchPrograms: SearchPrograms) {
     this.searchPrograms = searchPrograms;
     this.userResultConverter = new UserResultConverter();
-    this.suggestionsConverter = new SuggestionsConverter();
+    this.suggestionsResultConverter = new SuggestionsResultConverter();
   }
 
   public async suggestions(request: Request, response: Response) {
@@ -22,7 +22,7 @@ export class SearchController {
     if (maybeQuery) {
       const results = await this.searchPrograms.suggestions(maybeQuery);
 
-      const suggestions = this.suggestionsConverter.convert(results);
+      const suggestions = this.suggestionsResultConverter.convert(results);
 
       return response.send(suggestions);
     }

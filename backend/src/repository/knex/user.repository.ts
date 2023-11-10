@@ -45,6 +45,15 @@ export class KnexUserRepository implements UserRepository {
     this.loggedInConverter = new LoggedInUserConverter();
     this.userWithInfoConverter = new UserWithInfoConverter();
   }
+
+  public async allPositions(): Promise<string[]> {
+    const positionRecords = await this.knex('users')
+      .select('position')
+      .distinct();
+
+    return positionRecords.map((record) => record.position);
+  }
+
   async all(): Promise<User[]> {
     const userRecords = await this.knex('users');
 

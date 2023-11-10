@@ -439,13 +439,9 @@ components:
         data:
           type: object
           properties:
-            id:
-              type: integer
-              format: int64
-              examples: [10]
             name:
               type: string
-              examples: ["spanish"]
+              examples: ["Scrum Master"]
     UserSuggestions:
       type: array
       items:

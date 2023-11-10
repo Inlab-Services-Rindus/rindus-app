@@ -1,4 +1,4 @@
-import { Suggestion } from '@/models/business/Suggestions';
+import { Suggestions } from '@/models/business/Suggestions';
 import { User } from '@/models/business/User';
 import { SearchService } from '@/services/search';
 
@@ -9,14 +9,14 @@ export class SearchPrograms {
     this.searchService = searchService;
   }
 
-  public async suggestions(query: string): Promise<Suggestion[]> {
+  public async suggestions(query: string): Promise<Suggestions> {
     const [languages, positions, users] = await Promise.all([
       this.searchService.suggestLanguages(query),
       this.searchService.suggestPositions(query),
       this.searchService.searchUsers(query),
     ]);
 
-    return [...languages, ...positions, { users: users.slice(0, 5) }];
+    return [...languages, ...positions, users];
   }
 
   public async search(query: string): Promise<User[]> {

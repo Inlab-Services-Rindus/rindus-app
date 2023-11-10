@@ -1,11 +1,14 @@
 import { Converter } from '@/converters/Converter';
 import { UserConverter } from '@/converters/api/User.converter';
-import { SuggestionUser, Suggestions } from '@/models/api/search/Suggestion';
-import { Suggestion } from '@/models/business/Suggestions';
+import {
+  SuggestionUser,
+  SuggestionsResult,
+} from '@/models/api/search/Suggestion';
+import { Suggestions } from '@/models/business/Suggestions';
 import { User } from '@/models/business/User';
 
-export class SuggestionsConverter
-  implements Converter<Suggestion[], Suggestions>
+export class SuggestionsResultConverter
+  implements Converter<Suggestions, SuggestionsResult>
 {
   private readonly suggestionUserConverter: SuggestionUserConverter;
 
@@ -13,22 +16,26 @@ export class SuggestionsConverter
     this.suggestionUserConverter = new SuggestionUserConverter();
   }
 
-  convert(source: Suggestion[]): Suggestions {
-    return source.map((suggestion) => {
-      if ('keyword' in suggestion) {
-        return {
-          type: 'keyword',
-          data: suggestion.keyword,
-        };
+  convert(source: Suggestions): SuggestionsResult {
+    return source.reduce((acc, suggestion) => {
+      if (Array.isArray(suggestion)) {
+        return acc.concat(
+          suggestion.map((user) => this.suggestionUserConverter.convert(user)),
+        );
+      } else if (typeof suggestion === 'string') {
+        return acc.concat({
+          type: 'position',
+          data: suggestion,
+        });
+      } else if ('id' in suggestion) {
+        return acc.concat({
+          type: 'language',
+          data: suggestion,
+        });
       } else {
-        return {
-          type: 'freetext',
-          data: suggestion.users.map((user) =>
-            this.suggestionUserConverter.convert(user),
-          ),
-        };
+        return acc;
       }
-    });
+    }, [] as SuggestionsResult);
   }
 }
 
