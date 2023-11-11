@@ -1,20 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Loader from '@/atoms/loader/Loader';
 import { config } from '@/config/config';
 import { EmployeeProfile } from '@/model/Employee';
-import { Partner } from '@/model/Partner';
+import { Partner, PartnerMembers } from '@/model/Partner';
 import UserCard from '@/organisms/user-card/UserCard';
 import '@/pages/partner/Partner.scss';
 
-interface PartnerMembers {
-  members: EmployeeProfile[];
-  captains: EmployeeProfile[];
-}
-
 export default function PartnerInfo() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [partnerInfo, setPartnerInfo] = useState<Partner>();
   const [members, setMembers] = useState<EmployeeProfile[]>([]);
@@ -43,6 +39,10 @@ export default function PartnerInfo() {
     return <Loader />;
   }
 
+  const handleNavigate = (id: number) => {
+    navigate(`/profile/${id}`);
+  };
+
   return (
     <div className="partner">
       <div className="partner__header">
@@ -67,7 +67,7 @@ export default function PartnerInfo() {
         <div className="body__employees">
           {members?.map((employee) => (
             <UserCard
-              handleClick={() => console.log('hola')}
+              handleClick={() => handleNavigate(employee?.id)}
               key={employee.id}
               profilePictureUrl={employee.profilePictureUrl}
               firstName={employee.firstName}
@@ -79,7 +79,7 @@ export default function PartnerInfo() {
         <div className="body__captains">
           {captains?.map((captain) => (
             <UserCard
-              handleClick={() => console.log('hola')}
+              handleClick={() => handleNavigate(captain?.id)}
               key={captain.id}
               profilePictureUrl={captain.profilePictureUrl}
               firstName={captain.firstName}

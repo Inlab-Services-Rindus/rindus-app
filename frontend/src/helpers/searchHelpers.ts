@@ -11,6 +11,6 @@ export const setTagsAndUsers = (data: SearchItem[]) => {
       userItems.push(...item.data);
     }
   });
-  console.log(tagNames, 'aqui estan');
+
   return { tagNames, userItems };
 };

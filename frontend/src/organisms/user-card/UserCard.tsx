@@ -31,7 +31,11 @@ export default function UserCard({
   };
 
   return (
-    <div onClick={handleClickCard} className="user-card">
+    <div
+      onClick={handleClickCard}
+      className="user-card"
+      data-testid="user-card"
+    >
       <div className="user-card__img">
         <Avatar
           profilePictureUrl={profilePictureUrl}
