@@ -59,10 +59,14 @@ export class DeparmentConverter
 {
   convert(source: Partner | undefined): Department {
     if (source) {
-      return { name: source.name, logoUrl: source.logoUrl };
+      return { id: source.id, name: source.name, logoUrl: source.logoUrl };
     }
 
-    return { name: 'rindus', logoUrl: `${config.app.url}/images/rindus.svg` };
+    return {
+      id: null,
+      name: 'rindus',
+      logoUrl: `${config.app.url}/images/rindus.svg`,
+    };
   }
 }
 

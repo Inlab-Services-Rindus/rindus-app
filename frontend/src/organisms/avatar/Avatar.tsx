@@ -47,7 +47,7 @@ export function Avatar({
           loading="lazy"
           className="avatar__picture__img"
           src={profilePictureUrl}
-          alt={`${firstName}'s profile`}
+          alt={`${firstName}'s profile picture`}
         />
       </div>
       {renderBadge()}

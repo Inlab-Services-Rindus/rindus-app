@@ -9,6 +9,7 @@ export interface UserProfile extends User {
 }
 
 export interface Department {
+  id: number | null; // null for employees that work for rindus
   name: string;
   logoUrl: string;
 }
