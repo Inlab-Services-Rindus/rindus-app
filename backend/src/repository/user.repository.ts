@@ -13,10 +13,11 @@ export interface UserRepository {
     pageSize: number,
     sessionUserId: number,
   ): Promise<Page<User>>;
-  findUserByEmail(_email: string): Promise<LoggedInUser | undefined>;
-  findUserById(_id: number): Promise<LoggedInUser | undefined>;
+  findUserByEmail(email: string): Promise<LoggedInUser | undefined>;
+  findUserById(id: number): Promise<LoggedInUser | undefined>;
   findUserWithInfo(
-    _id: number,
+    id: number,
   ): Promise<(User & WithInfo & WithLanguages) | undefined>;
   allPositions(): Promise<string[]>;
+  allByLanguage(languageId: number): Promise<User[]>;
 }
