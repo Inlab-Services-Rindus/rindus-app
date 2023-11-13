@@ -5,6 +5,7 @@
   flex-direction: column;
   align-items: center;
   padding-bottom: 12px;
+  max-width: 104px;
   gap: 4px;
 
   &__name {
@@ -12,5 +13,9 @@
     text-align: center;
     padding: 4px;
     @include text($font-poppins-regular, 14px, 400, 16px);
+
+    &--bold {
+      @include text($font-poppins-regular, 14px, 600, 16px);
+    }
   }
 }

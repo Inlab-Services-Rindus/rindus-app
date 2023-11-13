@@ -82,7 +82,7 @@ export class PersonioEmployeePartnerConverter
       .replace(/&/g, 'and')
       .replace(/loyalty-partner-solutions/g, 'lps');
 
-    return `/images/partners/${sanitisedPartnerName}.svg`;
+    return `/images/partners/${sanitisedPartnerName}.jpg`;
   }
 
   private isPartner(departmentId: string): boolean {
