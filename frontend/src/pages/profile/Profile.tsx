@@ -32,6 +32,7 @@ export function Profile() {
             key={profile?.id}
             profilePictureUrl={profile?.profilePictureUrl ?? ''}
             isBirthday={profile?.isBirthday ?? false}
+            firstName={profile?.firstName}
             // isCaptain={profile?.isCaptain}
           />
 
@@ -42,7 +43,19 @@ export function Profile() {
         </div>
         <div className="information-container">
           <div className="partner">
-            <img src={profile?.department?.logoUrl} className="partner__logo" />
+            <Link
+              className="partner__link"
+              to={
+                profile?.department?.id
+                  ? `/partner/${profile.department.id}`
+                  : ''
+              }
+            >
+              <img
+                src={profile?.department?.logoUrl}
+                className="partner__logo"
+              />
+            </Link>
             <div className="partner__info">
               <span className="partner__info__title">Department</span>
               <span className="partner__info__name">
@@ -74,7 +87,7 @@ export function Profile() {
           <div className="languages__tags-container">
             {profile?.languages.map((language) => (
               <Tag
-                key={profile?.id}
+                key={language}
                 tag={language.charAt(0).toUpperCase() + language.slice(1) ?? ''}
               />
             ))}

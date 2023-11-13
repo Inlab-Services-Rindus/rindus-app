@@ -16,6 +16,7 @@ export interface EmployeeProfile extends Employee {
 }
 
 interface Department {
+  id: number | null;
   name: string;
   logoUrl: string;
 }
