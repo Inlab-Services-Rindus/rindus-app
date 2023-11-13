@@ -35,7 +35,6 @@ export function Search(): JSX.Element {
         );
         const data = (await response.json()) as SearchResponse;
         const { tagNames, userItems } = setTagsAndUsers(data);
-        console.log(tagNames, 'esto es lo que se pinta');
 
         setNoResults(!tagNames.length && !userItems.length);
         setTags(tagNames);
