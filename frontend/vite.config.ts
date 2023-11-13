@@ -19,6 +19,10 @@ export default defineConfig({
         replacement: path.resolve(projectRootDir, 'src/assets/scss'),
       },
       {
+        find: '@assets',
+        replacement: path.resolve(projectRootDir, 'src/assets'),
+      },
+      {
         find: '@helpers',
         replacement: path.resolve(projectRootDir, 'src/helpers'),
       },

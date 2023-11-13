@@ -32,7 +32,6 @@ export function Profile() {
             key={profile?.id}
             profilePictureUrl={profile?.profilePictureUrl ?? ''}
             isBirthday={profile?.isBirthday ?? false}
-            firstName={profile?.firstName}
             // isCaptain={profile?.isCaptain}
           />
 

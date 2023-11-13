@@ -4,6 +4,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@scss/*": ["./src/assets/scss/*"],
+      "@assets/*": ["./src/assets/*"],
       "@helpers/*": ["./src/helpers/*"]
     },
     "target": "ES2020",

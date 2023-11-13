@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import Loader from '@/atoms/loader/Loader';
 import { config } from '@/config/config';
@@ -10,7 +10,6 @@ import '@/pages/partner/Partner.scss';
 
 export default function PartnerInfo() {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const [partnerInfo, setPartnerInfo] = useState<Partner>();
   const [members, setMembers] = useState<EmployeeProfile[]>([]);
@@ -39,10 +38,6 @@ export default function PartnerInfo() {
     return <Loader />;
   }
 
-  const handleNavigate = (id: number) => {
-    navigate(`/profile/${id}`);
-  };
-
   return (
     <div className="partner">
       <div className="partner__header">
@@ -67,7 +62,6 @@ export default function PartnerInfo() {
         <div className="body__employees">
           {members?.map((employee) => (
             <UserCard
-              handleClick={() => handleNavigate(employee?.id)}
               key={employee.id}
               id={employee.id}
               profilePictureUrl={employee.profilePictureUrl}
@@ -80,7 +74,6 @@ export default function PartnerInfo() {
         <div className="body__captains">
           {captains?.map((captain) => (
             <UserCard
-              handleClick={() => handleNavigate(captain?.id)}
               key={captain.id}
               id={captain.id}
               profilePictureUrl={captain.profilePictureUrl}
