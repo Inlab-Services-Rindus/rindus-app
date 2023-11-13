@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 
-import email from '@/assets/email.svg';
-import slack from '@/assets/slack.svg';
+import email from '@/assets/icons/Contact_gmail_40.svg';
+import slack from '@/assets/icons/Contact_slack_40.svg';
 import Loader from '@/atoms/loader/Loader';
 import Tag from '@/atoms/tag/Tag';
 import { config } from '@/config/config';
