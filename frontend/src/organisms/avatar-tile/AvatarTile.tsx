@@ -28,7 +28,11 @@ export default function AvatarTile({
         />
       </div>
       {firstName && (
-        <div className="avatar-tile__name">
+        <div
+          className={`avatar-tile__name ${
+            isBirthday ? 'avatar-tile__name--bold' : ''
+          }`}
+        >
           <span>{firstName}</span>
         </div>
       )}

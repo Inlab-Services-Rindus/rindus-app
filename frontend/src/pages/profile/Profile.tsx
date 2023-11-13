@@ -52,7 +52,9 @@ export function Profile() {
           </div>
           <div className="account">
             <img src={email} className="account__logo" />
-            <span className="account__address">{profile?.email}</span>
+            <span className="account__address">
+              <a href={`mailto:${profile?.email}`}>{profile?.email}</a>
+            </span>
           </div>
           <div className="account">
             <img src={slack} alt="" className="account__logo" />

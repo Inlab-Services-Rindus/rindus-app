@@ -1,9 +1,11 @@
 @use '@scss/colors' as *;
+@use '@scss/fonts' as *;
 
 .tabPanel {
   &__button-container {
     display: flex;
     justify-content: flex-end;
+    gap: 24px;
     padding: 20px 16px;
     padding-bottom: 12px;
     border-bottom: 1px solid $rindus-light-gray;
@@ -17,6 +19,8 @@
 
     &--active {
       color: white;
+
+      @include text($font-poppins-regular, 16px, 700, 22px);
     }
   }
 

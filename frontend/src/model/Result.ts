@@ -4,7 +4,7 @@ export interface TagItem {
 }
 
 export interface UserItem {
-  id: string;
+  id: number;
   profilePictureUrl: string;
   firstName: string;
   lastName?: string;

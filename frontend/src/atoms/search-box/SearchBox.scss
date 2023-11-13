@@ -1,4 +1,5 @@
 @import '@/assets/scss/_fonts.scss';
+@import '@/assets/scss/_colors.scss';
 
 .searchbox {
   display: flex;
@@ -12,12 +13,12 @@
     align-items: center;
     align-self: stretch;
     border-radius: 8px;
-    background: #f7f8fc;
+    background: $rindus-off-white;
     border: none;
     width: 100%;
     text-indent: 46px;
     outline: none;
-    color: var(--Gray-Medium, #6e768d);
+    color: $rindus-medium-gray;
 
     input::placeholder {
       @include text($font-poppins-regular, 16px, 400, 22px);

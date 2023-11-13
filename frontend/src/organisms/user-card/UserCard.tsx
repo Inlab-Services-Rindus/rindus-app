@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router-dom';
+
 import { Avatar, AvatarSize } from '@/organisms/avatar/Avatar';
 import '@/organisms/user-card/UserCard.scss';
 
 interface UserCardProps {
+  id: number;
   firstName: string;
   lastName?: string;
   isBirthday?: boolean;
@@ -13,21 +16,21 @@ interface UserCardProps {
 }
 
 export default function UserCard({
+  id,
   firstName,
   lastName,
   isBirthday,
   isCaptain,
   profilePictureUrl,
   position,
-  handleClick,
   size,
 }: UserCardProps): JSX.Element {
   const fullName = `${firstName}${lastName ? ` ${lastName}` : ''}`;
 
+  const navigate = useNavigate();
+
   const handleClickCard = () => {
-    if (handleClick) {
-      handleClick(fullName);
-    }
+    navigate(`/profile/${id}`);
   };
 
   return (
