@@ -17,25 +17,13 @@ export class SuggestionsResultConverter
   }
 
   convert(source: Suggestions): SuggestionsResult {
-    return source.reduce((acc, suggestion) => {
-      if (Array.isArray(suggestion)) {
-        return acc.concat(
-          suggestion.map((user) => this.suggestionUserConverter.convert(user)),
-        );
-      } else if (typeof suggestion === 'string') {
-        return acc.concat({
-          type: 'position',
-          data: suggestion,
-        });
-      } else if ('id' in suggestion) {
-        return acc.concat({
-          type: 'language',
-          data: suggestion,
-        });
-      } else {
-        return acc;
-      }
-    }, [] as SuggestionsResult);
+    return {
+      languageSuggestions: source.languages,
+      positionSuggestions: source.positions,
+      userSuggestions: source.users.map((user) =>
+        this.suggestionUserConverter.convert(user),
+      ),
+    };
   }
 }
 

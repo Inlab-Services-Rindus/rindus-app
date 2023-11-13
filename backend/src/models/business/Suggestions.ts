@@ -1,8 +1,12 @@
-import { Language } from '@/models/business/Language';
 import { User } from '@/models/business/User';
 
-type Position = string;
+export interface Suggestions {
+  languages: TagSuggestion[];
+  positions: TagSuggestion[];
+  users: User[];
+}
 
-export type Suggestions = Suggestion[];
-
-export type Suggestion = Language | Position | User[];
+export interface TagSuggestion {
+  display: string;
+  query: string;
+}

@@ -179,9 +179,12 @@ export class KnexUserRepository implements UserRepository {
   private async userLanguages(userId: number): Promise<Language[]> {
     const languageRecords = await this.knex({ ul: 'users_languages' })
       .join({ l: 'languages' }, 'ul.language_id', 'l.id')
-      .select('l.name')
+      .select('l.name', 'l.id')
       .where('ul.user_id', userId);
 
-    return languageRecords.map((record) => record.name);
+    return languageRecords.map((record) => ({
+      id: record.id,
+      name: record.name,
+    }));
   }
 }
