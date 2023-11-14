@@ -1,5 +1,4 @@
 import Logout from '@/ui/components/atoms/buttons/logout/Logout';
-
 import { fireEvent, render, screen } from '@testing-library/react';
 
 const logoutSpy = vi.fn();
@@ -12,10 +11,6 @@ vi.mock('react', async () => {
 });
 
 describe('Logout', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('should render succesfully', () => {
     render(<Logout />);
     const buttonElement = screen.getByRole('button');

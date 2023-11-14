@@ -1,5 +1,4 @@
 import Back from '@/ui/components/atoms/buttons/back/Back';
-
 import { render, screen } from '@testing-library/react';
 
 const useNavigateSpy = vi.fn();
@@ -12,10 +11,6 @@ vi.mock('react-router-dom', async () => {
 });
 
 describe('Back', () => {
-  beforeEach(() => {
-    useNavigateSpy.mockClear();
-  });
-
   it('should render successfully', () => {
     render(<Back />);
     const buttonElement = screen.getByRole('button');
@@ -31,6 +26,6 @@ describe('Back', () => {
 
     buttonElement.click();
 
-    expect(useNavigateSpy).toHaveBeenCalled();
+    expect(useNavigateSpy).toHaveBeenCalledWith(-1);
   });
 });

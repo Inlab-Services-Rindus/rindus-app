@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import arrowBack from '@/assets/icons/Arrow_back_24.svg';
+
 import '@/ui/components/atoms/buttons/back/Back.scss';
 
 export default function Back() {
