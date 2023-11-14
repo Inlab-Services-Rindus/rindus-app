@@ -1,4 +1,5 @@
 import { config } from '@/config/config';
+
 import { AuthRepository } from '@/modules/auth//domain/AuthRepository';
 import { AuthUser } from '@/modules/auth/domain/AuthUser';
 
@@ -37,11 +38,8 @@ export async function softLogin() {
       credentials: 'include',
     });
 
-    if (response.status === 401) {
+    if (response.status !== 400 && !response.ok) {
       throw new Error('Login expired');
-    }
-    if (response.status !== 200) {
-      throw new Error('Error soft logging in');
     }
 
     const user = (await response.json()) as Promise<AuthUser>;

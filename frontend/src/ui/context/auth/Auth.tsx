@@ -5,6 +5,7 @@ import { login } from '@/modules/auth/application/login/login';
 import { logout } from '@/modules/auth/application/logout/logout';
 import { softLogin } from '@/modules/auth/application/soft-login/soft-login';
 import { createAuthRepository } from '@/modules/auth/infrastructure/AuthRepository';
+
 import useToast from '@/ui/hooks/toast/useToast';
 
 interface AuthContextType {
@@ -63,12 +64,14 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
       if (user) {
         setIsLoggedIn(true);
+
         setUserProfileData(user);
         navigate('/');
       } else {
         showToastError('Login failed');
       }
     } catch (error) {
+      setIsLoading(false);
       showToastError('Login failed');
     }
   };
@@ -86,10 +89,16 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         setUserProfileData(user);
         navigate('/');
       } else {
+        showToastError('Login failed');
+      }
+    } catch (error: any) {
+      setIsLoading(false);
+
+      if (error?.message === 'Login expired') {
         showToastWarning('Login expired');
       }
-    } catch (error) {
-      showToastWarning('Login expired');
+
+      showToastError('Login failed');
     }
   };
 
@@ -113,6 +122,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         showToastError('Logout unsuccessful');
       }
     } catch (error) {
+      setIsLoading(false);
       showToastError('Logout unsuccessful');
     }
   };

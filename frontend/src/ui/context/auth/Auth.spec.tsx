@@ -1,16 +1,18 @@
-import { config } from '@/config/config';
-import { AuthContext, AuthProvider } from '@/ui/context/auth/Auth';
-
+import { mockUser } from '@/mocks/user';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
+import { AuthContext, AuthProvider } from '@/ui/context/auth/Auth';
+
 const showToastErrorSpy = vi.fn();
+const showToastWarningSpy = vi.fn();
 const showToastSuccessSpy = vi.fn();
-vi.mock('@/hooks/toast/useToast', async () => {
-  const actual = (await vi.importActual('@/hooks/toast/useToast')) as any;
+vi.mock('@/ui/hooks/toast/useToast', async () => {
+  const actual = (await vi.importActual('@/ui/hooks/toast/useToast')) as any;
   return {
     ...actual,
     default: () => ({
       showToastError: showToastErrorSpy,
+      showToastWarning: showToastWarningSpy,
       showToastSuccess: showToastSuccessSpy,
     }),
   };
@@ -25,13 +27,21 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-// First call to fetch is for soft login
-// Second call to fetch is for login/logout global.fetch = vi.fn().mockResolvedValueOnce({ ok: false, }).mockResolvedValueOnce({ ok: true, json: async () => ({}), });
-
-describe.skip('Auth', () => {
+const login = vi.fn();
+const logout = vi.fn();
+const softLogin = vi.fn();
+vi.mock('@/modules/auth/infrastructure/AuthRepository', () => ({
+  createAuthRepository: vi.fn(() => ({
+    login: login,
+    logout: logout,
+    softLogin: softLogin,
+  })),
+}));
+describe('Auth', () => {
   beforeEach(() => {
     useNavigateSpy.mockReset();
     showToastErrorSpy.mockReset();
+    showToastWarningSpy.mockReset();
     showToastSuccessSpy.mockReset();
   });
 
@@ -71,12 +81,10 @@ describe.skip('Auth', () => {
     expect(getByText('Is loading: true')).toBeTruthy();
   });
 
-  describe.skip('Soft Login', () => {
+  describe('Soft Login', () => {
     it('should set authed to true and navigate to home when the soft login call is ok', async () => {
-      global.fetch = vi.fn().mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({}),
-      });
+      softLogin.mockResolvedValueOnce(mockUser);
+
       const { getByText } = render(
         <AuthProvider>
           <AuthContext.Consumer>
@@ -84,24 +92,10 @@ describe.skip('Auth', () => {
               <>
                 <span>Is logged in: {value.isLoggedIn.toString()}</span>
                 <span>Is loading: {value.isLoading.toString()}</span>
-                <button
-                  onClick={() =>
-                    value.login({ credential: 'jwt-test', select_by: 'test' })
-                  }
-                >
-                  Login
-                </button>
               </>
             )}
           </AuthContext.Consumer>
         </AuthProvider>,
-      );
-
-      expect(global.fetch).toHaveBeenCalledWith(
-        `${config.backendUrl}/soft-login`,
-        expect.objectContaining({
-          credentials: 'include',
-        }),
       );
 
       await waitFor(() => {
@@ -111,10 +105,9 @@ describe.skip('Auth', () => {
       });
     });
 
-    it('should show toast error when the response from soft login call is not ok and the code is different from 400', async () => {
-      global.fetch = vi.fn().mockResolvedValueOnce({
-        ok: false,
-      });
+    it('should show error toast when the response from soft login call when the user is empty', async () => {
+      softLogin.mockResolvedValueOnce(null);
+
       const { getByText } = render(
         <AuthProvider>
           <AuthContext.Consumer>
@@ -122,39 +115,25 @@ describe.skip('Auth', () => {
               <>
                 <span>Is logged in: {value.isLoggedIn.toString()}</span>
                 <span>Is loading: {value.isLoading.toString()}</span>
-                <button
-                  onClick={() =>
-                    value.login({ credential: 'jwt-test', select_by: 'test' })
-                  }
-                >
-                  Login
-                </button>
               </>
             )}
           </AuthContext.Consumer>
         </AuthProvider>,
       );
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        `${config.backendUrl}/soft-login`,
-        expect.objectContaining({
-          credentials: 'include',
-        }),
-      );
-
       await waitFor(() => {
-        expect(showToastErrorSpy).toHaveBeenCalledWith('Login expired');
+        expect(showToastErrorSpy).toHaveBeenCalledWith('Login failed');
 
         expect(getByText('Is logged in: false')).toBeTruthy();
         expect(getByText('Is loading: false')).toBeTruthy();
       });
     });
 
-    it('should not show toast error when the response from soft login call is not ok and the code is 400 ', async () => {
-      global.fetch = vi.fn().mockResolvedValueOnce({
-        ok: false,
-        status: 400,
+    it('should show warming toast when the response from soft login call throw a "Login expired" error', async () => {
+      softLogin.mockImplementationOnce(() => {
+        throw new Error('Login expired');
       });
+
       const { getByText } = render(
         <AuthProvider>
           <AuthContext.Consumer>
@@ -162,95 +141,24 @@ describe.skip('Auth', () => {
               <>
                 <span>Is logged in: {value.isLoggedIn.toString()}</span>
                 <span>Is loading: {value.isLoading.toString()}</span>
-                <button
-                  onClick={() =>
-                    value.login({ credential: 'jwt-test', select_by: 'test' })
-                  }
-                >
-                  Login
-                </button>
               </>
             )}
           </AuthContext.Consumer>
         </AuthProvider>,
       );
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        `${config.backendUrl}/soft-login`,
-        expect.objectContaining({
-          credentials: 'include',
-        }),
-      );
-
       await waitFor(() => {
-        expect(showToastErrorSpy).not.toHaveBeenCalled();
-
+        expect(showToastWarningSpy).toHaveBeenCalledWith('Login expired');
         expect(getByText('Is logged in: false')).toBeTruthy();
         expect(getByText('Is loading: false')).toBeTruthy();
       });
     });
-  });
 
-  describe('Login', () => {
-    it('should set authed to true and navigate to home when the response from login call is ok', async () => {
-      global.fetch = vi
-        .fn()
-        .mockResolvedValueOnce({
-          ok: false,
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({}),
-        });
-      const { getByText } = render(
-        <AuthProvider>
-          <AuthContext.Consumer>
-            {(value) => (
-              <>
-                <span>Is logged in: {value.isLoggedIn.toString()}</span>
-                <span>Is loading: {value.isLoading.toString()}</span>
-                <button
-                  onClick={() =>
-                    value.login({ credential: 'jwt-test', select_by: 'test' })
-                  }
-                >
-                  Login
-                </button>
-              </>
-            )}
-          </AuthContext.Consumer>
-        </AuthProvider>,
-      );
-
-      fireEvent.click(getByText('Login'));
-
-      expect(global.fetch).toHaveBeenCalledWith(
-        `${config.backendUrl}/login`,
-        expect.objectContaining({
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ jwt: 'jwt-test' }),
-          method: 'POST',
-        }),
-      );
-
-      await waitFor(() => {
-        expect(getByText('Is logged in: true')).toBeTruthy();
-        expect(getByText('Is loading: false')).toBeTruthy();
-        expect(useNavigateSpy).toHaveBeenCalledWith('/');
+    it('should show error toast when the response from soft login call throw a "Error soft logging in" error', async () => {
+      softLogin.mockImplementationOnce(() => {
+        throw new Error('Error soft logging in');
       });
-    });
 
-    it('should maintain authed and show toast error when the response from login call is not ok', async () => {
-      global.fetch = vi
-        .fn()
-        .mockResolvedValueOnce({
-          ok: false,
-        })
-        .mockResolvedValueOnce({
-          ok: false,
-        });
       const { getByText } = render(
         <AuthProvider>
           <AuthContext.Consumer>
@@ -269,19 +177,6 @@ describe.skip('Auth', () => {
             )}
           </AuthContext.Consumer>
         </AuthProvider>,
-      );
-
-      fireEvent.click(getByText('Login'));
-
-      expect(global.fetch).toHaveBeenCalledWith(
-        `${config.backendUrl}/login`,
-        expect.objectContaining({
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ jwt: 'jwt-test' }),
-          method: 'POST',
-        }),
       );
 
       await waitFor(() => {
@@ -293,17 +188,10 @@ describe.skip('Auth', () => {
     });
   });
 
-  describe('Logout', () => {
-    it('should set authed to false and navigate to login and show success toast when the response from logout call is ok', async () => {
-      global.fetch = vi
-        .fn()
-        .mockResolvedValueOnce({
-          ok: false,
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => ({}),
-        });
+  describe('Login', () => {
+    it('should set authed to true and navigate to home when the login call is ok', async () => {
+      login.mockResolvedValueOnce(mockUser);
+
       const { getByText } = render(
         <AuthProvider>
           <AuthContext.Consumer>
@@ -311,6 +199,114 @@ describe.skip('Auth', () => {
               <>
                 <span>Is logged in: {value.isLoggedIn.toString()}</span>
                 <span>Is loading: {value.isLoading.toString()}</span>
+                <button
+                  onClick={() =>
+                    value.login({ credential: 'jwt-test', select_by: 'test' })
+                  }
+                >
+                  Login
+                </button>
+              </>
+            )}
+          </AuthContext.Consumer>
+        </AuthProvider>,
+      );
+
+      fireEvent.click(getByText('Login'));
+
+      await waitFor(() => {
+        expect(getByText('Is logged in: true')).toBeTruthy();
+        expect(getByText('Is loading: false')).toBeTruthy();
+        expect(useNavigateSpy).toHaveBeenCalledWith('/');
+      });
+    });
+
+    it('should show error toast when the response from soft login call when the user is empty', async () => {
+      login.mockResolvedValueOnce(null);
+
+      const { getByText } = render(
+        <AuthProvider>
+          <AuthContext.Consumer>
+            {(value) => (
+              <>
+                <span>Is logged in: {value.isLoggedIn.toString()}</span>
+                <span>Is loading: {value.isLoading.toString()}</span>
+                <button
+                  onClick={() =>
+                    value.login({ credential: 'jwt-test', select_by: 'test' })
+                  }
+                >
+                  Login
+                </button>
+              </>
+            )}
+          </AuthContext.Consumer>
+        </AuthProvider>,
+      );
+
+      fireEvent.click(getByText('Login'));
+
+      await waitFor(() => {
+        expect(showToastErrorSpy).toHaveBeenCalledWith('Login failed');
+
+        expect(getByText('Is logged in: false')).toBeTruthy();
+        expect(getByText('Is loading: false')).toBeTruthy();
+      });
+    });
+
+    it('should show error toast when the response from soft login call throw an error', async () => {
+      softLogin.mockImplementationOnce(() => {
+        throw new Error('Error');
+      });
+
+      const { getByText } = render(
+        <AuthProvider>
+          <AuthContext.Consumer>
+            {(value) => (
+              <>
+                <span>Is logged in: {value.isLoggedIn.toString()}</span>
+                <span>Is loading: {value.isLoading.toString()}</span>
+                <button
+                  onClick={() =>
+                    value.login({ credential: 'jwt-test', select_by: 'test' })
+                  }
+                >
+                  Login
+                </button>
+              </>
+            )}
+          </AuthContext.Consumer>
+        </AuthProvider>,
+      );
+
+      fireEvent.click(getByText('Login'));
+      await waitFor(() => {
+        expect(showToastErrorSpy).toHaveBeenCalledWith('Login failed');
+        expect(getByText('Is logged in: false')).toBeTruthy();
+        expect(getByText('Is loading: false')).toBeTruthy();
+      });
+    });
+  });
+
+  describe('Logout', () => {
+    it('should set authed to false and navigate to login and show success toast when the response from logout call is ok', async () => {
+      login.mockResolvedValueOnce(mockUser);
+      logout.mockResolvedValueOnce(true);
+
+      const { getByText } = render(
+        <AuthProvider>
+          <AuthContext.Consumer>
+            {(value) => (
+              <>
+                <span>Is logged in: {value.isLoggedIn.toString()}</span>
+                <span>Is loading: {value.isLoading.toString()}</span>
+                <button
+                  onClick={() =>
+                    value.login({ credential: 'jwt-test', select_by: 'test' })
+                  }
+                >
+                  Login
+                </button>
                 <button onClick={value.logout}>Logout</button>
               </>
             )}
@@ -318,12 +314,15 @@ describe.skip('Auth', () => {
         </AuthProvider>,
       );
 
-      fireEvent.click(getByText('Logout'));
+      fireEvent.click(getByText('Login'));
 
-      expect(global.fetch).toHaveBeenCalledWith(`${config.backendUrl}/logout`, {
-        method: 'POST',
-        credentials: 'include',
+      await waitFor(() => {
+        expect(getByText('Is logged in: true')).toBeTruthy();
+        expect(getByText('Is loading: false')).toBeTruthy();
+        expect(useNavigateSpy).toHaveBeenCalledWith('/');
       });
+
+      fireEvent.click(getByText('Logout'));
 
       await waitFor(() => {
         expect(getByText('Is logged in: false')).toBeTruthy();
@@ -333,15 +332,10 @@ describe.skip('Auth', () => {
       });
     });
 
-    it('should maintain authed and show toast error when the response from logout call is not ok', async () => {
-      global.fetch = vi
-        .fn()
-        .mockResolvedValueOnce({
-          ok: false,
-        })
-        .mockResolvedValueOnce({
-          ok: false,
-        });
+    it('should maintain authed and navigate to login and show success toast when the response from logout call is not ok', async () => {
+      login.mockResolvedValueOnce(mockUser);
+      logout.mockResolvedValueOnce(false);
+
       const { getByText } = render(
         <AuthProvider>
           <AuthContext.Consumer>
@@ -349,6 +343,13 @@ describe.skip('Auth', () => {
               <>
                 <span>Is logged in: {value.isLoggedIn.toString()}</span>
                 <span>Is loading: {value.isLoading.toString()}</span>
+                <button
+                  onClick={() =>
+                    value.login({ credential: 'jwt-test', select_by: 'test' })
+                  }
+                >
+                  Login
+                </button>
                 <button onClick={value.logout}>Logout</button>
               </>
             )}
@@ -356,12 +357,59 @@ describe.skip('Auth', () => {
         </AuthProvider>,
       );
 
+      fireEvent.click(getByText('Login'));
+
+      await waitFor(() => {
+        expect(getByText('Is logged in: true')).toBeTruthy();
+        expect(getByText('Is loading: false')).toBeTruthy();
+        expect(useNavigateSpy).toHaveBeenCalledWith('/');
+      });
+
       fireEvent.click(getByText('Logout'));
 
-      expect(global.fetch).toHaveBeenCalledWith(`${config.backendUrl}/logout`, {
-        method: 'POST',
-        credentials: 'include',
+      await waitFor(() => {
+        expect(getByText('Is logged in: true')).toBeTruthy();
+        expect(getByText('Is loading: false')).toBeTruthy();
+        expect(showToastErrorSpy).toHaveBeenCalledWith('Logout unsuccessful');
       });
+    });
+
+    it('should maintain authed and show toast error when the response from logout call throw an error', async () => {
+      login.mockResolvedValueOnce(mockUser);
+      logout.mockImplementationOnce(() => {
+        throw new Error('Error');
+      });
+
+      const { getByText } = render(
+        <AuthProvider>
+          <AuthContext.Consumer>
+            {(value) => (
+              <>
+                <span>Is logged in: {value.isLoggedIn.toString()}</span>
+                <span>Is loading: {value.isLoading.toString()}</span>
+                <button
+                  onClick={() =>
+                    value.login({ credential: 'jwt-test', select_by: 'test' })
+                  }
+                >
+                  Login
+                </button>
+                <button onClick={value.logout}>Logout</button>
+              </>
+            )}
+          </AuthContext.Consumer>
+        </AuthProvider>,
+      );
+
+      fireEvent.click(getByText('Login'));
+
+      await waitFor(() => {
+        expect(getByText('Is logged in: true')).toBeTruthy();
+        expect(getByText('Is loading: false')).toBeTruthy();
+        expect(useNavigateSpy).toHaveBeenCalledWith('/');
+      });
+
+      fireEvent.click(getByText('Logout'));
 
       await waitFor(() => {
         expect(getByText('Is logged in: true')).toBeTruthy();
