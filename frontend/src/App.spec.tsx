@@ -4,7 +4,7 @@ import App from '@/App';
 
 import { screen, render } from '@testing-library/react';
 
-vi.mock('@/pages/login/Login', () => ({
+vi.mock('@/ui/section/login/Login', () => ({
   Login: () => <div data-testid="login-page">Login Page</div>,
 }));
 

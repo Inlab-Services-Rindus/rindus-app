@@ -1,6 +1,6 @@
-import { EmployeeProfile } from '@/model/Employee';
+import { UserExtended } from '@/modules/users/domain/User';
 
-export const mockProfile: EmployeeProfile = {
+export const mockProfile: UserExtended = {
   id: 1,
   firstName: 'John',
   lastName: 'Doe',
