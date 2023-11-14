@@ -1,4 +1,4 @@
-import { Header } from '@/ui/components/organisms/header/Header';
+import Header from '@/ui/components/organisms/header/Header';
 import { render, screen } from '@testing-library/react';
 
 let isLoggedInSpy = true;

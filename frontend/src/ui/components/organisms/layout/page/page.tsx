@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
-import { Header } from '@/ui/components/organisms/header/Header';
+import Header from '@/ui/components/organisms/header/Header';
+
 import '@/ui/components/organisms/layout/page/Page.scss';
 
 interface Props {

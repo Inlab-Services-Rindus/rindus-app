@@ -1,18 +1,9 @@
-import Page from '@/ui/components/organisms/layout/page/page';
-
+import Page from '@/ui/components/organisms/layout/page/Page';
 import { render, screen } from '@testing-library/react';
 
-const useNavigateSpy = vi.fn();
-const useLocationSpy = vi.fn();
-vi.mock('react-router-dom', async () => {
-  const actual = (await vi.importActual('react-router-dom')) as any;
-  return {
-    ...actual,
-    useNavigate: () => useNavigateSpy,
-    useLocation: () => useLocationSpy,
-  };
-});
-
+vi.mock('@/ui/components/organisms/header/Header', () => ({
+  default: () => <div data-testid="header">Header</div>,
+}));
 describe('Page', () => {
   it('should render successfully', () => {
     render(
@@ -21,7 +12,7 @@ describe('Page', () => {
       </Page>,
     );
 
-    expect(screen.getByTestId('header-login')).toBeInTheDocument();
+    expect(screen.getByTestId('header')).toBeInTheDocument();
     expect(screen.getByText('Test')).toBeInTheDocument();
   });
 });

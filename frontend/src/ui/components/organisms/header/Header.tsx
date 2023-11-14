@@ -10,7 +10,7 @@ import { AuthContext } from '@/ui/context/auth/Auth';
 
 import '@/ui/components/organisms/header/Header.scss';
 
-export function Header() {
+export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoggedIn, userProfileData } = useContext(AuthContext);
