@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import Loader from '@/ui/components/atoms/loader/Loader';
 import Section from '@/ui/components/molecules/section/Section';
 import AvatarTile from '@/ui/components/organisms/avatar-tile/AvatarTile';
+
 import { StoreContext } from '@/ui/context/store/Store';
+
 import '@/ui/section/home/people-tab/PeopleTab.scss';
 
-export function PeopleTab() {
+export default function PeopleTab() {
   const navigate = useNavigate();
   const {
     users: { data, hasMore, hasError },

@@ -2,10 +2,12 @@ import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Tab from '@/ui/components/molecules/section/Section';
+
 import { StoreContext } from '@/ui/context/store/Store';
+
 import '@/ui/section/home/partners-tab/PartnersTab.scss';
 
-export function PartnersTab() {
+export default function PartnersTab() {
   const {
     partners: { data, isLoading, hasError },
     getPartners,

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
-import '@/ui/components/molecules/tabPanel/TabPanel.scss';
+import { motion } from 'framer-motion';
+
 import { BEMClassHelper } from '@/ui/helpers/BEMClassHelper';
 
-import { motion } from 'framer-motion';
+import '@/ui/components/molecules/tabPanel/TabPanel.scss';
 
 interface TabPanelProps {
   tabs: {
@@ -16,7 +17,7 @@ export function TabPanel({ tabs }: TabPanelProps) {
   const [currentTab, setCurrentTab] = useState(0);
 
   return (
-    <div className="tabPanel">
+    <div className="tabPanel" data-testid="tab-panel">
       <div className="tabPanel__button-container">
         {tabs?.map((tab, index) => (
           <button

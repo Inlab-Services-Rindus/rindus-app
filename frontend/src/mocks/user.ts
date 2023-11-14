@@ -1,6 +1,6 @@
 import { UserExtended } from '@/modules/users/domain/User';
 
-export const mockProfile: UserExtended = {
+export const mockUser: UserExtended = {
   id: 1,
   firstName: 'John',
   lastName: 'Doe',

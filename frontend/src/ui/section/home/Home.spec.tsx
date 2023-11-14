@@ -1,125 +1,30 @@
-// import { config } from '@/config/config';
-// import { Home } from '@/ui/section/home/Home';
+import { Home } from '@/ui/section/home/Home';
+import { act, render, screen } from '@testing-library/react';
 
-// import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+vi.mock('@/ui/section/home/people-tab/PeopleTab', () => ({
+  default: () => <div data-testid="people-tab">PeopleTab</div>,
+}));
 
-const useNavigateSpy = vi.fn();
-const useLocationSpy = vi.fn();
-vi.mock('react-router-dom', async () => {
-  const actual = (await vi.importActual('react-router-dom')) as any;
-  return {
-    ...actual,
-    useNavigate: () => useNavigateSpy,
-    useLocation: () => useLocationSpy,
-  };
-});
+vi.mock('@/ui/section/home/partners-tab/PartnersTab', () => ({
+  default: () => <div data-testid="partners-tab">PartnersTab</div>,
+}));
 
-const showToastErrorSpy = vi.fn();
+describe('Home', () => {
+  it('should render people tab by default', () => {
+    render(<Home />);
 
-vi.mock('@/hooks/toast/useToast', async () => {
-  const actual = (await vi.importActual('@/hooks/toast/useToast')) as any;
-  return {
-    ...actual,
-    default: () => ({
-      showToastError: showToastErrorSpy,
-    }),
-  };
-});
-
-vi.mock('react', async () => {
-  const actual = (await vi.importActual('react')) as any;
-  return {
-    ...actual,
-    useContext: () => ({ isLoggedIn: true }),
-  };
-});
-
-describe.skip('Home', () => {
-  beforeEach(() => {
-    showToastErrorSpy.mockReset();
+    expect(screen.getByTestId('tab-panel')).toBeInTheDocument();
+    expect(screen.getByTestId('people-tab')).toBeInTheDocument();
   });
 
-  // it('should fetch the data when render the component', async () => {
-  //   useFetchSpy.mockReturnValueOnce({
-  //     data: mockUsersResponse,
-  //     isLoading: false,
-  //     refresh: vi.fn(),
-  //   });
-  //   useFetchSpy.mockReturnValueOnce({
-  //     data: mockPartnersResponse,
-  //     isLoading: false,
-  //     refresh: vi.fn(),
-  //   });
+  it('should render partner tab when change the tab', () => {
+    render(<Home />);
 
-  //   render(<Home />);
+    act(() => {
+      screen.getAllByRole('button')[1].click();
+    });
 
-  //   expect(useFetchSpy).toHaveBeenCalledWith(
-  //     expect.objectContaining({
-  //       url: `${config.backendUrl}/users`,
-  //       options: { credentials: 'include' },
-  //       onErrorCallback: expect.any(Function),
-  //     }),
-  //   );
-
-  //   expect(useFetchSpy).toHaveBeenCalledWith(
-  //     expect.objectContaining({
-  //       url: `${config.backendUrl}/partners`,
-  //       options: { credentials: 'include' },
-  //       onErrorCallback: expect.any(Function),
-  //     }),
-  //   );
-  // });
-
-  // it('should render the PeopleTab when fetch response is not empty', () => {
-  //   useFetchSpy.mockReturnValueOnce({
-  //     data: mockUsersResponse,
-  //     isLoading: false,
-  //     refresh: vi.fn(),
-  //   });
-  //   useFetchSpy.mockReturnValueOnce({
-  //     data: [],
-  //     isLoading: false,
-  //     refresh: vi.fn(),
-  //   });
-
-  //   render(<Home />);
-
-  //   expect(screen.getByTestId('people-tab')).toBeInTheDocument();
-  // });
-
-  // it('should show toast error when the fetch call to onErrorCallback', async () => {
-  //   global.fetch = vi.fn().mockResolvedValueOnce({
-  //     ok: false,
-  //     json: vi.fn().mockResolvedValueOnce(mockUsersResponse),
-  //   });
-  //   global.fetch = vi.fn().mockResolvedValueOnce({
-  //     ok: false,
-  //     json: vi.fn().mockResolvedValueOnce(mockPartnersResponse),
-  //   });
-
-  //   render(<Home />);
-
-  //   await waitFor(() => {
-  //     expect(showToastErrorSpy).toHaveBeenCalled();
-  //   });
-  // });
-
-  // it('should render the PartnersTab when fetch response is not empty', () => {
-  //   useFetchSpy.mockReturnValueOnce({
-  //     data: [],
-  //     isLoading: false,
-  //     refresh: vi.fn(),
-  //   });
-  //   useFetchSpy.mockReturnValueOnce({
-  //     data: mockPartnersResponse,
-  //     isLoading: false,
-  //     refresh: vi.fn(),
-  //   });
-
-  //   render(<Home />);
-
-  //   fireEvent.click(screen.getByText('Partners'));
-
-  //   expect(screen.getByTestId('partners-tab')).toBeInTheDocument();
-  // });
+    expect(screen.getByTestId('tab-panel')).toBeInTheDocument();
+    expect(screen.getByTestId('partners-tab')).toBeInTheDocument();
+  });
 });
