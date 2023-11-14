@@ -5,8 +5,10 @@ import Back from '@/ui/components/atoms/buttons/back/Back';
 import LogoutButton from '@/ui/components/atoms/buttons/logout/Logout';
 import RindusLogo from '@/ui/components/atoms/buttons/rindus-logo/RindusLogo';
 import Search from '@/ui/components/atoms/buttons/search/Search';
-import '@/ui/components/organisms/header/Header.scss';
+
 import { AuthContext } from '@/ui/context/auth/Auth';
+
+import '@/ui/components/organisms/header/Header.scss';
 
 export function Header() {
   const navigate = useNavigate();
