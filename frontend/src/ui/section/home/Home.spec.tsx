@@ -1,7 +1,7 @@
-import { config } from '@/config/config';
-import { Home } from '@/ui/section/home/Home';
+// import { config } from '@/config/config';
+// import { Home } from '@/ui/section/home/Home';
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+// import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 const useNavigateSpy = vi.fn();
 const useLocationSpy = vi.fn();

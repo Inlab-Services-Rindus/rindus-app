@@ -1,28 +1,28 @@
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+// import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import Partner from '@/ui/section/partner/Partner';
+// import Partner from '@/ui/section/partner/Partner';
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { SpyInstance } from 'vitest';
+// import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+// import { SpyInstance } from 'vitest';
 
-vi.mock('@/hooks/fetch/useFetch');
-const useNavigateSpy = vi.fn();
-vi.mock('react-router-dom', async () => {
-  const actual = (await vi.importActual('react-router-dom')) as any;
-  return {
-    ...actual,
-    useNavigate: () => useNavigateSpy,
-  };
-});
+// vi.mock('@/hooks/fetch/useFetch');
+// const useNavigateSpy = vi.fn();
+// vi.mock('react-router-dom', async () => {
+//   const actual = (await vi.importActual('react-router-dom')) as any;
+//   return {
+//     ...actual,
+//     useNavigate: () => useNavigateSpy,
+//   };
+// });
 
-const renderComponent = () =>
-  render(
-    <MemoryRouter initialEntries={['/partner/1']}>
-      <Routes>
-        <Route path="/partner/:id" element={<Partner />} />
-      </Routes>
-    </MemoryRouter>,
-  );
+// const renderComponent = () =>
+//   render(
+//     <MemoryRouter initialEntries={['/partner/1']}>
+//       <Routes>
+//         <Route path="/partner/:id" element={<Partner />} />
+//       </Routes>
+//     </MemoryRouter>,
+//   );
 
 describe.skip('Partner', () => {
   const globalFetchSpy = vi.spyOn(global, 'fetch');

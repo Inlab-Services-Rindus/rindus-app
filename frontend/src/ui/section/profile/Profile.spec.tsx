@@ -1,10 +1,10 @@
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+// import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import { config } from '@/config/config';
-import { Profile } from '@/ui/section/profile/Profile';
+// import { config } from '@/config/config';
+// import { Profile } from '@/ui/section/profile/Profile';
 
-import { render, waitFor } from '@testing-library/react';
-import { Mock } from 'vitest';
+// import { render, waitFor } from '@testing-library/react';
+// import { Mock } from 'vitest';
 
 vi.mock('@/hooks/fetch/useFetch');
 
