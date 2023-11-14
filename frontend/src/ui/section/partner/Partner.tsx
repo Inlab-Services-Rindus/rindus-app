@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import Loader from '@/ui/components/atoms/loader/Loader';
+import Section from '@/ui/components/molecules/section/Section';
+import UserCard from '@/ui/components/organisms/user-card/UserCard';
+
 import { getPartnerInfo } from '@/modules/partners/application/get-info/getPartnerInfo';
 import { getPartnerUsers } from '@/modules/partners/application/get-users/getPartnerUsers';
 import { Partner } from '@/modules/partners/domain/Partner';
 import { createPartnerRepository } from '@/modules/partners/infrastructure/PartnerRepository';
 import { UserExtended } from '@/modules/users/domain/User';
-import Loader from '@/ui/components/atoms/loader/Loader';
-import Section from '@/ui/components/molecules/section/Section';
-import UserCard from '@/ui/components/organisms/user-card/UserCard';
+
 import '@/ui/section/partner/Partner.scss';
 
-export default function PartnerInfo() {
+export function PartnerInfo() {
   const { id } = useParams();
   const navigate = useNavigate();
 

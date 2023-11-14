@@ -1,5 +1,4 @@
 import ProtectedRoutes from '@/ui/components/organisms/protected-routes/ProtectedRoutes';
-
 import { render, screen } from '@testing-library/react';
 
 vi.mock('react-router-dom', async () => {
