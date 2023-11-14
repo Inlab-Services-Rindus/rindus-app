@@ -1,5 +1,4 @@
 import GoogleButton from '@/ui/components/atoms/buttons/google/GoogleButton';
-
 import { render, screen, fireEvent } from '@testing-library/react';
 
 interface GoogleAPI {

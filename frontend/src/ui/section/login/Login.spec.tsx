@@ -1,6 +1,5 @@
 import { GoogleButtonProps } from '@/ui/components/atoms/buttons/google/GoogleButton';
 import { Login } from '@/ui/section/login/Login';
-
 import { fireEvent, render, screen } from '@testing-library/react';
 
 vi.mock('@/ui/components/atoms/buttons/google/GoogleButton', () => ({
@@ -13,17 +12,6 @@ vi.mock('@/ui/components/atoms/buttons/google/GoogleButton', () => ({
     />
   ),
 }));
-
-const useNavigateSpy = vi.fn();
-const useLocationSpy = vi.fn();
-vi.mock('react-router-dom', async () => {
-  const actual = (await vi.importActual('react-router-dom')) as any;
-  return {
-    ...actual,
-    useNavigate: () => useNavigateSpy,
-    useLocation: () => useLocationSpy,
-  };
-});
 
 interface GoogleAPI {
   accounts: {

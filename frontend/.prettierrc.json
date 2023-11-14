@@ -9,8 +9,8 @@
     "^@/ui/context/(.*)",
     "^@/ui/hooks/(.*)",
     "^@/ui/helpers/(.*)",
-    "^@/ui/section/(.*)",
-    "^@/ui/components/(.*)",
+    "^@/ui/section/(.*\\.(?!scss|css).*$)",
+    "^@/ui/components/(.*\\.(?!scss|css).*$)",
     ".(scss|css)$"
   ],
   "importOrderSeparation": true,
