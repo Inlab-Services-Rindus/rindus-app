@@ -31,7 +31,6 @@ export function Router() {
       <Route element={<ProtectedRoutes isAuth={isLoggedIn} />}>
         <Route element={<Home />} path="/" />
         <Route element={<Search />} path="/search" />
-        {/* <Route element={<SearchDetails />} path="/search/:query" /> */}
         <Route element={<Profile />} path="/profile/:id" />
         <Route element={<Partner />} path="/partner/:id" />
       </Route>

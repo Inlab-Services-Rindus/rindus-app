@@ -53,7 +53,7 @@ export function Search(): JSX.Element {
   };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
+    const newValue = event.target.value.toUpperCase();
     setNoResults(false);
     setResults([]);
     setTags([]);
@@ -75,7 +75,7 @@ export function Search(): JSX.Element {
       setNoResults(true);
       setSearch({ display: item.display, query: item.query });
     }
-
+    setSearch({ display: item.display, query: item.query });
     setResults(data);
     setTags([]);
     setUsers([]);
@@ -88,17 +88,16 @@ export function Search(): JSX.Element {
       </button>
     </div>
   );
-
   const renderResults = () => {
     if (results.length > 0) {
       return (
-        <div style={{ width: '100%', paddingTop: '20px' }}>
+        <div className="result">
           <div className="result__tag">
             <div>
               <span className="result__tag__text">Results for: </span>
             </div>
             <div>
-              <Tag tag={query.toUpperCase()} />
+              {search?.display && <Tag tag={search.display.toUpperCase()} />}
             </div>
           </div>
           {results?.map((user: UserItem) => (
@@ -121,7 +120,7 @@ export function Search(): JSX.Element {
       search?.display
     ) {
       return (
-        <div style={{ width: '100%' }}>
+        <div className="search">
           <div className="search__tag">
             {search?.display && renderTag(search, true)}
             {tags?.map((item: LanguageItem | PositionItem) => renderTag(item))}
