@@ -50,7 +50,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
   const navigate = useNavigate();
 
-  const { showToastError, showToastWarning, showToastSuccess } = useToast();
+  const { showToastError, showToastSuccess } = useToast();
 
   const actionLogin = async (
     googleResponse: google.accounts.id.CredentialResponse,
