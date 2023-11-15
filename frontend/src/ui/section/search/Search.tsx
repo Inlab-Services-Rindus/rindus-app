@@ -16,7 +16,7 @@ import { useDebounce } from 'use-debounce';
 
 import { setTagsAndUsers } from '@/ui/helpers/searchHelpers';
 
-import '@/pages/search/Search.scss';
+import '@/ui/section/search/Search.scss';
 
 export function Search(): JSX.Element {
   const [query, setQuery] = useState<string>('');

@@ -15,8 +15,6 @@ export default function PartnersTab() {
 
   const navigate = useNavigate();
 
-  console.log('Pedro ===> isLoading', isLoading);
-
   useEffect(() => {
     getPartners();
   }, []);

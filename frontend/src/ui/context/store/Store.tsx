@@ -95,8 +95,6 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     if (partnersData.data.length === 0) {
       setPartnersData({ ...partnersData, isLoading: true });
 
-      console.log('Pedro ===> entro aqui', partnersData.isLoading);
-
       try {
         const partners = await getAllPartners(partnerRepository);
 

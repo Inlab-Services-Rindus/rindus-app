@@ -21,14 +21,10 @@ const Section = ({
   shouldRefresh,
 }: SectionProps) => {
   if (isLoading) {
-    console.log('Pedro ===> entro en loading');
-
     return <Loader />;
   }
 
   if (refresh && shouldRefresh) {
-    console.log('Pedro ===> entro en refresh');
-
     return <Retry refresh={refresh} />;
   }
 

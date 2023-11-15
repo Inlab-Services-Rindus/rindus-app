@@ -25,7 +25,5 @@ export const setTagsAndUsers = (data: Suggestions) => {
     userItems.push(...data.userSuggestions);
   }
 
-  console.log(tagNames, userItems, 'aqui estan');
-
   return { tagNames, userItems };
 };
