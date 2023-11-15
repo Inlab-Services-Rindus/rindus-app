@@ -28,11 +28,6 @@ export interface UserItem {
   isBirthday: boolean;
 }
 
-interface UserItems {
-  type: string;
-  data: UserItem[];
-}
-
 export type SuggestionItems = LanguageItem | PositionItem;
 
 interface TagResponse {
