@@ -15,6 +15,16 @@ export async function initUsersFuseByName(userRepository: UserRepository) {
   return new Fuse(users, options);
 }
 
+export async function initUsersFuseByPosition(userRepository: UserRepository) {
+  const options: IFuseOptions<User> = searchOptions({
+    keys: ['position'],
+  });
+
+  const users = await userRepository.all();
+
+  return new Fuse(users, options);
+}
+
 export async function initPositionsFuse(userRepository: UserRepository) {
   const options: IFuseOptions<string> = searchOptions({ keys: ['position'] });
 

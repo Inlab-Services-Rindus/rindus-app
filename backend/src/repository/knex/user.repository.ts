@@ -46,6 +46,20 @@ export class KnexUserRepository implements UserRepository {
     this.userWithInfoConverter = new UserWithInfoConverter();
   }
 
+  public async allByLanguage(languageId: number): Promise<User[]> {
+    const userRecords = await this.knex({ ul: 'users_languages' })
+      .join(
+        {
+          u: 'users_view',
+        },
+        'ul.user_id',
+        'u.id',
+      )
+      .where('ul.language_id', languageId);
+
+    return this.mapToBusinesss(userRecords);
+  }
+
   public async allPositions(): Promise<string[]> {
     const positionRecords = await this.knex('users')
       .select('position')

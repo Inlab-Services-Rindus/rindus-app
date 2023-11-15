@@ -5,6 +5,7 @@ import { Language } from '@/models/business/Language';
 
 export class FuseSearchService implements SearchService {
   private readonly usersByName: Promise<Fuse<User>>;
+  private readonly usersByPosition: Promise<Fuse<User>>;
   private readonly positions: Promise<Fuse<string>>;
   private readonly languages: Promise<Fuse<Language>>;
 
@@ -12,12 +13,21 @@ export class FuseSearchService implements SearchService {
 
   constructor(
     usersByName: Promise<Fuse<User>>,
+    usersByPosition: Promise<Fuse<User>>,
     positions: Promise<Fuse<string>>,
     languages: Promise<Fuse<Language>>,
   ) {
     this.usersByName = usersByName;
+    this.usersByPosition = usersByPosition;
     this.positions = positions;
     this.languages = languages;
+  }
+  public async searchUsersByPosition(query: string): Promise<User[]> {
+    const results = (await this.usersByPosition).search(
+      this.advancedQuery(query),
+    );
+
+    return this.mapFuseResult(results);
   }
 
   public async suggestPositions(query: string): Promise<string[]> {
