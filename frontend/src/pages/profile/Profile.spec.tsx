@@ -35,9 +35,10 @@ describe('Profile', () => {
     const { getByText, getByAltText } = renderComponent();
 
     await waitFor(() => {
-      expect(
-        getByAltText(`${mockProfile.firstName}'s profile picture`),
-      ).toHaveAttribute('src', mockProfile.profilePictureUrl);
+      expect(getByAltText('Profile picture')).toHaveAttribute(
+        'src',
+        mockProfile.profilePictureUrl,
+      );
       expect(
         getByText(`${mockProfile.firstName} ${mockProfile.lastName}`),
       ).toBeInTheDocument();
