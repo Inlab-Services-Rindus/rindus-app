@@ -63,7 +63,7 @@ export class FuseSearchService implements SearchService {
   }
 
   private advancedQuery(query: string) {
-    return `'${query}`;
+    return `'"${query}"`;
   }
 
   private mapFuseResult<T>(results: FuseResult<T>[]) {
