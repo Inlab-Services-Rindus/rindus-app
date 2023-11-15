@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import Header from '@/ui/components/organisms/header/Header';
 
-import '@/ui/layout/page/Page.scss';
+import '@/ui/components/layout/page/Page.scss';
 
 interface Props {
   children: ReactNode;
