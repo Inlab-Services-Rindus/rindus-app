@@ -88,8 +88,6 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         setIsLoggedIn(true);
         setUserProfileData(user);
         navigate('/');
-      } else {
-        showToastError('Login failed');
       }
     } catch (error: any) {
       setIsLoading(false);

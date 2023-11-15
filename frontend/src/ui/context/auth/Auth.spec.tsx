@@ -99,30 +99,6 @@ describe('Auth', () => {
       });
     });
 
-    it('should show error toast when the response from soft login call when the user is empty', async () => {
-      softLogin.mockResolvedValueOnce(null);
-
-      const { getByText } = render(
-        <AuthProvider>
-          <AuthContext.Consumer>
-            {(value) => (
-              <>
-                <span>Is logged in: {value.isLoggedIn.toString()}</span>
-                <span>Is loading: {value.isLoading.toString()}</span>
-              </>
-            )}
-          </AuthContext.Consumer>
-        </AuthProvider>,
-      );
-
-      await waitFor(() => {
-        expect(showToastErrorSpy).toHaveBeenCalledWith('Login failed');
-
-        expect(getByText('Is logged in: false')).toBeTruthy();
-        expect(getByText('Is loading: false')).toBeTruthy();
-      });
-    });
-
     it('should not show any toast when the response from soft login call throw a "Login expired" error', async () => {
       softLogin.mockImplementationOnce(() => {
         throw new Error('Login expired');

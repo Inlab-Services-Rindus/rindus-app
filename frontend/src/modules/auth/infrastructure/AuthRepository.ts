@@ -42,8 +42,10 @@ export async function softLogin() {
       throw new Error('Login expired');
     }
 
-    const user = (await response.json()) as Promise<AuthUser>;
-    return user;
+    if (response.status === 200) {
+      const user = (await response.json()) as Promise<AuthUser>;
+      return user;
+    }
   } catch (error) {
     throw new Error('Error soft logging in');
   }
