@@ -1,4 +1,4 @@
-import Page from '@/ui/components/organisms/layout/page/Page';
+import Page from '@/ui/layout/page/Page';
 import { render, screen } from '@testing-library/react';
 
 vi.mock('@/ui/components/organisms/header/Header', () => ({

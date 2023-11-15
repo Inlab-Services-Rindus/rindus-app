@@ -2,7 +2,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Meta } from '@/ui/components/atoms/meta/Meta';
-import Page from '@/ui/components/organisms/layout/page/Page';
+import Page from '@/ui/layout/page/Page';
 
 import { Router } from '@/ui/router/Router';
 
