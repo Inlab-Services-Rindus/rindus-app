@@ -1,8 +1,10 @@
-import { KeywordSuggestion } from '@/models/business/Suggestions';
+import { Language } from '@/models/business/Language';
 import { User } from '@/models/business/User';
 
 export interface SearchService {
-  searchUsers(_query: string): Promise<User[]>;
-  suggestPositions(_query: string): Promise<KeywordSuggestion[]>;
-  suggestLanguages(_query: string): Promise<KeywordSuggestion[]>;
+  searchUsers(query: string): Promise<User[]>;
+  suggestUsers(query: string): Promise<User[]>;
+  suggestPositions(query: string): Promise<string[]>;
+  suggestLanguages(query: string): Promise<Language[]>;
+  searchUsersByPosition(query: string): Promise<User[]>;
 }

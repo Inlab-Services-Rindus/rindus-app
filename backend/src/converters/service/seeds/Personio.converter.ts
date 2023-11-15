@@ -53,17 +53,34 @@ export class PersonioEmployeePartnerConverter
 {
   private static readonly IT_PREFIX = 'IT';
 
+  private static DESCRIPTIONS: { [x: string]: string } = {
+    douglas: "With over 2,000 stores, leader of Europe's beauty care sector.",
+    stroer:
+      'Germany’s leading digital multi-channel media firm, provider of integrated marketing solutions.',
+    sonnen:
+      'Top German solar battery manufacturer merging renewable energy storage and home automation.',
+    canda:
+      'Founded in 1841, family-owned C&A provides affordable, ready-to-wear clothing for everyday consumers.',
+    auxmoney:
+      'Auxmoney is the leading FinTech in Germany for online peer-to-peer credits.',
+    obi: 'OBI is the leading do-it-yourself store for building supplies in Germany, Austria.',
+    lps: 'Technology leaders with 15 years of expertise in managing coalition loyalty programs in travel and transportation.',
+  };
+
   convert(source: string): Insertable<PartnerRecord> | undefined {
     if (!this.isPartner(source)) {
       return undefined;
     }
 
     const partnerName = this.sanitiseDepartmentId(source).trim();
+    const sanitisedPartnerName = this.sanitisePartnerName(partnerName);
+    const description =
+      PersonioEmployeePartnerConverter.DESCRIPTIONS[sanitisedPartnerName];
 
     return {
       name: partnerName,
-      logo_url: this.partnerLogoUrl(partnerName),
-      description: 'A rindus partner',
+      logo_url: this.partnerLogoUrl(sanitisedPartnerName),
+      description: description,
     };
   }
 
@@ -74,15 +91,17 @@ export class PersonioEmployeePartnerConverter
     );
   }
 
-  private partnerLogoUrl(partnerName: string): string {
-    const sanitisedPartnerName = partnerName
+  private sanitisePartnerName(partnerName: string) {
+    return partnerName
       .toLocaleLowerCase()
       .replace(/ /g, '-')
       .replace(/ö/g, 'o')
       .replace(/&/g, 'and')
       .replace(/loyalty-partner-solutions/g, 'lps');
+  }
 
-    return `/images/partners/${sanitisedPartnerName}.jpg`;
+  private partnerLogoUrl(partnerName: string): string {
+    return `/images/partners/${partnerName}.jpg`;
   }
 
   private isPartner(departmentId: string): boolean {

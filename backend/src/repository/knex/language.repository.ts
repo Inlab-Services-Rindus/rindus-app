@@ -11,8 +11,6 @@ export class KnexLanguageRepository implements LanguageRepository {
   }
 
   public async all(): Promise<Language[]> {
-    const record = await this.knex<string>('languages').select('name');
-
-    return record.map((record) => record.name);
+    return await this.knex<string>('languages').select('id', 'name');
   }
 }

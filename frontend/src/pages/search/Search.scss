@@ -6,11 +6,15 @@
   padding: 20px 16px;
 }
 
-.search__tag {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 20px;
+.search {
+  width: 100%;
+
+  &__tag {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+  }
 }
 
 .tag__container {
@@ -33,5 +37,25 @@
   &__text {
     margin: 0;
     padding: 0;
+  }
+}
+
+.result {
+  width: 100%;
+  padding-top: 20px;
+
+  &__tag {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    border-bottom: 1px solid $rindus-light-gray;
+
+    &__text {
+      @include text($font-poppins-regular, 12px, 400, 16px);
+      color: var(--Gray-Neutral, #a5a5aa);
+    }
   }
 }

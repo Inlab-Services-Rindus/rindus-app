@@ -1,5 +1,11 @@
-import { SuggestionsConverter } from '@/converters/api/Search.converter';
+import { SuggestionsResultConverter } from '@/converters/api/Search.converter';
 import { UserResultConverter } from '@/converters/api/User.converter';
+import {
+  parseIdQueryParam,
+  parseKeywordQueryParam,
+  parseQueryQueryParam,
+} from '@/helpers/RequestHelper';
+import { User } from '@/models/business/User';
 import { SearchPrograms } from '@/programs/search.programs';
 import { Request, Response } from 'express';
 
@@ -8,21 +14,21 @@ export class SearchController {
 
   private readonly userResultConverter: UserResultConverter;
 
-  private readonly suggestionsConverter: SuggestionsConverter;
+  private readonly suggestionsResultConverter: SuggestionsResultConverter;
 
   constructor(searchPrograms: SearchPrograms) {
     this.searchPrograms = searchPrograms;
     this.userResultConverter = new UserResultConverter();
-    this.suggestionsConverter = new SuggestionsConverter();
+    this.suggestionsResultConverter = new SuggestionsResultConverter();
   }
 
   public async suggestions(request: Request, response: Response) {
-    const maybeQuery = this.parseQuery(request);
+    const maybeQuery = parseQueryQueryParam(request);
 
     if (maybeQuery) {
       const results = await this.searchPrograms.suggestions(maybeQuery);
 
-      const suggestions = this.suggestionsConverter.convert(results);
+      const suggestions = this.suggestionsResultConverter.convert(results);
 
       return response.send(suggestions);
     }
@@ -31,28 +37,40 @@ export class SearchController {
   }
 
   public async search(request: Request, response: Response) {
-    const maybeQuery = this.parseQuery(request);
+    const maybeQuery = parseQueryQueryParam(request);
+    const maybeKeyword = parseKeywordQueryParam(request);
+    const maybeId = parseIdQueryParam(request);
 
-    if (maybeQuery) {
-      const users = await this.searchPrograms.search(maybeQuery);
-
-      const results = users.map((user) =>
-        this.userResultConverter.convert(user),
-      );
-
-      return response.send(results);
+    if (!maybeQuery && !maybeKeyword) {
+      return response.sendStatus(400);
     }
 
-    return response.send([]);
-  }
+    let users;
+    switch (maybeKeyword) {
+      case 'language':
+        if (!maybeId) {
+          return response.sendStatus(400);
+        }
 
-  private parseQuery(request: Request) {
-    const query = request.query.query;
+        users = await this.searchPrograms.searchByLanguage(maybeId);
+        break;
+      case 'position':
+        if (!maybeQuery) {
+          return response.sendStatus(400);
+        }
 
-    if (typeof query !== 'string') {
-      return undefined;
+        users = await this.searchPrograms.searchByPosition(maybeQuery);
+        break;
+      default:
+        if (maybeQuery) {
+          users = await this.searchPrograms.search(maybeQuery);
+        } else {
+          users = [] as User[];
+        }
     }
 
-    return query;
+    const results = users.map((user) => this.userResultConverter.convert(user));
+
+    return response.send(results);
   }
 }
