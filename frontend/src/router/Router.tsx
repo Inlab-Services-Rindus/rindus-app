@@ -8,7 +8,7 @@ import { Home } from '@/pages/home/Home';
 import { Login } from '@/pages/login/Login';
 import Partner from '@/pages/partner/Partner';
 import { Profile } from '@/pages/profile/Profile';
-import { SearchDetails } from '@/pages/search-details/SearchDetails';
+// import { SearchDetails } from '@/pages/search-details/SearchDetails';
 import { Search } from '@/pages/search/Search';
 
 export function Router() {
@@ -31,7 +31,7 @@ export function Router() {
       <Route element={<ProtectedRoutes isAuth={isLoggedIn} />}>
         <Route element={<Home />} path="/" />
         <Route element={<Search />} path="/search" />
-        <Route element={<SearchDetails />} path="/search/:query" />
+        {/* <Route element={<SearchDetails />} path="/search/:query" /> */}
         <Route element={<Profile />} path="/profile/:id" />
         <Route element={<Partner />} path="/partner/:id" />
       </Route>

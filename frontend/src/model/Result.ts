@@ -1,14 +1,31 @@
-export interface TagItem {
-  type: string;
-  data: string;
+export interface Suggestions {
+  languageSuggestions: LanguageItem[];
+  positionSuggestions: PositionItem[];
+  userSuggestions: UserItem[];
+}
+export interface LanguageItem {
+  display: string;
+  query: string;
+}
+
+export interface PositionItem {
+  display: string;
+  query: string;
+}
+
+export interface Search {
+  display: string;
+  query: string;
 }
 
 export interface UserItem {
   id: number;
   profilePictureUrl: string;
+  email: string;
   firstName: string;
-  lastName?: string;
+  lastName: string;
   position: string;
+  isBirthday: boolean;
 }
 
 interface UserItems {
@@ -16,7 +33,7 @@ interface UserItems {
   data: UserItem[];
 }
 
-export type SearchItem = TagItem | UserItems;
+export type SuggestionItems = LanguageItem | PositionItem;
 
 interface TagResponse {
   type: string;
