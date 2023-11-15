@@ -29,7 +29,7 @@ describe.skip('Partner', () => {
 
   beforeEach(() => {
     globalFetchSpy.mockClear();
-    useNavigateSpy.mockClear();
+    // useNavigateSpy.mockClear();
   });
 
   // it('should render partner info', async () => {
