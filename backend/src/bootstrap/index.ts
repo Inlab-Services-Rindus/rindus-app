@@ -5,6 +5,7 @@ import { configure } from '@/bootstrap/configure';
 import {
   initLanguagesFuse,
   initUsersFuseByName,
+  initPositionsFuse,
   initUsersFuseByPosition,
 } from '@/bootstrap/search';
 
@@ -34,6 +35,7 @@ const languageRepository = new KnexLanguageRepository(store);
 
 const usersByName = initUsersFuseByName(userRepository);
 const usersByPosition = initUsersFuseByPosition(userRepository);
+const positions = initPositionsFuse(userRepository);
 const languages = initLanguagesFuse(languageRepository);
 
 // Services
@@ -41,13 +43,14 @@ const jwtValidator = new GoogleJwtValidator();
 const userSearchService = new FuseSearchService(
   usersByName,
   usersByPosition,
+  positions,
   languages,
 );
 
 // Programs
 const sessionPrograms = new SessionPrograms(jwtValidator, userRepository);
 const userPrograms = new UserPrograms(userRepository);
-const searchPrograms = new SearchPrograms(userSearchService);
+const searchPrograms = new SearchPrograms(userSearchService, userRepository);
 
 // Controllers
 export const sessionController = new SessionController(

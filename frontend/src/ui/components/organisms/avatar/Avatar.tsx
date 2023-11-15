@@ -5,14 +5,12 @@ import '@/ui/components/organisms/avatar/Avatar.scss';
 export type AvatarSize = 'small' | 'medium' | 'large';
 interface AvatarProps {
   profilePictureUrl: string;
-  firstName?: string;
   isBirthday?: boolean;
   isCaptain?: boolean;
   size?: AvatarSize;
 }
 
 export function Avatar({
-  firstName,
   isBirthday,
   isCaptain,
   profilePictureUrl,
@@ -47,7 +45,7 @@ export function Avatar({
           loading="lazy"
           className="avatar__picture__img"
           src={profilePictureUrl}
-          alt={`${firstName}'s profile picture`}
+          alt={'Profile picture'}
         />
       </div>
       {renderBadge()}

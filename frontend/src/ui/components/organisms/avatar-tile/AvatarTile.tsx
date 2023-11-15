@@ -22,7 +22,6 @@ export default function AvatarTile({
         <Avatar
           size="large"
           profilePictureUrl={profilePictureUrl}
-          firstName={firstName}
           isBirthday={isBirthday}
           isCaptain={isCaptain}
         />

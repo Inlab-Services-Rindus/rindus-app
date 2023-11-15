@@ -1,10 +1,14 @@
 import { User } from '@/models/api/User';
 
-export type Suggestions = Suggestion[];
+export interface SuggestionsResult {
+  languageSuggestions: TagSuggestion[];
+  positionSuggestions: TagSuggestion[];
+  userSuggestions: SuggestionUser[];
+}
 
-export interface Suggestion {
-  type: 'keyword' | 'freetext';
-  data: string | SuggestionUser[];
+export interface TagSuggestion {
+  display: string;
+  query: string;
 }
 
 export interface SuggestionUser extends User {

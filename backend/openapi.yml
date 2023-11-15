@@ -404,33 +404,35 @@ components:
       items:
         $ref: "#/components/schemas/User"
     SuggestionsResult:
-      type: array
-      items:
-        anyOf:
-          - $ref: "#/components/schemas/LanguageSuggestion"
-            minItems: 0
-            maxItems: 2
-          - $ref: "#/components/schemas/PositionSuggestion"
-            minItems: 0
-            maxItems: 2
-          - $ref: "#/components/schemas/UserSuggestions"
-            minItems: 0
-            maxItems: 1
-    LanguageSuggestion:
       type: object
       properties:
-        type:
-          const: language
-        data:
-          type: object
-          properties:
-            id:
-              type: integer
-              format: int64
-              examples: [10]
-            name:
-              type: string
-              examples: ["spanish"]
+        languageSuggestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/TagSuggestion"
+            minItems: 0
+            maxItems: 2
+        positionSuggestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/TagSuggestion"
+            minItems: 0
+            maxItems: 2
+        userSuggestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+            minItems: 0
+            maxItems: 5
+    TagSuggestion:
+      type: object
+      properties:
+        display:
+          type: string
+          examples: ["Scrum Master"]
+        query:
+          type: string
+          examples: ["/search?type=position&query=Scrum+Master"]
     PositionSuggestion:
       type: object
       properties:
@@ -439,19 +441,9 @@ components:
         data:
           type: object
           properties:
-            id:
-              type: integer
-              format: int64
-              examples: [10]
             name:
               type: string
-              examples: ["spanish"]
-    UserSuggestions:
-      type: array
-      items:
-        $ref: "#/components/schemas/User"
-        minItems: 0
-        maxItems: 5
+              examples: ["Scrum Master"]
   requestBodies:
     Login:
       description: Google provided user's JWT token

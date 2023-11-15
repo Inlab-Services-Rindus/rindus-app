@@ -45,6 +45,29 @@ export class KnexUserRepository implements UserRepository {
     this.loggedInConverter = new LoggedInUserConverter();
     this.userWithInfoConverter = new UserWithInfoConverter();
   }
+
+  public async allByLanguage(languageId: number): Promise<User[]> {
+    const userRecords = await this.knex({ ul: 'users_languages' })
+      .join(
+        {
+          u: 'users_view',
+        },
+        'ul.user_id',
+        'u.id',
+      )
+      .where('ul.language_id', languageId);
+
+    return this.mapToBusinesss(userRecords);
+  }
+
+  public async allPositions(): Promise<string[]> {
+    const positionRecords = await this.knex('users')
+      .select('position')
+      .distinct();
+
+    return positionRecords.map((record) => record.position);
+  }
+
   async all(): Promise<User[]> {
     const userRecords = await this.knex('users');
 
@@ -170,9 +193,12 @@ export class KnexUserRepository implements UserRepository {
   private async userLanguages(userId: number): Promise<Language[]> {
     const languageRecords = await this.knex({ ul: 'users_languages' })
       .join({ l: 'languages' }, 'ul.language_id', 'l.id')
-      .select('l.name')
+      .select('l.name', 'l.id')
       .where('ul.user_id', userId);
 
-    return languageRecords.map((record) => record.name);
+    return languageRecords.map((record) => ({
+      id: record.id,
+      name: record.name,
+    }));
   }
 }

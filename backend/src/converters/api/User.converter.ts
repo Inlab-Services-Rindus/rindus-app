@@ -48,7 +48,7 @@ export class ShowUserConverter
       position: source.position,
       office: source.office,
       department: this.departmentConverter.convert(source.partner),
-      languages: source.languages,
+      languages: source.languages.map((language) => language.name),
       slack: { name: source.slack.name, profileUrl: source.slack.profileUrl },
     };
   }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import Loader from '@/ui/components/atoms/loader/Loader';
 import Section from '@/ui/components/molecules/section/Section';
@@ -15,7 +15,6 @@ import '@/ui/section/partner/Partner.scss';
 
 export function PartnerInfo() {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const [partnerInfo, setPartnerInfo] = useState<Partner>();
   const [members, setMembers] = useState<UserExtended[]>([]);
@@ -51,10 +50,6 @@ export function PartnerInfo() {
     return <Loader />;
   }
 
-  const handleNavigate = (partnerId: number) => {
-    navigate(`/profile/${partnerId}`);
-  };
-
   return (
     <Section
       dataTestId="partner"
@@ -85,7 +80,6 @@ export function PartnerInfo() {
           <div className="body__employees">
             {members?.map((employee) => (
               <UserCard
-                handleClick={() => handleNavigate(employee?.id)}
                 key={employee.id}
                 id={employee.id}
                 profilePictureUrl={employee.profilePictureUrl}
@@ -98,7 +92,6 @@ export function PartnerInfo() {
           <div className="body__captains">
             {captains?.map((captain) => (
               <UserCard
-                handleClick={() => handleNavigate(captain?.id)}
                 key={captain.id}
                 id={captain.id}
                 profilePictureUrl={captain.profilePictureUrl}
