@@ -3,6 +3,6 @@ import { AuthUser } from '@/modules/auth/domain/AuthUser';
 
 export async function softLogin(
   authRepository: AuthRepository,
-): Promise<AuthUser> {
+): Promise<AuthUser | undefined> {
   return authRepository.softLogin();
 }
