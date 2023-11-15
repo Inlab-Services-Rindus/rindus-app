@@ -38,7 +38,7 @@ export async function softLogin() {
       credentials: 'include',
     });
 
-    if (response.status !== 400 && !response.ok) {
+    if (response.status === 401) {
       throw new Error('Login expired');
     }
 

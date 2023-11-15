@@ -94,11 +94,9 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     } catch (error: any) {
       setIsLoading(false);
 
-      if (error?.message === 'Login expired') {
-        showToastWarning('Login expired');
+      if (error?.message !== 'Login expired') {
+        showToastError('Login failed');
       }
-
-      showToastError('Login failed');
     }
   };
 

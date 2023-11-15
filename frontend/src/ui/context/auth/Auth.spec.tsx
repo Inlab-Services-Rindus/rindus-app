@@ -123,7 +123,7 @@ describe('Auth', () => {
       });
     });
 
-    it('should show warming toast when the response from soft login call throw a "Login expired" error', async () => {
+    it('should not show any toast when the response from soft login call throw a "Login expired" error', async () => {
       softLogin.mockImplementationOnce(() => {
         throw new Error('Login expired');
       });
@@ -142,7 +142,9 @@ describe('Auth', () => {
       );
 
       await waitFor(() => {
-        expect(showToastWarningSpy).toHaveBeenCalledWith('Login expired');
+        expect(showToastSuccessSpy).not.toHaveBeenCalled();
+        expect(showToastWarningSpy).not.toHaveBeenCalled();
+        expect(showToastErrorSpy).not.toHaveBeenCalled();
         expect(getByText('Is logged in: false')).toBeTruthy();
         expect(getByText('Is loading: false')).toBeTruthy();
       });
