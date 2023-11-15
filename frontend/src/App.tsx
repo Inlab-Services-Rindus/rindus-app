@@ -2,7 +2,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Meta } from '@/ui/components/atoms/meta/Meta';
-import PageLayout from '@/ui/components/organisms/layout/page/Page';
+import Page from '@/ui/components/organisms/layout/page/Page';
 
 import { Router } from '@/ui/router/Router';
 
@@ -18,11 +18,11 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <StoreProvider>
-            <PageLayout>
+            <Page>
               <Meta />
               <Router />
               <Toast />
-            </PageLayout>
+            </Page>
           </StoreProvider>
         </AuthProvider>
       </BrowserRouter>
