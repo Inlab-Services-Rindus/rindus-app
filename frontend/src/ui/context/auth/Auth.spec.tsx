@@ -45,25 +45,18 @@ describe('Auth', () => {
     showToastSuccessSpy.mockReset();
   });
 
-  it('should render succesfully', () => {
-    global.fetch = vi.fn().mockResolvedValueOnce({
-      ok: false,
-    });
-
+  it('should render succesfully', async () => {
     render(
       <AuthProvider>
         <div data-testid="auth-provider">AuthProvider</div>
       </AuthProvider>,
     );
-
-    expect(screen.getByTestId('auth-provider')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId('auth-provider')).toBeInTheDocument();
+    });
   });
 
-  it('auth is false and loading is true by default', () => {
-    global.fetch = vi.fn().mockResolvedValueOnce({
-      ok: false,
-    });
-
+  it('auth is false and loading is true by default', async () => {
     const { getByText } = render(
       <AuthProvider>
         <AuthContext.Consumer>
@@ -76,9 +69,10 @@ describe('Auth', () => {
         </AuthContext.Consumer>
       </AuthProvider>,
     );
-
-    expect(getByText('Is logged in: false')).toBeTruthy();
-    expect(getByText('Is loading: true')).toBeTruthy();
+    await waitFor(() => {
+      expect(getByText('Is logged in: false')).toBeTruthy();
+      expect(getByText('Is loading: true')).toBeTruthy();
+    });
   });
 
   describe('Soft Login', () => {
