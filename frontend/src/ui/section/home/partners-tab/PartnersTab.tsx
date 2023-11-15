@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Tab from '@/ui/components/molecules/section/Section';
+import Section from '@/ui/components/molecules/section/Section';
 
 import { StoreContext } from '@/ui/context/store/Store';
 
@@ -20,7 +20,7 @@ export default function PartnersTab() {
   }, []);
 
   return (
-    <Tab
+    <Section
       isLoading={isLoading}
       className="partners-tab__container"
       dataTestId="partners-tab"
@@ -40,6 +40,6 @@ export default function PartnersTab() {
           ></img>
         </div>
       ))}
-    </Tab>
+    </Section>
   );
 }

@@ -1,13 +1,9 @@
-import type {
-  Suggestions,
-  UserItem,
-  LanguageItem,
-  PositionItem,
-} from '@/model/Result';
+import { Item, Suggestion } from '@/modules/search/domain/Suggestion';
+import { UserExtended } from '@/modules/users/domain/User';
 
-export const setTagsAndUsers = (data: Suggestions) => {
-  const tagNames: LanguageItem[] | PositionItem[] = [];
-  const userItems: UserItem[] = [];
+export const setTagsAndUsers = (data: Suggestion) => {
+  const tagNames: Item[] = [];
+  const userItems: UserExtended[] = [];
 
   if ('languageSuggestions' in data) {
     for (const suggestion of data.languageSuggestions) {

@@ -1,10 +1,9 @@
-import Tab from '@/ui/components/molecules/section/Section';
-
+import Section from '@/ui/components/molecules/section/Section';
 import { render, screen } from '@testing-library/react';
 
-describe('Tab', () => {
+describe('Section', () => {
   it('renders children', () => {
-    render(<Tab isLoading={false}>Test</Tab>);
+    render(<Section isLoading={false}>Test</Section>);
 
     const tabElement = screen.getByText(/Test/);
 
@@ -12,7 +11,7 @@ describe('Tab', () => {
   });
 
   it('renders Loader when isLoading is true', () => {
-    render(<Tab isLoading>Test</Tab>);
+    render(<Section isLoading>Test</Section>);
 
     const loaderElement = screen.getByTestId('loader');
 
@@ -23,9 +22,9 @@ describe('Tab', () => {
     const refreshMock = vi.fn();
 
     render(
-      <Tab isLoading={false} refresh={refreshMock} shouldRefresh>
+      <Section isLoading={false} refresh={refreshMock} shouldRefresh>
         Test
-      </Tab>,
+      </Section>,
     );
 
     const retryElement = screen.getByTestId('retry-component');
