@@ -1,4 +1,4 @@
-import { Partner } from '@/model/Partner';
+import { Partner } from '@/modules/partners/domain/Partner';
 
 export const partnerMock: Partner = {
   description: 'A rindus partner',

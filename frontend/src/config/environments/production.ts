@@ -1,9 +1,6 @@
-import { AppConfig } from '@/model/Config';
+import { AppConfig } from '@/config/config';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
-console.log('Pedro ===> backendUrl', backendUrl);
-
 
 export const prodConfig = (): AppConfig => ({
   backendUrl,

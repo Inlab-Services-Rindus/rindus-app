@@ -4,8 +4,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@scss/*": ["./src/assets/scss/*"],
-      "@assets/*": ["./src/assets/*"],
-      "@helpers/*": ["./src/helpers/*"]
+      "@helpers/*": ["./src/ui/helpers/*"],
+      "@assets/*": ["./src/assets/*"]
     },
     "target": "ES2020",
     "useDefineForClassFields": true,

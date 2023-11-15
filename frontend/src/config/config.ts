@@ -1,6 +1,8 @@
 import { devConfig, prodConfig } from '@/config/environments';
 
-import { AppConfig } from 'src/model/Config';
+export interface AppConfig {
+  backendUrl: string;
+}
 
 type Mode = 'development' | 'production' | 'mock';
 

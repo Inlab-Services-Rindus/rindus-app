@@ -1,13 +1,16 @@
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 
+import { Meta } from '@/ui/components/atoms/meta/Meta';
+import Page from '@/ui/components/layout/page/Page';
+
+import { Router } from '@/ui/router/Router';
+
+import { AuthProvider } from '@/ui/context/auth/Auth';
+import { StoreProvider } from '@/ui/context/store/Store';
+import { Toast } from '@/ui/context/toast/Toast';
+
 import '@/App.scss';
-import { Meta } from '@/atoms/meta/Meta';
-import { AuthProvider } from '@/context/auth/Auth';
-import { StoreProvider } from '@/context/store/Store';
-import { Toast } from '@/context/toast/Toast';
-import PageLayout from '@/organisms/layout/page/page';
-import { Router } from '@/router/Router';
 
 function App() {
   return (
@@ -15,11 +18,11 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <StoreProvider>
-            <PageLayout>
+            <Page>
               <Meta />
               <Router />
               <Toast />
-            </PageLayout>
+            </Page>
           </StoreProvider>
         </AuthProvider>
       </BrowserRouter>

@@ -3,8 +3,14 @@
   "singleQuote": true,
   "importOrder": [
     "^react(.*)",
-    "^@/(.*)",
     "<THIRD_PARTY_MODULES>",
+    "^@/modules/(.*)",
+    "^@/ui/router/(.*)",
+    "^@/ui/context/(.*)",
+    "^@/ui/hooks/(.*)",
+    "^@/ui/helpers/(.*)",
+    "^@/ui/section/(.*\\.(?!scss|css).*$)",
+    "^@/ui/components/(.*\\.(?!scss|css).*$)",
     ".(scss|css)$"
   ],
   "importOrderSeparation": true,
