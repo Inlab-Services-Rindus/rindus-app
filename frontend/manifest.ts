@@ -3,9 +3,11 @@ import { VitePWAOptions } from 'vite-plugin-pwa';
 export const manifestForPlugin: Partial<VitePWAOptions> = {
   registerType: 'autoUpdate',
   includeAssets: ['/LOGO_Size_192px.png'],
+
   manifest: {
     name: 'Rindus',
     short_name: 'Rindus',
+    background_color: '#4dd699',
     description: 'Rindus app for employees.',
     icons: [
       {

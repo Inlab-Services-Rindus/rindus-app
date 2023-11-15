@@ -50,7 +50,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
   const navigate = useNavigate();
 
-  const { showToastError, showToastWarning, showToastSuccess } = useToast();
+  const { showToastError, showToastSuccess } = useToast();
 
   const actionLogin = async (
     googleResponse: google.accounts.id.CredentialResponse,
@@ -94,11 +94,9 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     } catch (error: any) {
       setIsLoading(false);
 
-      if (error?.message === 'Login expired') {
-        showToastWarning('Login expired');
+      if (error?.message !== 'Login expired') {
+        showToastError('Login failed');
       }
-
-      showToastError('Login failed');
     }
   };
 
