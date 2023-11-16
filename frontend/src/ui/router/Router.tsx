@@ -24,16 +24,17 @@ export function Router() {
 
   return (
     <Routes>
-      <Route
-        element={isLoggedIn ? <Navigate to="/" /> : <Login />}
-        path="/login"
-      />
+      <Route path="/login" element={<Login />} />
       <Route element={<ProtectedRoutes isAuth={isLoggedIn} />}>
         <Route element={<Home />} path="/" />
         <Route element={<Search />} path="/search" />
         <Route element={<Profile />} path="/profile/:id" />
         <Route element={<Partner />} path="/partner/:id" />
       </Route>
+      <Route
+        path="*"
+        element={isLoggedIn ? <Navigate to="/" /> : <Navigate to="/login" />}
+      />
     </Routes>
   );
 }
