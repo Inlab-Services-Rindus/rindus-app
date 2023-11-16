@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { Meta } from '@/ui/components/atoms/meta/Meta';
 import Page from '@/ui/components/layout/page/Page';
+import { Analytics } from '@vercel/analytics/react';
 
 import { Router } from '@/ui/router/Router';
 
@@ -22,6 +23,7 @@ function App() {
               <Meta />
               <Router />
               <Toast />
+              <Analytics />
             </Page>
           </StoreProvider>
         </AuthProvider>
