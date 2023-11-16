@@ -81,6 +81,24 @@ describe('Router Component', () => {
       );
       expect(screen.queryByTestId('home-page')).not.toBeInTheDocument();
     });
+
+    it('should render home page when the path is not defined and is authenticated', () => {
+      render(
+        <AuthContext.Provider
+          value={{
+            isLoggedIn: true,
+            isLoading: false,
+            login: vi.fn(),
+            logout: vi.fn(),
+          }}
+        >
+          <MemoryRouter initialEntries={['/test']}>
+            <Router />
+          </MemoryRouter>
+        </AuthContext.Provider>,
+      );
+      expect(screen.queryByTestId('home-page')).toBeInTheDocument();
+    });
   });
 
   describe('Login Page', () => {
@@ -102,23 +120,39 @@ describe('Router Component', () => {
 
       expect(screen.getByTestId('login-page')).toBeInTheDocument();
     });
-    it('should render home page when the path is /login and is not authenticated', () => {
+    it('should render login page when the path is defined and is not authenticated', () => {
       render(
         <AuthContext.Provider
           value={{
-            isLoggedIn: true,
+            isLoggedIn: false,
             isLoading: false,
             login: vi.fn(),
             logout: vi.fn(),
           }}
         >
-          <MemoryRouter initialEntries={['/login']}>
+          <MemoryRouter initialEntries={['/']}>
             <Router />
           </MemoryRouter>
         </AuthContext.Provider>,
       );
-
-      expect(screen.getByTestId('home-page')).toBeInTheDocument();
+      expect(screen.queryByTestId('login-page')).toBeInTheDocument();
+    });
+    it('should render login page when the path is not defined and is not authenticated', () => {
+      render(
+        <AuthContext.Provider
+          value={{
+            isLoggedIn: false,
+            isLoading: false,
+            login: vi.fn(),
+            logout: vi.fn(),
+          }}
+        >
+          <MemoryRouter initialEntries={['/test']}>
+            <Router />
+          </MemoryRouter>
+        </AuthContext.Provider>,
+      );
+      expect(screen.queryByTestId('login-page')).toBeInTheDocument();
     });
   });
 
