@@ -8,7 +8,9 @@ export default function GoogleButto({
   afterLogin,
 }: GoogleButtonProps): JSX.Element {
   useEffect(() => {
+    console.log('entro en UseEffect');
     if (window?.google?.accounts?.id) {
+      console.log('entro en el if');
       window?.google?.accounts?.id?.initialize({
         callback: afterLogin,
         client_id:
@@ -23,7 +25,9 @@ export default function GoogleButto({
       shape: 'pill',
       size: 'large',
     });
-  }, [window?.google?.accounts?.id]);
+  }, []);
+
+  console.log('entro en componente googleButton');
 
   return <div id="google__button" />;
 }
