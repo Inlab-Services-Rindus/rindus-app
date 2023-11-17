@@ -20,14 +20,13 @@ export function PartnerInfo() {
   const [members, setMembers] = useState<UserExtended[]>([]);
   const [captains, setCaptains] = useState<UserExtended[]>([]);
   const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const partnerRepository = createPartnerRepository();
 
   const load = async (partnerId?: string) => {
     if (partnerId) {
       setHasError(false);
-      setIsLoading(true);
       try {
         const partnerInfo = await getPartnerInfo(partnerRepository, partnerId);
         setPartnerInfo(partnerInfo);

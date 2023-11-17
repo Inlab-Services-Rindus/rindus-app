@@ -3,26 +3,27 @@ import { Link, useParams } from 'react-router-dom';
 
 import email from '@/assets/icons/Contact_gmail_40.svg';
 import slack from '@/assets/icons/Contact_slack_40.svg';
-import { getUser } from '@/modules/users/application/get/getUser';
-import { UserExtended } from '@/modules/users/domain/User';
-import { createUserRepository } from '@/modules/users/infrastructure/UserRepository';
 import Tag from '@/ui/components/atoms/tag/Tag';
 import Section from '@/ui/components/molecules/section/Section';
 import AvatarTile from '@/ui/components/organisms/avatar-tile/AvatarTile';
+
+import { getUser } from '@/modules/users/application/get/getUser';
+import { UserExtended } from '@/modules/users/domain/User';
+import { createUserRepository } from '@/modules/users/infrastructure/UserRepository';
+
 import '@/ui/section/profile/Profile.scss';
 
 export function Profile() {
   const { id } = useParams();
   const [user, setUser] = useState<UserExtended>();
   const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const userRepository = createUserRepository();
 
   const load = async (userId?: string) => {
     if (userId) {
       setHasError(false);
-      setIsLoading(true);
       try {
         const user = await getUser(userRepository, userId);
         setUser(user);
