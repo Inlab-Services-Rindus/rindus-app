@@ -21,7 +21,7 @@ export default function GoogleButto({
       shape: 'pill',
       size: 'large',
     });
-  }, [google.accounts.id]);
+  }, [google?.accounts?.id]);
 
   return <div id="google__button" />;
 }
