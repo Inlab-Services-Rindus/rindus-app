@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import { BEMClassHelper } from '@/ui/helpers/BEMClassHelper';
 
@@ -43,7 +43,16 @@ export function TabPanel({ tabs }: TabPanelProps) {
           </button>
         ))}
       </div>
-      {tabs[currentTab].content}
+      <AnimatePresence>
+        <motion.div
+          key={currentTab}
+          initial={{ opacity: 0, x: currentTab === 0 ? '-100%' : '100%' }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: 'spring', bounce: 0.2, duration: 0.8 }}
+        >
+          {tabs[currentTab].content}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
