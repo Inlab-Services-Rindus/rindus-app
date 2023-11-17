@@ -19,13 +19,6 @@ export const manifestForPlugin: Partial<VitePWAOptions> = {
         type: 'image/png',
       },
       {
-        src: '/LOGO_Size_180px_square.png',
-        sizes: '180x180',
-        type: 'image/png',
-        purpose: 'apple touch icon',
-      },
-
-      {
         src: '/LOGO_Size_512px_square.png',
         sizes: '512x512',
         type: 'image/png',
