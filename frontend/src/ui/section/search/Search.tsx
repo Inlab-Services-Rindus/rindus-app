@@ -92,6 +92,13 @@ export function Search(): JSX.Element {
     </div>
   );
 
+  const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && search && !noResults) {
+      console.log('entro');
+      handleClick(search, true);
+    }
+  };
+
   const renderResults = () => {
     if (results.length > 0) {
       return (
@@ -151,9 +158,23 @@ export function Search(): JSX.Element {
     </div>
   );
 
+  const handleClose = () => {
+    setQuery('');
+    setInputValue('');
+    setTags([]);
+    setUsers([]);
+    setSearch({ display: '', query: '' });
+    setResults([]);
+  };
+
   return (
     <div className="search-container">
-      <SearchBox inputHandler={handleInput} inputValue={inputValue} />
+      <SearchBox
+        inputHandler={handleInput}
+        inputValue={inputValue}
+        closeHandler={handleClose}
+        enterHandler={handleEnter}
+      />
       <Section
         dataTestId="search"
         refresh={fetchSuggestions}

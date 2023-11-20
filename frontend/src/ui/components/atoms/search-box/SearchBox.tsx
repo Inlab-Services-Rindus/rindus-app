@@ -1,14 +1,23 @@
+import Close from '@/ui/components/atoms/buttons/close/Close';
+
 import '@/ui/components/atoms/search-box/SearchBox.scss';
 
 interface Props {
   inputHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   inputValue: string;
-  clickHandler?: (event: React.MouseEvent<HTMLInputElement>) => void;
+  enterHandler?: (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    item?: any,
+    custom?: any,
+  ) => void;
+  closeHandler: () => void;
 }
 
 export default function SearchBox({
   inputHandler,
   inputValue,
+  enterHandler,
+  closeHandler,
 }: Props): JSX.Element {
   return (
     <div className="searchbox">
@@ -18,6 +27,7 @@ export default function SearchBox({
         className="searchbox__input"
         value={inputValue}
         onChange={inputHandler}
+        onKeyDown={enterHandler}
       ></input>
       <svg
         width="20"
@@ -35,6 +45,7 @@ export default function SearchBox({
           />
         </g>
       </svg>
+      <Close handleclick={closeHandler} />
     </div>
   );
 }
