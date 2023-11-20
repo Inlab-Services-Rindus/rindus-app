@@ -51,7 +51,7 @@ const employeeBaseDataProcessor =
 
     return converter.convert(personioEmployee)({
       office_id: officeId,
-      partner_id: partnerId,
+      partner_id: partnerId ?? 0,
     });
   };
 
@@ -68,8 +68,13 @@ async function processPartner(
   partnerConverter: PersonioEmployeePartnerConverter,
   partnerId: string,
 ) {
+  let partner = partnerId;
+  if (['Management', 'People and Culture'].includes(partnerId)) {
+    partner = 'Rindus';
+  }
+
   const maybePartner = await knex<PartnerRecord>('partners')
-    .where('name', partnerConverter.sanitiseDepartmentId(partnerId))
+    .where('name', partnerConverter.sanitiseDepartmentId(partner))
     .first();
 
   return maybePartner?.id;

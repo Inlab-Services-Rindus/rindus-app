@@ -164,7 +164,7 @@ export class KnexUserRepository implements UserRepository {
     const maybeRecord = await this.knex<UserProfileQueryRecord>({
       u: 'users',
     })
-      .leftJoin({ p: 'partners' }, 'u.partner_id', 'p.id')
+      .join({ p: 'partners' }, 'u.partner_id', 'p.id')
       .join({ o: 'offices' }, 'u.office_id', 'o.id')
       .join({ s: 'slack_info' }, 'u.email', 's.email')
       .select(

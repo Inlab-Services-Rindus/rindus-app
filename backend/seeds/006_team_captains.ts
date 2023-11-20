@@ -1,4 +1,5 @@
 import { parsePersonioJSONFile } from '@seeds/helper';
+import { accessSync } from 'fs';
 import { Knex } from 'knex';
 
 export async function seed(knex: Knex): Promise<void> {
@@ -10,6 +11,7 @@ export async function seed(knex: Knex): Promise<void> {
     .map((employeeData) => employeeData.data)
     .reduce(
       async (acc, item) => {
+        const departmentId = item.department_id;
         const userEmail = item.email;
         const teamCaptainRaw = item.dynamic_1298673;
         const teamCaptainEmail = teamCaptainRaw.split('|').at(1)?.trim();
@@ -17,6 +19,7 @@ export async function seed(knex: Knex): Promise<void> {
         return resolveToCaptainIdAndPartnerId(
           knex,
           await acc,
+          departmentId,
           userEmail,
           teamCaptainEmail ?? '',
         );
@@ -29,9 +32,14 @@ export async function seed(knex: Knex): Promise<void> {
 async function resolveToCaptainIdAndPartnerId(
   knex: Knex,
   acc: { user_id: number; partner_id: number }[],
+  departmentId: string,
   userEmail: string,
   teamCaptainEmail: string,
 ) {
+  if (['People and Culture', 'Management'].includes(departmentId)) {
+    return acc;
+  }
+
   const maybeTeamCaptain = await knex('users')
     .where('email', teamCaptainEmail)
     .first();

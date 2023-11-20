@@ -13,7 +13,7 @@ export interface UserRecord extends LoggedInUserRecord {
   last_name?: string;
   email: string;
   office_id: number;
-  partner_id?: number;
+  partner_id: number;
   position: string;
   birthday?: string;
 }
@@ -23,7 +23,7 @@ export interface UserViewRecord extends UserRecord {
 }
 
 export type UserProfileQueryRecord = UserRecord &
-  Partial<WithPartnerRecord> &
+  WithPartnerRecord &
   WithSlackInfoRecord &
   WithOfficeRecord;
 

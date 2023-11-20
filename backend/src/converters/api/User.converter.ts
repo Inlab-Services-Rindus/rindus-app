@@ -55,18 +55,10 @@ export class ShowUserConverter
 }
 
 export class DeparmentConverter
-  implements Converter<Partner | undefined, Department>
+  implements Converter<Partner, Department>
 {
-  convert(source: Partner | undefined): Department {
-    if (source) {
-      return { id: source.id, name: source.name, logoUrl: source.logoUrl };
-    }
-
-    return {
-      id: null,
-      name: 'rindus',
-      logoUrl: `${config.app.url}/images/rindus.jpg`,
-    };
+  convert(source: Partner): Department {
+    return { id: source.id, name: source.name, logoUrl: source.logoUrl };
   }
 }
 

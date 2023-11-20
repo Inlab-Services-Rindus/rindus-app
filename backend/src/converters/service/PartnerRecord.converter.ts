@@ -44,7 +44,7 @@ export class PartnerMembersConverter
 }
 
 export class WithPartnerRecordConverter
-  implements Converter<Partial<WithPartnerRecord>, Partner | undefined>
+  implements Converter<WithPartnerRecord, Partner>
 {
   private readonly partnerRecordConverter: PartnerRecordConverter;
 
@@ -52,16 +52,7 @@ export class WithPartnerRecordConverter
     this.partnerRecordConverter = new PartnerRecordConverter();
   }
 
-  convert(source: Partial<WithPartnerRecord>): Partner | undefined {
-    if (
-      !source.partner_id ||
-      !source.partner_name ||
-      !source.partner_logo_url ||
-      !source.partner_description
-    ) {
-      return undefined;
-    }
-
+  convert(source: WithPartnerRecord): Partner {
     return this.partnerRecordConverter.convert({
       id: source.partner_id,
       name: source.partner_name,
