@@ -112,6 +112,8 @@ export function Search(): JSX.Element {
               firstName={user.firstName}
               lastName={user.lastName}
               position={user.position}
+              isBirthday={user.isBirthday}
+              isCaptain={user.isCaptain}
             />
           ))}
         </div>
@@ -137,6 +139,8 @@ export function Search(): JSX.Element {
               firstName={user.firstName}
               lastName={user.lastName}
               position={user.position}
+              isBirthday={user.isBirthday}
+              isCaptain={user.isCaptain}
               size="small"
             />
           ))}

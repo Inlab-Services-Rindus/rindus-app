@@ -51,7 +51,7 @@ export function Profile() {
             key={user?.id}
             profilePictureUrl={user?.profilePictureUrl ?? ''}
             isBirthday={user?.isBirthday ?? false}
-            // isCaptain={profile?.isCaptain}
+            isCaptain={user?.isCaptain}
           />
 
           <span className="avatar__fullName">

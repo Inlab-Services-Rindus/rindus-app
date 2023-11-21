@@ -10,12 +10,10 @@ import { UserRepository } from '@/repository/user.repository';
 import {
   LoggedInUserRecord,
   UserProfileQueryRecord,
-  UserRecord,
   UserViewRecord,
 } from '@/models/service/database/UserRecord';
 import {
   LoggedInUserConverter,
-  UserConverter,
   UserViewConverter,
   UserWithInfoConverter,
 } from '@/converters/service/UserRecord.converter';
@@ -26,7 +24,6 @@ import { Language } from '@/models/business/Language';
 export class KnexUserRepository implements UserRepository {
   private readonly knex: Knex;
 
-  private readonly userConverter: UserConverter;
   private readonly userViewConverter: UserViewConverter;
   private readonly userPageConverter: PageConverter<UserViewRecord, User>;
   private readonly loggedInConverter: LoggedInUserConverter;
@@ -37,7 +34,6 @@ export class KnexUserRepository implements UserRepository {
 
   constructor(knex: Knex) {
     this.knex = knex;
-    this.userConverter = new UserConverter();
     this.userViewConverter = new UserViewConverter();
     this.userPageConverter = new PageConverter<UserViewRecord, User>(
       this.userViewConverter,
@@ -69,7 +65,7 @@ export class KnexUserRepository implements UserRepository {
   }
 
   async all(): Promise<User[]> {
-    const userRecords = await this.knex('users');
+    const userRecords = await this.knex('users_view');
 
     return this.mapToBusinesss(userRecords);
   }
@@ -101,8 +97,8 @@ export class KnexUserRepository implements UserRepository {
     ]);
   }
 
-  private mapToBusinesss(userRecords: UserRecord[]) {
-    return userRecords.map((record) => this.userConverter.convert(record));
+  private mapToBusinesss(userRecords: UserViewRecord[]) {
+    return userRecords.map((record) => this.userViewConverter.convert(record));
   }
 
   private totalPages(
@@ -162,23 +158,18 @@ export class KnexUserRepository implements UserRepository {
     id: number,
   ): Promise<(User & WithInfo) | undefined> {
     const maybeRecord = await this.knex<UserProfileQueryRecord>({
-      u: 'users',
+      u: 'users_view',
     })
       .join({ p: 'partners' }, 'u.partner_id', 'p.id')
       .join({ o: 'offices' }, 'u.office_id', 'o.id')
       .join({ s: 'slack_info' }, 'u.email', 's.email')
       .select(
-        { id: 'u.id' },
-        'first_name',
-        'last_name',
-        'u.email',
+        'u.*',
         { office_name: 'o.name' },
         { partner_id: 'p.id' },
         { partner_name: 'p.name' },
         { partner_logo_url: 'p.logo_url' },
         { partner_description: 'p.description' },
-        'position',
-        'picture_url',
         { slack_name: 's.name' },
         { slack_id: 's.slack_id' },
       )

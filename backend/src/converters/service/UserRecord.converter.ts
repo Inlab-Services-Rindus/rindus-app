@@ -1,11 +1,9 @@
 import { config } from '@/config';
-import { isBirthday } from '@/helpers/WithBirthdayHelper';
 import { Converter } from '@/converters/Converter';
 import { LoggedInUser, User, WithInfo } from '@/models/business/User';
 import {
   LoggedInUserRecord,
   UserProfileQueryRecord,
-  UserRecord,
   UserViewRecord,
 } from '@/models/service/database/UserRecord';
 import { WithPartnerRecordConverter } from '@/converters/service/PartnerRecord.converter';
@@ -39,28 +37,6 @@ export class LoggedInUserConverter
   }
 }
 
-export class UserConverter implements Converter<UserRecord, User> {
-  private readonly loggedInUserConverter: LoggedInUserConverter;
-
-  constructor() {
-    this.loggedInUserConverter = new LoggedInUserConverter();
-  }
-
-  convert(source: UserRecord): User {
-    const birthday = source.birthday;
-
-    return {
-      ...this.loggedInUserConverter.convert(source),
-      firstName: source.first_name,
-      lastName: source.last_name,
-      email: source.email,
-      position: source.position,
-      birthday,
-      isBirthday: isBirthday(birthday),
-    };
-  }
-}
-
 export class UserViewConverter implements Converter<UserViewRecord, User> {
   private readonly loggedInUserConverter: LoggedInUserConverter;
 
@@ -77,6 +53,7 @@ export class UserViewConverter implements Converter<UserViewRecord, User> {
       position: source.position,
       birthday: source.birthday,
       isBirthday: source.is_birthday,
+      isTeamCaptain: source.is_team_captain,
     };
   }
 }
@@ -85,11 +62,11 @@ export class UserWithInfoConverter
   implements Converter<UserProfileQueryRecord, User & WithInfo>
 {
   private static readonly SLACK_URL = 'https://rindus.slack.com/team/';
-  private readonly userConverter: UserConverter;
+  private readonly userViewConverter: UserViewConverter;
   private readonly withPartnerRecordRecordConverter: WithPartnerRecordConverter;
 
   constructor() {
-    this.userConverter = new UserConverter();
+    this.userViewConverter = new UserViewConverter();
     this.withPartnerRecordRecordConverter = new WithPartnerRecordConverter();
   }
 
@@ -97,7 +74,7 @@ export class UserWithInfoConverter
     const slackId = source.slack_id;
 
     return {
-      ...this.userConverter.convert(source),
+      ...this.userViewConverter.convert(source),
       office: source.office_name,
       partner: this.withPartnerRecordRecordConverter.convert({ ...source }),
       slack: {

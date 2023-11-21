@@ -8,10 +8,9 @@ import { User as ApiUser } from '@/models/api/User';
 import { Department, UserProfile } from '@/models/api/users/Show';
 import { UserResult } from '@/models/api/search/Search';
 import { Page } from '@/models/business/Pagination';
-import { UsersIndexPage } from '@/models/api/users/Index';
+import { IndexUser, UsersIndexPage } from '@/models/api/users/Index';
 import { LoggedInUserConverter } from '@/converters/api/Session.converter';
 import { Partner } from '@/models/business/Partner';
-import { config } from '@/config';
 
 export class UserConverter implements Converter<BusinessUser, ApiUser> {
   private readonly userLoginConverter: LoggedInUserConverter;
@@ -27,6 +26,20 @@ export class UserConverter implements Converter<BusinessUser, ApiUser> {
       firstName: source.firstName,
       lastName: source.lastName,
       isBirthday: source.isBirthday,
+    };
+  }
+}
+
+export class IndexUserConverter implements Converter<BusinessUser, IndexUser> {
+  private readonly userConverter: UserConverter;
+
+  constructor() {
+    this.userConverter = new UserConverter();
+  }
+  convert(source: BusinessUser): IndexUser {
+    return {
+      ...this.userConverter.convert(source),
+      isCaptain: source.isTeamCaptain,
     };
   }
 }
@@ -50,13 +63,12 @@ export class ShowUserConverter
       department: this.departmentConverter.convert(source.partner),
       languages: source.languages.map((language) => language.name),
       slack: { name: source.slack.name, profileUrl: source.slack.profileUrl },
+      isCaptain: source.isTeamCaptain,
     };
   }
 }
 
-export class DeparmentConverter
-  implements Converter<Partner, Department>
-{
+export class DeparmentConverter implements Converter<Partner, Department> {
   convert(source: Partner): Department {
     return { id: source.id, name: source.name, logoUrl: source.logoUrl };
   }
@@ -75,6 +87,7 @@ export class UserResultConverter
     return {
       ...this.userConverter.convert(source),
       position: source.position,
+      isCaptain: source.isTeamCaptain,
     };
   }
 }
@@ -82,15 +95,15 @@ export class UserResultConverter
 export class UsersIndexConverter
   implements Converter<Page<BusinessUser>, UsersIndexPage>
 {
-  private readonly userConverter: UserConverter;
+  private readonly indexUserConverter: IndexUserConverter;
 
   constructor() {
-    this.userConverter = new UserConverter();
+    this.indexUserConverter = new IndexUserConverter();
   }
 
   convert(source: Page<BusinessUser>): UsersIndexPage {
     return {
-      data: source.data.map((user) => this.userConverter.convert(user)),
+      data: source.data.map((user) => this.indexUserConverter.convert(user)),
       totalPages: source.totalPages,
     };
   }

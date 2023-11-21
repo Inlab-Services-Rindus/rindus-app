@@ -20,9 +20,10 @@ export interface UserRecord extends LoggedInUserRecord {
 
 export interface UserViewRecord extends UserRecord {
   is_birthday: boolean;
+  is_team_captain: boolean;
 }
 
-export type UserProfileQueryRecord = UserRecord &
+export type UserProfileQueryRecord = UserViewRecord &
   WithPartnerRecord &
   WithSlackInfoRecord &
   WithOfficeRecord;
@@ -30,6 +31,7 @@ export type UserProfileQueryRecord = UserRecord &
 declare module 'knex/types/tables' {
   interface Tables {
     users: UserRecord;
+    users_view: UserViewRecord;
     users_composite: Knex.CompositeTableType<
       UserRecord,
       Pick<UserRecord, 'first_name' | 'email' | 'office_id'> &

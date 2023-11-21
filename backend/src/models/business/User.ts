@@ -13,6 +13,7 @@ export interface User extends LoggedInUser {
   position: string;
   birthday?: string;
   isBirthday: boolean;
+  isTeamCaptain: boolean;
 }
 
 export interface WithInfo {

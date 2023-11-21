@@ -1,5 +1,4 @@
 import { parsePersonioJSONFile } from '@seeds/helper';
-import { accessSync } from 'fs';
 import { Knex } from 'knex';
 
 export async function seed(knex: Knex): Promise<void> {
