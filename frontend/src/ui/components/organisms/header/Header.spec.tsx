@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 
 let isLoggedInSpy = true;
 
+const useSetSearch = vi.fn();
 vi.mock('react', async () => {
   const actual = (await vi.importActual('react')) as any;
   return {
@@ -10,6 +11,7 @@ vi.mock('react', async () => {
     useContext: () => ({
       isLoggedIn: isLoggedInSpy,
       userProfileData: { id: 1 },
+      setSearch: useSetSearch,
     }),
   };
 });
@@ -64,12 +66,18 @@ describe('Header', () => {
         expect(screen.getByTestId('profile')).toBeInTheDocument();
       });
 
-      it('should call navigate when Search button is clicked', () => {
+      it('should call navigate and setSearch when Search button is clicked', () => {
         render(<Header />);
 
         screen.getByTestId('search').click();
 
         expect(useNavigateSpy).toHaveBeenCalledWith('/search');
+        expect(useSetSearch).toHaveBeenCalledWith({
+          tags: [],
+          users: [],
+          results: [],
+          search: { display: '', query: '' },
+        });
       });
 
       it('should call navigate when Logo button is clicked', () => {
