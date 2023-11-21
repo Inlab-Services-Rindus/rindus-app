@@ -21,11 +21,17 @@ interface PartnersData {
   isLoading: boolean;
 }
 
+interface TabData {
+  currentTab: number;
+}
+
 interface StoreContextType {
   users: UserData;
   partners: PartnersData;
+  tab: TabData;
   getUsers: (first?: boolean) => void;
   getPartners: () => void;
+  setCurrentTab: (currentTab: number) => void;
 }
 
 export const StoreContext = createContext<StoreContextType>({
@@ -41,8 +47,12 @@ export const StoreContext = createContext<StoreContextType>({
     hasError: false,
     isLoading: false,
   },
+  tab: {
+    currentTab: 0,
+  },
   getUsers: () => {},
   getPartners: () => {},
+  setCurrentTab: () => {},
 });
 
 interface StoreProviderProps {
@@ -63,6 +73,9 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     data: [],
     hasError: false,
     isLoading: false,
+  });
+  const [tabData, setTabData] = useState<TabData>({
+    currentTab: 0,
   });
 
   const getUsers = async (first?: boolean) => {
@@ -113,11 +126,19 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     }
   };
 
+  const setCurrentTab = (currentTab: number) => {
+    setTabData({
+      currentTab,
+    });
+  };
+
   const contextValue: StoreContextType = {
     users: usersData,
     getUsers,
     partners: partnersData,
     getPartners,
+    tab: tabData,
+    setCurrentTab,
   };
 
   return (
