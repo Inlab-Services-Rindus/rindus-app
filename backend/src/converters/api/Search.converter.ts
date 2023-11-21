@@ -38,6 +38,7 @@ class SuggestionUserConverter implements Converter<User, SuggestionUser> {
     return {
       ...this.userConverter.convert(source),
       position: source.position,
+      isCaptain: source.isTeamCaptain,
     };
   }
 }

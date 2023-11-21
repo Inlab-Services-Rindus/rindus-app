@@ -314,7 +314,13 @@ components:
           format: int64
           examples: [12]
     IndexUser:
-      $ref: "#/components/schemas/User"
+      allOf:
+        - $ref: "#/components/schemas/User"
+        - type: object
+          properties:
+            isCaptain:
+              type: boolean
+              examples: [true]
     UserProfile:
       allOf:
         - $ref: "#/components/schemas/User"
@@ -324,17 +330,7 @@ components:
               type: string
               examples: ["API Engineer"]
             department:
-              type: object
-              properties:
-                name:
-                  type: string
-                  format:
-                  examples: ["Douglas"]
-                logoUrl:
-                  type: string
-                  format: url
-                  examples:
-                    ["http://localhost:3000/images/partners/douglas.svg"]
+              $ref: "#/components/schemas/Partner"
             slack:
               type: object
               properties:
@@ -350,6 +346,9 @@ components:
               items:
                 type: string
                 examples: ["Spanish"]
+            isCaptain:
+              type: boolean
+              examples: [true]
     PartnersIndex:
       type: array
       items:
@@ -402,7 +401,13 @@ components:
     SearchResult:
       type: array
       items:
-        $ref: "#/components/schemas/User"
+        allOf:
+          - $ref: "#/components/schemas/User"
+          - type: object
+            properties:
+              isCaptain:
+                type: boolean
+                examples: [true]
     SuggestionsResult:
       type: object
       properties:
@@ -421,7 +426,13 @@ components:
         userSuggestions:
           type: array
           items:
-            $ref: "#/components/schemas/User"
+            allOf:
+              - $ref: "#/components/schemas/User"
+              - type: object
+                properties:
+                  isCaptain:
+                    type: boolean
+                    examples: [true]
             minItems: 0
             maxItems: 5
     TagSuggestion:

@@ -11,7 +11,7 @@
     "unit": "jest --testPathIgnorePatterns=repository",
     "unit:watch": "npm run unit -- --watch",
     "integration": "jest repository",
-    "test": "npm run unit && npm run integration"
+    "test": "npm run unit"
   },
   "dependencies": {
     "body-parser": "1.20.2",

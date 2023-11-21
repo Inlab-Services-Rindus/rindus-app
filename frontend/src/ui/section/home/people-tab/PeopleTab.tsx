@@ -2,11 +2,11 @@ import { useContext, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useNavigate } from 'react-router-dom';
 
-import { StoreContext } from '@/ui/context/store/Store';
-
 import Loader from '@/ui/components/atoms/loader/Loader';
 import Section from '@/ui/components/molecules/section/Section';
 import AvatarTile from '@/ui/components/organisms/avatar-tile/AvatarTile';
+
+import { StoreContext } from '@/ui/context/store/Store';
 
 import '@/ui/section/home/people-tab/PeopleTab.scss';
 
@@ -51,6 +51,7 @@ export default function PeopleTab() {
             profilePictureUrl={employee.profilePictureUrl}
             firstName={employee.firstName}
             isBirthday={employee.isBirthday}
+            isCaptain={employee.isCaptain}
           />
         ))}
       </InfiniteScroll>
