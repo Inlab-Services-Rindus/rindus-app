@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import Loader from '@/ui/components/atoms/loader/Loader';
 import Section from '@/ui/components/molecules/section/Section';
 import UserCard from '@/ui/components/organisms/user-card/UserCard';
 
