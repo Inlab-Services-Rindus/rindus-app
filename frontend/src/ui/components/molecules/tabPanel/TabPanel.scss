@@ -2,6 +2,10 @@
 @use '@scss/fonts' as *;
 
 .tabPanel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
   &__button-container {
     display: flex;
     gap: 24px;
@@ -32,5 +36,13 @@
     z-index: -1;
     background: $rindus-green;
     mix-blend-mode: multiply;
+  }
+
+  &__content {
+    flex: 1 1 auto;
+
+    .content {
+      height: 100%;
+    }
   }
 }
