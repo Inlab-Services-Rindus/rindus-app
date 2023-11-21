@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('picture_url');
     table.integer('office_id').unsigned().notNullable();
     table.foreign('office_id').references('offices.id').onDelete('cascade');
-    table.integer('partner_id').unsigned(); // Null for Rindus people - not belonging to any partner
+    table.integer('partner_id').unsigned().notNullable(); 
     table.foreign('partner_id').references('partners.id').onDelete('cascade');
     table.string('position').notNullable();
     table.string('birthday');

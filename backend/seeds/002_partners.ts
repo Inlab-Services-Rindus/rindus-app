@@ -21,5 +21,9 @@ export async function seed(knex: Knex): Promise<void> {
     return maybePartner ? acc.concat(maybePartner) : acc;
   }, [] as Insertable<PartnerRecord>[]);
 
-  await knex<PartnerRecord>('partners').insert(partners);
+  await knex<PartnerRecord>('partners').insert(partners.concat({
+    name: 'Rindus',
+    logo_url: '/images/rindus.jpg',
+    description: ''
+  }));
 }

@@ -5,6 +5,7 @@ export interface User {
   email: string;
   profilePictureUrl: string;
   isBirthday: boolean;
+  isCaptain?: boolean;
 }
 
 export interface UserExtended extends User {

@@ -13,4 +13,5 @@ export interface TagSuggestion {
 
 export interface SuggestionUser extends User {
   position: string;
+  isCaptain: boolean;
 }

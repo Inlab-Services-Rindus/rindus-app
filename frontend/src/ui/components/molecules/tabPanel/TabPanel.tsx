@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useContext } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
+
+import { StoreContext } from '@/ui/context/store/Store';
 
 import { BEMClassHelper } from '@/ui/helpers/BEMClassHelper';
 
@@ -14,7 +16,10 @@ interface TabPanelProps {
 }
 
 export function TabPanel({ tabs }: TabPanelProps) {
-  const [currentTab, setCurrentTab] = useState(0);
+  const {
+    tab: { currentTab },
+    setCurrentTab,
+  } = useContext(StoreContext);
 
   return (
     <div className="tabPanel" data-testid="tab-panel">

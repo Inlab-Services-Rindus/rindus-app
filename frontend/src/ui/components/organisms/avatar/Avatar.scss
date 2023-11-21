@@ -27,6 +27,12 @@
       width: 104px;
       height: 104px;
       border-radius: 104px;
+
+      @media screen and (min-width: 768px) {
+        width: 204px;
+        height: 204px;
+        border-radius: 204px;
+      }
     }
   }
 
@@ -64,6 +70,12 @@
       width: 32px;
       height: 32px;
       border-radius: 32px;
+
+      @media screen and (min-width: 768px) {
+        width: 42px;
+        height: 42px;
+        border-radius: 42px;
+      }
 
       img {
         width: 24px;

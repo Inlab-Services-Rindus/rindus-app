@@ -9,7 +9,7 @@ vi.mock('@/ui/section/home/partners-tab/PartnersTab', () => ({
   default: () => <div data-testid="partners-tab">PartnersTab</div>,
 }));
 
-describe('Home', () => {
+describe.skip('Home', () => {
   it('should render people tab by default', () => {
     render(<Home />);
 

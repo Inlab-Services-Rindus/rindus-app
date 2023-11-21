@@ -2,6 +2,6 @@ import { Partner, PartnerMembers } from '@/models/business/Partner';
 
 export interface PartnerRepository {
   all(): Promise<Partner[]>;
-  findById(_id: number): Promise<Partner | undefined>;
-  members(_id: number): Promise<PartnerMembers | undefined>;
+  findById(id: number): Promise<Partner | undefined>;
+  members(id: number): Promise<PartnerMembers | undefined>;
 }
