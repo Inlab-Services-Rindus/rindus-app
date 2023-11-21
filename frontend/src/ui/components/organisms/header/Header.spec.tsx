@@ -72,7 +72,12 @@ describe('Header', () => {
         screen.getByTestId('search').click();
 
         expect(useNavigateSpy).toHaveBeenCalledWith('/search');
-        expect(useSetSearch).toHaveBeenCalled();
+        expect(useSetSearch).toHaveBeenCalledWith({
+          tags: [],
+          users: [],
+          results: [],
+          search: { display: '', query: '' },
+        });
       });
 
       it('should call navigate when Logo button is clicked', () => {
