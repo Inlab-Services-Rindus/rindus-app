@@ -1,5 +1,6 @@
-import '@/ui/components/organisms/avatar-tile/AvatarTile.scss';
 import { Avatar } from '@/ui/components/organisms/avatar/Avatar';
+
+import '@/ui/components/organisms/avatar-tile/AvatarTile.scss';
 
 interface AvatarTileProps {
   firstName?: string;
@@ -18,7 +19,7 @@ export default function AvatarTile({
 }: AvatarTileProps): JSX.Element {
   return (
     <div onClick={onClick} className="avatar-tile">
-      <div>
+      <div className="avatar__container">
         <Avatar
           size="large"
           profilePictureUrl={profilePictureUrl}
