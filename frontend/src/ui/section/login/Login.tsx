@@ -11,7 +11,6 @@ export function Login() {
 
   return (
     <div className="login" data-testid="login-page">
-      <p>Probando 2</p>
       <div className="login__button">
         <GoogleButton afterLogin={login} />
       </div>
