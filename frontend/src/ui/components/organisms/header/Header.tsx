@@ -7,10 +7,12 @@ import RindusLogo from '@/ui/components/atoms/buttons/rindus-logo/RindusLogo';
 import Search from '@/ui/components/atoms/buttons/search/Search';
 
 import { AuthContext } from '@/ui/context/auth/Auth';
+import { StoreContext } from '@/ui/context/store/Store';
 
 import '@/ui/components/organisms/header/Header.scss';
 
 export default function Header() {
+  const { setSearch } = useContext(StoreContext);
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoggedIn, userProfileData } = useContext(AuthContext);
@@ -19,6 +21,12 @@ export default function Header() {
   const isProfilePage = location.pathname === `/profile/${userProfileData?.id}`;
 
   const handleSearchNavigate = () => {
+    setSearch({
+      tags: [],
+      users: [],
+      results: [],
+      search: { display: '', query: '' },
+    });
     navigate('/search');
   };
 

@@ -3,8 +3,9 @@ import { createContext, useState, ReactNode } from 'react';
 import { getAllPartners } from '@/modules/partners/application/get-all/getAllPartners';
 import { Partner } from '@/modules/partners/domain/Partner';
 import { createPartnerRepository } from '@/modules/partners/infrastructure/PartnerRepository';
+import { Item } from '@/modules/search/domain/Suggestion';
 import { getAllUsers } from '@/modules/users/application/get-all/getAllUsers';
-import { User } from '@/modules/users/domain/User';
+import { User, UserExtended } from '@/modules/users/domain/User';
 import { createUserRepository } from '@/modules/users/infrastructure/UserRepository';
 
 interface UserData {
@@ -21,9 +22,18 @@ interface PartnersData {
   isLoading: boolean;
 }
 
+interface SearchData {
+  tags: Item[];
+  users: UserExtended[];
+  results: UserExtended[];
+  search: Item;
+}
+
 interface StoreContextType {
   users: UserData;
   partners: PartnersData;
+  search: SearchData;
+  setSearch: React.Dispatch<React.SetStateAction<SearchData>>;
   getUsers: (first?: boolean) => void;
   getPartners: () => void;
 }
@@ -41,6 +51,13 @@ export const StoreContext = createContext<StoreContextType>({
     hasError: false,
     isLoading: false,
   },
+  search: {
+    tags: [],
+    users: [],
+    results: [],
+    search: { display: '', query: '' },
+  },
+  setSearch: () => {},
   getUsers: () => {},
   getPartners: () => {},
 });
@@ -50,6 +67,12 @@ interface StoreProviderProps {
 }
 
 export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
+  const [search, setSearch] = useState<SearchData>({
+    tags: [],
+    users: [],
+    results: [],
+    search: { display: '', query: '' },
+  });
   const userRepository = createUserRepository();
   const partnerRepository = createPartnerRepository();
   const [usersData, setUsersData] = useState<UserData>({
@@ -118,6 +141,8 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     getUsers,
     partners: partnersData,
     getPartners,
+    search: search,
+    setSearch,
   };
 
   return (
