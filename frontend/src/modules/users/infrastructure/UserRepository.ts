@@ -1,4 +1,5 @@
 import { config } from '@/config/config';
+
 import { UserExtended } from '@/modules/users/domain/User';
 import { UserPagination } from '@/modules/users/domain/UserPagination';
 import { UserRepository } from '@/modules/users/domain/UserRepository';
@@ -10,11 +11,14 @@ export function createUserRepository(): UserRepository {
   };
 }
 
-export async function getAll(page: number) {
+export async function getAll(page: number, pageSize: number) {
   try {
-    const response = await fetch(`${config.backendUrl}/users?page=${page}`, {
-      credentials: 'include',
-    });
+    const response = await fetch(
+      `${config.backendUrl}/users?page=${page}&pageSize=${pageSize}`,
+      {
+        credentials: 'include',
+      },
+    );
 
     if (!response.ok) {
       throw new Error('Error fetching users');
