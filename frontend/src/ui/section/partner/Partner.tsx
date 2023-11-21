@@ -45,10 +45,6 @@ export function PartnerInfo() {
     load(id);
   }, [id]);
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
   return (
     <Section
       dataTestId="partner"
