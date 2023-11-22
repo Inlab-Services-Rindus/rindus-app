@@ -13,3 +13,16 @@
     background: #fff3e7;
   }
 }
+
+/* styles for fullscreen mode (PWA/shortcut) */
+@media all and (display-mode: standalone) {
+  .Toastify__toast {
+    margin: 0 auto;
+    width: 90%;
+    margin-bottom: 50px;
+
+    &-body {
+      padding: 20px;
+    }
+  }
+}
