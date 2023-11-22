@@ -8,7 +8,7 @@ export function Toast() {
       containerId="toast-container"
       draggable={false}
       pauseOnFocusLoss={false}
-      position="bottom-right"
+      position="bottom-center"
       transition={Slide}
     />
   );
