@@ -374,6 +374,9 @@ components:
                   position:
                     type: string
                     examples: ["Scrum Master"]
+                  isCaptain:
+                    type: boolean
+                    examples: [false]
         captains:
           type: array
           items:

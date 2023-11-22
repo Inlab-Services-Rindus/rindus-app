@@ -2,7 +2,7 @@ import { Converter } from '@/converters/Converter';
 import { IndexPartner, PartnersIndex } from '@/models/api/partners/Index';
 import { Partner as BusinessPartner } from '@/models/business/Partner';
 import { Partner as ApiPartner } from '@/models/api/Partner';
-import { PartnerProfile } from '@/models/api/partners/Show';
+import { Captain, PartnerProfile } from '@/models/api/partners/Show';
 import { PartnerMembers as BusinessPartnerMembers } from '@/models/business/Partner';
 import { PartnerMembers as ApiPartnerMembers } from '@/models/api/partners/Show';
 import { Member as BusinessMember } from '@/models/business/Partner';
@@ -60,17 +60,32 @@ export class PartnerMembersConverter
   }
 }
 
-export class MemberConverter implements Converter<BusinessMember, ApiMember> {
+export class CaptainConverter implements Converter<BusinessMember, Captain> {
   private readonly userConverter: UserConverter;
 
   constructor() {
     this.userConverter = new UserConverter();
   }
 
-  convert(source: BusinessMember): ApiMember {
+  convert(source: BusinessMember): Captain {
     return {
       ...this.userConverter.convert(source),
       position: source.position,
+    };
+  }
+}
+
+export class MemberConverter implements Converter<BusinessMember, ApiMember> {
+  private readonly captainConverter: CaptainConverter;
+
+  constructor() {
+    this.captainConverter = new CaptainConverter();
+  }
+
+  convert(source: BusinessMember): ApiMember {
+    return {
+      ...this.captainConverter.convert(source),
+      isCaptain: source.isTeamCaptain,
     };
   }
 }

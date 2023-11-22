@@ -80,6 +80,7 @@ export function PartnerInfo() {
                 firstName={employee.firstName}
                 lastName={employee.lastName}
                 position={employee.position}
+                isCaptain={employee.isCaptain} // Rindus case
               />
             ))}
           </div>

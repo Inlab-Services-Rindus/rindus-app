@@ -7,9 +7,14 @@ export interface PartnerProfile extends Partner {
 
 export interface PartnerMembers {
   members: Member[];
-  captains: Member[];
+  captains: Captain[];
 }
 
 export interface Member extends User {
+  position: string;
+  isCaptain: boolean;
+}
+
+export interface Captain extends User {
   position: string;
 }
