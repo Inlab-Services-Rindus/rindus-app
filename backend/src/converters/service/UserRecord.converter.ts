@@ -61,7 +61,7 @@ export class UserViewConverter implements Converter<UserViewRecord, User> {
 export class UserWithInfoConverter
   implements Converter<UserProfileQueryRecord, User & WithInfo>
 {
-  private static readonly SLACK_URL = 'https://rindus.slack.com/team/';
+  private static readonly SLACK_URL = 'slack://user?team=T24CP5ZUZ&id=';
   private readonly userViewConverter: UserViewConverter;
   private readonly withPartnerRecordRecordConverter: WithPartnerRecordConverter;
 
