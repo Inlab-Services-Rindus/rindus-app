@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useContext } from 'react';
 
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+
+import { StoreContext } from '@/ui/context/store/Store';
 
 import { BEMClassHelper } from '@/ui/helpers/BEMClassHelper';
 
@@ -14,7 +16,10 @@ interface TabPanelProps {
 }
 
 export function TabPanel({ tabs }: TabPanelProps) {
-  const [currentTab, setCurrentTab] = useState(0);
+  const {
+    tab: { currentTab },
+    setCurrentTab,
+  } = useContext(StoreContext);
 
   return (
     <div className="tabPanel" data-testid="tab-panel">
@@ -43,7 +48,19 @@ export function TabPanel({ tabs }: TabPanelProps) {
           </button>
         ))}
       </div>
-      {tabs[currentTab].content}
+      <div className="tabPanel__content">
+        <AnimatePresence>
+          <motion.div
+            className="content"
+            key={currentTab}
+            initial={{ opacity: 0, x: currentTab === 0 ? '-100%' : '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ type: 'spring', bounce: 0.2, duration: 0.8 }}
+          >
+            {tabs[currentTab].content}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

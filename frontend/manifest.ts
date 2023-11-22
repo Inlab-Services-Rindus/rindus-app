@@ -1,7 +1,7 @@
 import { VitePWAOptions } from 'vite-plugin-pwa';
 
 export const manifestForPlugin: Partial<VitePWAOptions> = {
-  registerType: 'autoUpdate',
+  registerType: 'prompt',
   manifest: {
     name: 'Rindus',
     short_name: 'Rindus',

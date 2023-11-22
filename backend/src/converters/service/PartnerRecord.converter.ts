@@ -5,8 +5,8 @@ import {
 } from '@/models/service/database/PartnerRecord';
 import { Partner, PartnerMembers } from '@/models/business/Partner';
 import { config } from '@/config';
-import { UserRecord } from '@/models/service/database/UserRecord';
-import { UserConverter } from '@/converters/service/UserRecord.converter';
+import { UserViewRecord } from '@/models/service/database/UserRecord';
+import { UserViewConverter } from '@/converters/service/UserRecord.converter';
 
 export class PartnerRecordConverter
   implements Converter<PartnerRecord, Partner>
@@ -22,29 +22,29 @@ export class PartnerRecordConverter
 }
 
 export class PartnerMembersConverter
-  implements Converter<[UserRecord[], UserRecord[]], PartnerMembers>
+  implements Converter<[UserViewRecord[], UserViewRecord[]], PartnerMembers>
 {
-  private readonly userConverter: UserConverter;
+  private readonly userViewConverter: UserViewConverter;
 
   constructor() {
-    this.userConverter = new UserConverter();
+    this.userViewConverter = new UserViewConverter();
   }
 
-  convert(source: [UserRecord[], UserRecord[]]): PartnerMembers {
+  convert(source: [UserViewRecord[], UserViewRecord[]]): PartnerMembers {
     const [memberRecords, captainRecords] = source;
     return {
       members: memberRecords.map((userRecord) =>
-        this.userConverter.convert(userRecord),
+        this.userViewConverter.convert(userRecord),
       ),
       captains: captainRecords.map((userRecord) =>
-        this.userConverter.convert(userRecord),
+        this.userViewConverter.convert(userRecord),
       ),
     };
   }
 }
 
 export class WithPartnerRecordConverter
-  implements Converter<Partial<WithPartnerRecord>, Partner | undefined>
+  implements Converter<WithPartnerRecord, Partner>
 {
   private readonly partnerRecordConverter: PartnerRecordConverter;
 
@@ -52,16 +52,7 @@ export class WithPartnerRecordConverter
     this.partnerRecordConverter = new PartnerRecordConverter();
   }
 
-  convert(source: Partial<WithPartnerRecord>): Partner | undefined {
-    if (
-      !source.partner_id ||
-      !source.partner_name ||
-      !source.partner_logo_url ||
-      !source.partner_description
-    ) {
-      return undefined;
-    }
-
+  convert(source: WithPartnerRecord): Partner {
     return this.partnerRecordConverter.convert({
       id: source.partner_id,
       name: source.partner_name,

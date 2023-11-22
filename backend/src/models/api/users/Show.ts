@@ -6,6 +6,7 @@ export interface UserProfile extends User {
   department: Department;
   position: string;
   slack: Slack;
+  isCaptain: boolean;
 }
 
 export interface Department {

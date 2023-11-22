@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import SearchBox from '@/ui/components/atoms/search-box/SearchBox';
 import Tag from '@/ui/components/atoms/tag/Tag';
@@ -12,26 +12,33 @@ import { Item } from '@/modules/search/domain/Suggestion';
 import { createSearchRepository } from '@/modules/search/infrastructure/SearchRepository';
 import { UserExtended } from '@/modules/users/domain/User';
 
+import { StoreContext } from '@/ui/context/store/Store';
+
 import { setTagsAndUsers } from '@/ui/helpers/searchHelpers';
 
 import '@/ui/section/search/Search.scss';
 
 export function Search(): JSX.Element {
+  const { setSearch, search } = useContext(StoreContext);
+
   const [query, setQuery] = useState<string>('');
-  const [search, setSearch] = useState<Item>();
-  const [tags, setTags] = useState<Item[]>([]);
-  const [users, setUsers] = useState<UserExtended[]>([]);
+
   const [inputValue, setInputValue] = useState<string>('');
   const [debouncedQuery] = useDebounce(query, 400);
   const [noResults, setNoResults] = useState<boolean>(false);
-  const [results, setResults] = useState<UserExtended[]>([]);
-
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const searchRepository = createSearchRepository();
 
   useEffect(() => {
+    setInputValue(search.search.display.toUpperCase());
+    setSearch({
+      tags: search.tags,
+      results: search.results,
+      search: search.search,
+      users: search.users,
+    });
     if (debouncedQuery) {
       fetchSuggestions();
     }
@@ -46,8 +53,12 @@ export function Search(): JSX.Element {
       const { tagNames, userItems } = setTagsAndUsers(suggestion);
 
       setNoResults(!tagNames.length && !userItems.length);
-      setTags(tagNames);
-      setUsers(userItems);
+      setSearch((prevSearch) => ({
+        ...prevSearch,
+        tags: tagNames,
+        users: userItems,
+        results: [],
+      }));
     } catch (error) {
       setHasError(true);
     }
@@ -56,12 +67,14 @@ export function Search(): JSX.Element {
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value.toUpperCase();
     setNoResults(false);
-    setResults([]);
-    setTags([]);
-    setUsers([]);
     setInputValue(newValue);
-    setSearch({ display: newValue, query: newValue });
     setQuery(newValue);
+    setSearch({
+      tags: [],
+      users: [],
+      results: [],
+      search: { display: newValue, query: newValue },
+    });
   };
 
   const handleClick = async (item: Item, custom?: boolean) => {
@@ -73,12 +86,19 @@ export function Search(): JSX.Element {
       setIsLoading(false);
       if (results.length === 0) {
         setNoResults(true);
-        setSearch({ display: item.display, query: item.query });
+        setSearch((prevSearch) => ({
+          ...prevSearch,
+          display: item.display,
+          query: item.query,
+        }));
       }
-      setSearch({ display: item.display, query: item.query });
-      setResults(results);
-      setTags([]);
-      setUsers([]);
+      setSearch({
+        tags: [],
+        users: [],
+        results: results,
+        search: { display: item.display, query: item.query },
+      });
+      setInputValue(item.display.toUpperCase());
     } catch (error) {
       setHasError(true);
     }
@@ -92,8 +112,15 @@ export function Search(): JSX.Element {
     </div>
   );
 
+  const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && search.search && !noResults) {
+      console.log('entro');
+      handleClick(search.search, true);
+    }
+  };
+
   const renderResults = () => {
-    if (results.length > 0) {
+    if (search.results?.length > 0) {
       return (
         <div className="result">
           <div className="result__tag">
@@ -101,10 +128,12 @@ export function Search(): JSX.Element {
               <span className="result__tag__text">Results for: </span>
             </div>
             <div>
-              {search?.display && <Tag tag={search.display.toUpperCase()} />}
+              {search.search?.display && (
+                <Tag tag={search.search.display.toUpperCase()} />
+              )}
             </div>
           </div>
-          {results?.map((user: UserExtended) => (
+          {search?.results?.map((user: UserExtended) => (
             <UserCard
               id={user.id}
               key={user.id}
@@ -112,6 +141,8 @@ export function Search(): JSX.Element {
               firstName={user.firstName}
               lastName={user.lastName}
               position={user.position}
+              isBirthday={user.isBirthday}
+              isCaptain={user.isCaptain}
             />
           ))}
         </div>
@@ -119,17 +150,17 @@ export function Search(): JSX.Element {
     }
 
     if (
-      results.length === 0 &&
-      (users.length > 0 || tags.length > 0) &&
-      search?.display
+      search?.results?.length === 0 &&
+      (search.users.length > 0 || search.tags.length > 0) &&
+      search?.search.display
     ) {
       return (
         <div className="search">
           <div className="search__tag">
-            {search?.display && renderTag(search, true)}
-            {tags?.map((item: Item) => renderTag(item))}
+            {search?.search?.display && renderTag(search.search, true)}
+            {search?.tags?.map((item: Item) => renderTag(item))}
           </div>
-          {users?.map((user: UserExtended) => (
+          {search?.users?.map((user: UserExtended) => (
             <UserCard
               key={user.id}
               id={user.id}
@@ -137,6 +168,8 @@ export function Search(): JSX.Element {
               firstName={user.firstName}
               lastName={user.lastName}
               position={user.position}
+              isBirthday={user.isBirthday}
+              isCaptain={user.isCaptain}
               size="small"
             />
           ))}
@@ -147,13 +180,31 @@ export function Search(): JSX.Element {
 
   const renderNoResults = () => (
     <div className="no-result">
-      <p className="no-result__text">No results found for {search?.display}.</p>
+      <p className="no-result__text">
+        No results found for {search?.search?.display}.
+      </p>
     </div>
   );
 
+  const handleClose = () => {
+    setQuery('');
+    setInputValue('');
+    setSearch({
+      tags: [],
+      users: [],
+      results: [],
+      search: { display: '', query: '' },
+    });
+  };
+
   return (
     <div className="search-container">
-      <SearchBox inputHandler={handleInput} inputValue={inputValue} />
+      <SearchBox
+        inputHandler={handleInput}
+        inputValue={inputValue}
+        closeHandler={handleClose}
+        enterHandler={handleEnter}
+      />
       <Section
         dataTestId="search"
         refresh={fetchSuggestions}

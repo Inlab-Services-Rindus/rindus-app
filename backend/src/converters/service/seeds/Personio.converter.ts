@@ -6,7 +6,7 @@ import { PartnerRecord } from '@/models/service/database/PartnerRecord';
 
 interface ReferencedData {
   office_id: number;
-  partner_id: number | undefined;
+  partner_id: number;
 }
 
 export class PersonioEmployeeConverter

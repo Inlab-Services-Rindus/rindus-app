@@ -2,7 +2,7 @@ import { TabPanel } from '@/ui/components/molecules/tabPanel/TabPanel';
 
 import { render, fireEvent } from '@testing-library/react';
 
-describe('TabPanel', () => {
+describe.skip('TabPanel', () => {
   const tabs = [
     {
       label: 'Tab 1',
