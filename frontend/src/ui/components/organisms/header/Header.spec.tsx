@@ -4,6 +4,8 @@ import { render, screen } from '@testing-library/react';
 let isLoggedInSpy = true;
 
 const useSetSearch = vi.fn();
+const useSetCurrentTab = vi.fn();
+
 vi.mock('react', async () => {
   const actual = (await vi.importActual('react')) as any;
   return {
@@ -12,6 +14,7 @@ vi.mock('react', async () => {
       isLoggedIn: isLoggedInSpy,
       userProfileData: { id: 1 },
       setSearch: useSetSearch,
+      setCurrentTab: useSetCurrentTab,
     }),
   };
 });
@@ -80,12 +83,13 @@ describe('Header', () => {
         });
       });
 
-      it('should call navigate when Logo button is clicked', () => {
+      it('should call navigate and setCurrentTab when Logo button is clicked', () => {
         render(<Header />);
 
         screen.getByTestId('rindusLogo').click();
 
         expect(useNavigateSpy).toHaveBeenCalledWith('/');
+        expect(useSetCurrentTab).toHaveBeenCalledWith(0);
       });
 
       it('should call navigate when Profile button is clicked', () => {
