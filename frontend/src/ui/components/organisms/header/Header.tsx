@@ -12,7 +12,7 @@ import { StoreContext } from '@/ui/context/store/Store';
 import '@/ui/components/organisms/header/Header.scss';
 
 export default function Header() {
-  const { setSearch } = useContext(StoreContext);
+  const { setSearch, setCurrentTab } = useContext(StoreContext);
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoggedIn, userProfileData } = useContext(AuthContext);
@@ -32,6 +32,7 @@ export default function Header() {
 
   const handleLogo = () => {
     if (isLoggedIn) {
+      setCurrentTab(0);
       navigate('/');
     }
   };
