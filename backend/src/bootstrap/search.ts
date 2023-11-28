@@ -8,8 +8,8 @@ import { Language } from '@/models/business/Language';
 export async function initUsersFuseByName(userRepository: UserRepository) {
   const options: IFuseOptions<User> = searchOptions({
     keys: [
-      { name: 'firstName', weight: 2 },
-      { name: 'lastName', weight: 2 },
+      { name: 'asciiFirstName', weight: 2 },
+      { name: 'asciiLastName', weight: 2 },
       { name: 'position', weight: 1 },
     ],
   });

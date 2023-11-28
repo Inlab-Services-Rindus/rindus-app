@@ -78,7 +78,7 @@ export class KnexUserRepository implements UserRepository {
     const queryUserRecords = this.knex('users_view')
       .whereNot('id', sessionUserId)
       .orderBy('is_birthday', 'desc')
-      .orderBy('first_name', 'asc')
+      .orderBy('ascii_first_name', 'asc')
       .offset((page - 1) * pageSize)
       .limit(pageSize);
 

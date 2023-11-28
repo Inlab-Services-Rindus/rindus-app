@@ -10,7 +10,9 @@ export interface LoggedInUserRecord extends Identifiable {
 
 export interface UserRecord extends LoggedInUserRecord {
   first_name: string;
+  ascii_first_name: string;
   last_name?: string;
+  ascii_last_name?: string;
   email: string;
   office_id: number;
   partner_id: number;

@@ -23,3 +23,10 @@ function distinct<T>(items: T[]): T[] {
 function toRecord(elem: string): Enumerable {
   return { name: elem };
 }
+
+export function sanitise(string: string) {
+  return string
+    .toLocaleLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}

@@ -8,7 +8,9 @@ export interface LoggedInUser {
 
 export interface User extends LoggedInUser {
   firstName: string;
+  asciiFirstName: string;
   lastName?: string;
+  asciiLastName?: string;
   email: string;
   position: string;
   birthday?: string;
