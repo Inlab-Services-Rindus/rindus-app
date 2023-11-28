@@ -1,5 +1,5 @@
 import { logger } from '@/bootstrap/logger';
-import { cookieConfig } from '@/bootstrap/sessions';
+import { SESSION_COOKIE_NAME, cookieConfig } from '@/bootstrap/sessions';
 import { config, isLiveEnvironment } from '@/config';
 import { LoggedInUserConverter } from '@/converters/api/Session.converter';
 import { SessionPrograms } from '@/programs/session.programs';
@@ -42,7 +42,7 @@ export class SessionController {
   }
 
   public async softLogin(request: Request, response: Response) {
-    if (!request.cookies['connect.sid']) {
+    if (!request.cookies[SESSION_COOKIE_NAME]) {
       return response.sendStatus(204);
     }
 
@@ -69,7 +69,7 @@ export class SessionController {
 
       const cookieConf = cookieConfig(isLiveEnvironment(config));
       return response
-        .cookie('connect.sid', '', {
+        .cookie(SESSION_COOKIE_NAME, '', {
           ...cookieConf,
           maxAge: 1,
         } as CookieOptions)

@@ -20,6 +20,8 @@ export const cookieConfig = (isLiveEnv: boolean): session.CookieOptions => ({
   sameSite: isLiveEnv ? 'none' : 'lax',
 });
 
+export const SESSION_COOKIE_NAME = 'sid';
+
 export const httpSessions = (app: Express, knex: Knex): Express => {
   app.use(cookieParser());
   const store = new (knexSessionStore(session))({
@@ -30,6 +32,7 @@ export const httpSessions = (app: Express, knex: Knex): Express => {
   app.use(
     session({
       secret: config.sessions.secret,
+      name: SESSION_COOKIE_NAME,
       proxy: isLiveEnv,
       cookie: cookieConfig(isLiveEnv),
       store,

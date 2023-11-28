@@ -503,5 +503,5 @@ components:
   securitySchemes:
     cookieAuth:
       type: apiKey
-      name: connect.sid
+      name: sid
       in: cookie
