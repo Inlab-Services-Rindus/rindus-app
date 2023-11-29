@@ -1,4 +1,5 @@
 import { config } from '@/config/config';
+
 import { Partner } from '@/modules/partners/domain/Partner';
 import { PartnerRepository } from '@/modules/partners/domain/PartnerRepository';
 import { PartnerUsers } from '@/modules/partners/domain/PartnerUsers';
@@ -28,7 +29,7 @@ export async function getAll() {
   }
 }
 
-export async function getInfo(id: string) {
+export async function getInfo(id: number) {
   try {
     const response = await fetch(`${config.backendUrl}/partners/${id}`, {
       credentials: 'include',
@@ -45,7 +46,7 @@ export async function getInfo(id: string) {
   }
 }
 
-export async function getUsers(id: string) {
+export async function getUsers(id: number) {
   try {
     const response = await fetch(
       `${config.backendUrl}/partners/${id}/members`,
