@@ -3,7 +3,7 @@ import { PartnerRepository } from '@/modules/partners/domain/PartnerRepository';
 
 export async function getPartnerInfo(
   partnerRepository: PartnerRepository,
-  id: string,
+  id: number,
 ): Promise<Partner> {
   return partnerRepository.getInfo(id);
 }

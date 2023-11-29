@@ -1,69 +1,52 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Section from '@/ui/components/molecules/section/Section';
 import UserCard from '@/ui/components/organisms/user-card/UserCard';
 
-import { getPartnerInfo } from '@/modules/partners/application/get-info/getPartnerInfo';
-import { getPartnerUsers } from '@/modules/partners/application/get-users/getPartnerUsers';
-import { Partner } from '@/modules/partners/domain/Partner';
-import { createPartnerRepository } from '@/modules/partners/infrastructure/PartnerRepository';
-import { UserExtended } from '@/modules/users/domain/User';
+import { StoreContext } from '@/ui/context/store/Store';
 
 import '@/ui/section/partner/Partner.scss';
 
-export function PartnerInfo() {
+export function Partner() {
   const { id } = useParams();
 
-  const [partnerInfo, setPartnerInfo] = useState<Partner>();
-  const [members, setMembers] = useState<UserExtended[]>([]);
-  const [captains, setCaptains] = useState<UserExtended[]>([]);
-  const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const partnerRepository = createPartnerRepository();
+  const { lastPartner, getLastPartner } = useContext(StoreContext);
 
-  const load = async (partnerId?: string) => {
-    if (partnerId) {
-      setHasError(false);
-      try {
-        const partnerInfo = await getPartnerInfo(partnerRepository, partnerId);
-        setPartnerInfo(partnerInfo);
-
-        const users = await getPartnerUsers(partnerRepository, partnerId);
-        setMembers(users.members);
-        setCaptains(users.captains);
-      } catch (error) {
-        setHasError(true);
-      }
+  const actionGetPartner = async () => {
+    if (id) {
+      setIsLoading(true);
+      await getLastPartner(Number(id));
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    load(id);
-  }, [id]);
+    actionGetPartner();
+  }, []);
 
   return (
     <Section
       dataTestId="partner"
-      refresh={() => load(id)}
+      refresh={() => actionGetPartner()}
       isLoading={isLoading}
-      shouldRefresh={hasError}
+      shouldRefresh={lastPartner?.hasError}
     >
       <div className="partner">
         <div className="partner__header">
           <div className="header__info">
             <div className="header__image">
               <img
-                src={partnerInfo?.logoUrl}
-                alt={`${partnerInfo?.name} logo`}
+                src={lastPartner?.partnerInfo?.logoUrl}
+                alt={`${lastPartner?.partnerInfo?.name} logo`}
                 loading="lazy"
               />
             </div>
             <div className="header__title">
-              <h1>{partnerInfo?.name}</h1>
-              <h2>{partnerInfo?.description}</h2>
+              <h1>{lastPartner?.partnerInfo?.name}</h1>
+              <h2>{lastPartner?.partnerInfo?.description}</h2>
             </div>
           </div>
         </div>
@@ -72,7 +55,7 @@ export function PartnerInfo() {
             <h3>Team:</h3>
           </div>
           <div className="body__employees">
-            {members?.map((employee) => (
+            {lastPartner?.members?.map((employee) => (
               <UserCard
                 key={employee.id}
                 id={employee.id}
@@ -84,7 +67,7 @@ export function PartnerInfo() {
             ))}
           </div>
           <div className="body__captains">
-            {captains?.map((captain) => (
+            {lastPartner?.captains?.map((captain) => (
               <UserCard
                 key={captain.id}
                 id={captain.id}

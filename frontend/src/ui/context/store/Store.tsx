@@ -1,6 +1,8 @@
 import { createContext, useState, ReactNode } from 'react';
 
 import { getAllPartners } from '@/modules/partners/application/get-all/getAllPartners';
+import { getPartnerInfo } from '@/modules/partners/application/get-info/getPartnerInfo';
+import { getPartnerUsers } from '@/modules/partners/application/get-users/getPartnerUsers';
 import { Partner } from '@/modules/partners/domain/Partner';
 import { createPartnerRepository } from '@/modules/partners/infrastructure/PartnerRepository';
 import { Item } from '@/modules/search/domain/Suggestion';
@@ -24,6 +26,12 @@ interface PartnersData {
   isLoading: boolean;
 }
 
+interface PartnerInfo {
+  partnerInfo: Partner;
+  members: UserExtended[];
+  captains: UserExtended[];
+  hasError: boolean;
+}
 interface SearchData {
   tags: Item[];
   users: UserExtended[];
@@ -37,11 +45,13 @@ interface TabData {
 interface StoreContextType {
   users: UserData;
   partners: PartnersData;
+  lastPartner: PartnerInfo;
   search: SearchData;
   setSearch: React.Dispatch<React.SetStateAction<SearchData>>;
   tab: TabData;
   getUsers: (first?: boolean) => void;
   getPartners: () => void;
+  getLastPartner: (id: number) => void;
   setCurrentTab: (currentTab: number) => void;
 }
 
@@ -58,6 +68,17 @@ export const StoreContext = createContext<StoreContextType>({
     hasError: false,
     isLoading: false,
   },
+  lastPartner: {
+    partnerInfo: {
+      id: 0,
+      logoUrl: '',
+      name: '',
+      description: '',
+    },
+    members: [],
+    captains: [],
+    hasError: false,
+  },
   search: {
     tags: [],
     users: [],
@@ -70,6 +91,7 @@ export const StoreContext = createContext<StoreContextType>({
   },
   getUsers: () => {},
   getPartners: () => {},
+  getLastPartner: () => {},
   setCurrentTab: () => {},
 });
 
@@ -101,6 +123,18 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     hasError: false,
     isLoading: false,
   });
+  const [lastPartner, setLastPartner] = useState<PartnerInfo>({
+    partnerInfo: {
+      id: 0,
+      logoUrl: '',
+      name: '',
+      description: '',
+    },
+    members: [],
+    captains: [],
+    hasError: false,
+  });
+
   const [tabData, setTabData] = useState<TabData>({
     currentTab: 0,
   });
@@ -154,6 +188,34 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     }
   };
 
+  const getLastPartner = async (id: number) => {
+    if (id !== lastPartner.partnerInfo.id) {
+      try {
+        const partnerInfo = await getPartnerInfo(partnerRepository, id);
+        const users = await getPartnerUsers(partnerRepository, id);
+
+        setLastPartner({
+          partnerInfo,
+          members: users.members,
+          captains: users.captains,
+          hasError: false,
+        });
+      } catch (error) {
+        setLastPartner({
+          partnerInfo: {
+            id: 0,
+            logoUrl: '',
+            name: '',
+            description: '',
+          },
+          members: [],
+          captains: [],
+          hasError: true,
+        });
+      }
+    }
+  };
+
   const setCurrentTab = (currentTab: number) => {
     setTabData({
       currentTab,
@@ -169,6 +231,8 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     setSearch,
     tab: tabData,
     setCurrentTab,
+    lastPartner,
+    getLastPartner,
   };
 
   return (
