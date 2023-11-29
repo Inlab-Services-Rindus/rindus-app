@@ -69,7 +69,7 @@ export function PartnerInfo() {
         </div>
         <div className="partner__body">
           <div className="body__title">
-            <h3>Team:</h3>
+            <h3>Members:</h3>
           </div>
           <div className="body__employees">
             {members?.map((employee) => (
