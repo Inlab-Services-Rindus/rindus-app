@@ -24,4 +24,5 @@ export async function up(knex: Knex): Promise<void> {
 export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTable('languages');
   await knex.schema.dropTable('offices');
+  await knex.schema.dropTable('sessions');
 }
