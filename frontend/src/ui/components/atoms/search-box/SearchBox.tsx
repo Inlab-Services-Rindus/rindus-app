@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import Close from '@/ui/components/atoms/buttons/close/Close';
 
 import '@/ui/components/atoms/search-box/SearchBox.scss';
@@ -19,6 +21,22 @@ export default function SearchBox({
   enterHandler,
   closeHandler,
 }: Props): JSX.Element {
+  const inputRef = useRef(null);
+
+  function focusInput() {
+    const input = inputRef.current as HTMLInputElement | null;
+    input?.focus();
+  }
+
+  function handleClose() {
+    closeHandler();
+    focusInput();
+  }
+
+  useEffect(() => {
+    focusInput();
+  }, []);
+
   return (
     <div className="searchbox">
       <input
@@ -28,6 +46,7 @@ export default function SearchBox({
         value={inputValue}
         onChange={inputHandler}
         onKeyDown={enterHandler}
+        ref={inputRef}
       ></input>
       <svg
         width="20"
@@ -45,7 +64,7 @@ export default function SearchBox({
           />
         </g>
       </svg>
-      <Close handleclick={closeHandler} />
+      <Close handleclick={handleClose} />
     </div>
   );
 }
