@@ -11,7 +11,7 @@ vi.mock('react', async () => {
     useContext: () => ({
       isLoggedIn: isLoggedInSpy,
       userProfileData: { id: 1 },
-      setSearch: useSetSearch,
+      setSearchData: useSetSearch,
     }),
   };
 });
