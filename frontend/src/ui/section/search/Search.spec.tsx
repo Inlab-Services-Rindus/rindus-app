@@ -1,11 +1,8 @@
 import { mockSuggestions } from '@/mocks/suggestions';
 import { Search } from '@/ui/section/search/Search';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { mock } from 'node:test';
 
-import { StoreContext, StoreProvider } from '@/ui/context/store/Store';
-
-import { setTagsAndUsers } from '@/ui/helpers/searchHelpers';
+import { StoreProvider } from '@/ui/context/store/Store';
 
 const getSuggestion = vi.fn();
 const getResults = vi.fn();
