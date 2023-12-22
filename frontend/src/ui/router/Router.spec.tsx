@@ -23,7 +23,7 @@ vi.mock('@/ui/section/profile/Profile', () => ({
 }));
 
 vi.mock('@/ui/section/partner/Partner', () => ({
-  PartnerInfo: () => <div data-testid="partner-page">Partner Page</div>,
+  Partner: () => <div data-testid="partner-page">Partner Page</div>,
 }));
 
 describe('Router Component', () => {
