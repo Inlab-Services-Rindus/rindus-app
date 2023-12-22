@@ -149,7 +149,6 @@ export function Search(): JSX.Element {
       results: [],
       search: { display: '', query: '' },
     });
-    setNoResults(false);
   };
 
   return (
