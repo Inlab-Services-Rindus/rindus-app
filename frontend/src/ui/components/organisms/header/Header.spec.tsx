@@ -4,6 +4,8 @@ import { render, screen } from '@testing-library/react';
 let isLoggedInSpy = true;
 
 const useSetSearch = vi.fn();
+const useSetCurrentTab = vi.fn();
+
 vi.mock('react', async () => {
   const actual = (await vi.importActual('react')) as any;
   return {
@@ -11,7 +13,8 @@ vi.mock('react', async () => {
     useContext: () => ({
       isLoggedIn: isLoggedInSpy,
       userProfileData: { id: 1 },
-      setSearchData: useSetSearch,
+      setSearch: useSetSearch,
+      setCurrentTab: useSetCurrentTab,
     }),
   };
 });
