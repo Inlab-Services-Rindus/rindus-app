@@ -1,7 +1,39 @@
 import { VitePWAOptions } from 'vite-plugin-pwa';
 
 export const manifestForPlugin: Partial<VitePWAOptions> = {
-  registerType: 'prompt',
+  registerType: 'autoUpdate',
+  workbox: {
+    runtimeCaching: [
+      {
+        urlPattern: /^https:\/\/api\.app\.rindus\.de\/avatars\/.*/i,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'avatars-cache',
+          expiration: {
+            maxEntries: 200,
+            maxAgeSeconds: 60 * 60 * 24,
+          },
+          cacheableResponse: {
+            statuses: [0, 200],
+          },
+        },
+      },
+      {
+        urlPattern: /^https:\/\/api\.app\.rindus\.de\/images\/.*/i,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'images-cache',
+          expiration: {
+            maxEntries: 200,
+            maxAgeSeconds: 60 * 60 * 24,
+          },
+          cacheableResponse: {
+            statuses: [0, 200],
+          },
+        },
+      },
+    ],
+  },
   manifest: {
     name: 'Rindus',
     short_name: 'Rindus',

@@ -5,7 +5,7 @@ import Loader from '@/ui/components/atoms/loader/Loader';
 import ProtectedRoutes from '@/ui/components/organisms/protected-routes/ProtectedRoutes';
 import { Home } from '@/ui/section/home/Home';
 import { Login } from '@/ui/section/login/Login';
-import { PartnerInfo as Partner } from '@/ui/section/partner/Partner';
+import { Partner } from '@/ui/section/partner/Partner';
 import { Profile } from '@/ui/section/profile/Profile';
 import { Search } from '@/ui/section/search/Search';
 

@@ -48,7 +48,9 @@ export class UserViewConverter implements Converter<UserViewRecord, User> {
     return {
       ...this.loggedInUserConverter.convert(source),
       firstName: source.first_name,
+      asciiFirstName: source.ascii_first_name,
       lastName: source.last_name,
+      asciiLastName: source.ascii_last_name,
       email: source.email,
       position: source.position,
       birthday: source.birthday,

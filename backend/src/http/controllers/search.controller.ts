@@ -1,5 +1,6 @@
 import { SuggestionsResultConverter } from '@/converters/api/Search.converter';
 import { UserResultConverter } from '@/converters/api/User.converter';
+import { sanitise } from '@/helpers/RecordConverterHelper';
 import {
   parseIdQueryParam,
   parseKeywordQueryParam,
@@ -26,7 +27,8 @@ export class SearchController {
     const maybeQuery = parseQueryQueryParam(request);
 
     if (maybeQuery) {
-      const results = await this.searchPrograms.suggestions(maybeQuery);
+      const santisedQuery = sanitise(maybeQuery);
+      const results = await this.searchPrograms.suggestions(santisedQuery);
 
       const suggestions = this.suggestionsResultConverter.convert(results);
 
@@ -46,6 +48,7 @@ export class SearchController {
     }
 
     let users;
+    const santisedQuery = sanitise(maybeQuery ?? '');
     switch (maybeKeyword) {
       case 'language':
         if (!maybeId) {
@@ -59,11 +62,11 @@ export class SearchController {
           return response.sendStatus(400);
         }
 
-        users = await this.searchPrograms.searchByPosition(maybeQuery);
+        users = await this.searchPrograms.searchByPosition(santisedQuery);
         break;
       default:
         if (maybeQuery) {
-          users = await this.searchPrograms.search(maybeQuery);
+          users = await this.searchPrograms.search(santisedQuery);
         } else {
           users = [] as User[];
         }

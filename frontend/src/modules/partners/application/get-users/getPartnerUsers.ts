@@ -3,7 +3,7 @@ import { PartnerUsers } from '@/modules/partners/domain/PartnerUsers';
 
 export async function getPartnerUsers(
   partnerRepository: PartnerRepository,
-  id: string,
+  id: number,
 ): Promise<PartnerUsers> {
   return partnerRepository.getUsers(id);
 }

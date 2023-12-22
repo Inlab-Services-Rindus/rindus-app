@@ -7,7 +7,11 @@ import { Language } from '@/models/business/Language';
 
 export async function initUsersFuseByName(userRepository: UserRepository) {
   const options: IFuseOptions<User> = searchOptions({
-    keys: ['firstName', 'lastName'],
+    keys: [
+      { name: 'asciiFirstName', weight: 2 },
+      { name: 'asciiLastName', weight: 2 },
+      { name: 'position', weight: 1 },
+    ],
   });
 
   const users = await userRepository.all();
@@ -26,11 +30,16 @@ export async function initUsersFuseByPosition(userRepository: UserRepository) {
 }
 
 export async function initPositionsFuse(userRepository: UserRepository) {
-  const options: IFuseOptions<string> = searchOptions({ keys: ['position'] });
+  const options: IFuseOptions<string> = searchOptions({
+    keys: ['position'],
+  });
 
   const positions = await userRepository.allPositions();
 
-  return new Fuse(positions, options);
+  return new Fuse(
+    positions.sort((a, b) => a.length - b.length),
+    options,
+  );
 }
 
 export async function initLanguagesFuse(

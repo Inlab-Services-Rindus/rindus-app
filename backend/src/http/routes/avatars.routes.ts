@@ -15,9 +15,11 @@ avatarsRouter.use(
     },
     userResHeaderDecorator(headers) {
       // recieves an Object of headers, returns an Object of headers.
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { pragma, ...filteredHeaders } = headers;
       return {
-        ...headers,
-        ['cache-control']: 'public, max-age=0',
+        ...filteredHeaders,
+        ['cache-control']: 'public, max-age=86400',
       };
     },
   }),

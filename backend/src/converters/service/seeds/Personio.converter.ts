@@ -1,4 +1,4 @@
-import { Insertable, isEmpty } from '@/helpers/RecordConverterHelper';
+import { Insertable, isEmpty, sanitise } from '@/helpers/RecordConverterHelper';
 import { Converter } from '@/converters/Converter';
 import { UserRecord } from '@/models/service/database/UserRecord';
 import { Employee as PersonioEmployee } from '@/models/service/seeds/Personio';
@@ -21,7 +21,9 @@ export class PersonioEmployeeConverter
 
     return (references: ReferencedData) => ({
       first_name: source.first_name,
+      ascii_first_name: sanitise(source.first_name),
       last_name: source.last_name,
+      ascii_last_name: sanitise(source.last_name),
       email: source.email,
       picture_url: source.profile_picture_url,
       birthday: isEmpty(birthday) ? undefined : birthday,

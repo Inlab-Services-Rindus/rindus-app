@@ -14,7 +14,7 @@ export function createSearchRepository(): SearchRepository {
 export async function getSuggestion(query: string) {
   try {
     const response = await fetch(
-      encodeURI(`${config.backendUrl}/suggestions?query=${query}`),
+      `${config.backendUrl}/suggestions?query=${encodeURIComponent(query)}`,
       {
         credentials: 'include',
       },
@@ -34,7 +34,9 @@ export async function getSuggestion(query: string) {
 export async function getResults(query: string, isFull: boolean) {
   try {
     const response = await fetch(
-      isFull ? query : encodeURI(`${config.backendUrl}/search?query=${query}`),
+      isFull
+        ? query
+        : `${config.backendUrl}/search?query=${encodeURIComponent(query)}`,
       {
         credentials: 'include',
       },
