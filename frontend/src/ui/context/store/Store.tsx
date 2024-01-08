@@ -5,12 +5,17 @@ import { getPartnerInfo } from '@/modules/partners/application/get-info/getPartn
 import { getPartnerUsers } from '@/modules/partners/application/get-users/getPartnerUsers';
 import { Partner } from '@/modules/partners/domain/Partner';
 import { createPartnerRepository } from '@/modules/partners/infrastructure/PartnerRepository';
+import { getResults } from '@/modules/search/application/get-results/getResults';
+import { getSuggestion } from '@/modules/search/application/get-suggestion/getSuggestion';
 import { Item } from '@/modules/search/domain/Suggestion';
+import { createSearchRepository } from '@/modules/search/infrastructure/SearchRepository';
 import { getAllUsers } from '@/modules/users/application/get-all/getAllUsers';
 import { User, UserExtended } from '@/modules/users/domain/User';
 import { createUserRepository } from '@/modules/users/infrastructure/UserRepository';
 
 import useIsMobile from '@/ui/hooks/useIsMobile/useIsMobile';
+
+import { setTagsAndUsers } from '@/ui/helpers/searchHelpers';
 
 interface UserData {
   data: User[];
@@ -32,11 +37,13 @@ interface PartnerInfo {
   captains: UserExtended[];
   hasError: boolean;
 }
-interface SearchData {
+export interface SearchData {
   tags: Item[];
   users: UserExtended[];
   results: UserExtended[];
   search: Item;
+  hasError: boolean;
+  noResults: boolean;
 }
 interface TabData {
   currentTab: number;
@@ -47,11 +54,15 @@ interface StoreContextType {
   partners: PartnersData;
   lastPartner: PartnerInfo;
   search: SearchData;
-  setSearch: React.Dispatch<React.SetStateAction<SearchData>>;
   tab: TabData;
+  query: string;
+  setQueryKey: (key: string) => void;
   getUsers: (first?: boolean) => void;
   getPartners: () => void;
   getLastPartner: (id: number) => void;
+  getSearchSuggestions: () => void;
+  getSearchResults: (item: Item, custom: boolean) => void;
+  setSearchData: (item: Partial<SearchData>) => void;
   setCurrentTab: (currentTab: number) => void;
 }
 
@@ -84,14 +95,20 @@ export const StoreContext = createContext<StoreContextType>({
     users: [],
     results: [],
     search: { display: '', query: '' },
+    hasError: false,
+    noResults: false,
   },
-  setSearch: () => {},
+  setSearchData: () => {},
+  setQueryKey: () => {},
+  query: '',
   tab: {
     currentTab: 0,
   },
   getUsers: () => {},
   getPartners: () => {},
   getLastPartner: () => {},
+  getSearchSuggestions: () => {},
+  getSearchResults: () => {},
   setCurrentTab: () => {},
 });
 
@@ -105,9 +122,13 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     users: [],
     results: [],
     search: { display: '', query: '' },
+    hasError: false,
+    noResults: false,
   });
+  const [query, setQuery] = useState<string>('');
   const userRepository = createUserRepository();
   const partnerRepository = createPartnerRepository();
+  const searchRepository = createSearchRepository();
 
   const isMobile = useIsMobile();
 
@@ -216,6 +237,62 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     }
   };
 
+  const getSearchSuggestions = async () => {
+    try {
+      const suggestion = await getSuggestion(searchRepository, query);
+      const { tagNames, userItems } = setTagsAndUsers(suggestion);
+
+      setSearchData({
+        ...search,
+        tags: tagNames,
+        users: userItems,
+        results: [],
+        noResults: !tagNames.length && !userItems.length,
+        hasError: false,
+        search: { display: query, query: query },
+      });
+    } catch (error) {
+      setSearchData({ ...search, hasError: true });
+    }
+  };
+
+  const getSearchResults = async (item: Item, custom?: boolean) => {
+    const searchTerm = custom ? item.display : item.query;
+
+    try {
+      const results = await getResults(searchRepository, searchTerm, !custom);
+
+      if (results.length === 0) {
+        setSearchData({
+          ...search,
+          noResults: true,
+          search: { display: item.display, query: item.query },
+        });
+      } else {
+        setSearchData({
+          ...search,
+          tags: [],
+          users: [],
+          results: results,
+          search: { display: item.display, query: item.query },
+        });
+      }
+    } catch (error) {
+      setSearchData({ ...search, hasError: true });
+    }
+  };
+
+  const setQueryKey = (key: string) => {
+    setQuery(key);
+  };
+
+  const setSearchData = (items: Partial<SearchData>) => {
+    setSearch({
+      ...search,
+      ...items,
+    });
+  };
+
   const setCurrentTab = (currentTab: number) => {
     setTabData({
       currentTab,
@@ -228,11 +305,15 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     partners: partnersData,
     getPartners,
     search: search,
-    setSearch,
+    setSearchData,
     tab: tabData,
     setCurrentTab,
     lastPartner,
     getLastPartner,
+    query: query,
+    setQueryKey,
+    getSearchSuggestions,
+    getSearchResults,
   };
 
   return (

@@ -6,105 +6,59 @@ import Section from '@/ui/components/molecules/section/Section';
 import UserCard from '@/ui/components/organisms/user-card/UserCard';
 import { useDebounce } from 'use-debounce';
 
-import { getResults } from '@/modules/search/application/get-results/getResults';
-import { getSuggestion } from '@/modules/search/application/get-suggestion/getSuggestion';
 import { Item } from '@/modules/search/domain/Suggestion';
-import { createSearchRepository } from '@/modules/search/infrastructure/SearchRepository';
 import { UserExtended } from '@/modules/users/domain/User';
 
 import { StoreContext } from '@/ui/context/store/Store';
 
-import { setTagsAndUsers } from '@/ui/helpers/searchHelpers';
-
 import '@/ui/section/search/Search.scss';
 
 export function Search(): JSX.Element {
-  const { setSearch, search } = useContext(StoreContext);
+  const {
+    setSearchData,
+    search,
+    getSearchSuggestions,
+    setQueryKey,
+    getSearchResults,
+    query,
+  } = useContext(StoreContext);
 
-  const [query, setQuery] = useState<string>('');
-
-  const [inputValue, setInputValue] = useState<string>('');
   const [debouncedQuery] = useDebounce(query, 400);
-  const [noResults, setNoResults] = useState<boolean>(false);
-  const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [suggestionRequested, setSuggestionRequested] =
+    useState<boolean>(false);
 
-  const searchRepository = createSearchRepository();
+  const getSuggestions = async () => {
+    setIsLoading(true);
+    await getSearchSuggestions();
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    setInputValue(search.search.display.toUpperCase());
-    setSearch({
-      tags: search.tags,
-      results: search.results,
-      search: search.search,
-      users: search.users,
-    });
-    if (debouncedQuery) {
-      fetchSuggestions();
+    if (debouncedQuery && suggestionRequested) {
+      getSuggestions();
     }
   }, [debouncedQuery]);
 
-  const fetchSuggestions = async () => {
-    try {
-      setHasError(false);
-      setIsLoading(true);
-      const suggestion = await getSuggestion(searchRepository, query);
-      setIsLoading(false);
-      const { tagNames, userItems } = setTagsAndUsers(suggestion);
-
-      setNoResults(!tagNames.length && !userItems.length);
-      setSearch((prevSearch) => ({
-        ...prevSearch,
-        tags: tagNames,
-        users: userItems,
-        results: [],
-      }));
-    } catch (error) {
-      setHasError(true);
-    }
-  };
-
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value.toUpperCase();
-    setNoResults(false);
-    setInputValue(newValue);
-    setQuery(newValue);
-    setSearch({
-      tags: [],
-      users: [],
+    setSuggestionRequested(true);
+    setQueryKey(newValue);
+    setSearchData({
+      ...search,
       results: [],
       search: { display: newValue, query: newValue },
+      noResults: false,
     });
   };
 
-  const handleClick = async (item: Item, custom?: boolean) => {
-    const query = custom ? item.display : item.query;
-
-    try {
-      setIsLoading(true);
-      const results = await getResults(searchRepository, query, !custom);
-      setIsLoading(false);
-      if (results.length === 0) {
-        setNoResults(true);
-        setSearch((prevSearch) => ({
-          ...prevSearch,
-          display: item.display,
-          query: item.query,
-        }));
-      }
-      setSearch({
-        tags: [],
-        users: [],
-        results: results,
-        search: { display: item.display, query: item.query },
-      });
-      setInputValue(item.display.toUpperCase());
-    } catch (error) {
-      setHasError(true);
-    }
+  const handleClick = async (item: Item, custom: boolean) => {
+    setIsLoading(true);
+    await getSearchResults(item, custom);
+    setIsLoading(false);
   };
 
-  const renderTag = (item: Item, custom?: boolean) => (
+  const renderTag = (item: Item, custom?: any) => (
     <div key={item.query} className="tag__container">
       <button className="tag__button" onClick={() => handleClick(item, custom)}>
         <Tag tag={item.display.toUpperCase()} />
@@ -113,8 +67,7 @@ export function Search(): JSX.Element {
   );
 
   const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && search.search && !noResults) {
-      console.log('entro');
+    if (event.key === 'Enter' && search.results && !search.noResults) {
       handleClick(search.search, true);
     }
   };
@@ -152,10 +105,10 @@ export function Search(): JSX.Element {
     if (
       search?.results?.length === 0 &&
       (search.users.length > 0 || search.tags.length > 0) &&
-      search?.search.display
+      search.search.display
     ) {
       return (
-        <div className="search">
+        <div data-testid="suggestions" className="search">
           <div className="search__tag">
             {search?.search?.display && renderTag(search.search, true)}
             {search?.tags?.map((item: Item) => renderTag(item))}
@@ -180,40 +133,40 @@ export function Search(): JSX.Element {
 
   const renderNoResults = () => (
     <div className="no-result">
-      <p className="no-result__text">
+      <p data-testid="no-result" className="no-result__text">
         No results found for {search?.search?.display}.
       </p>
     </div>
   );
 
   const handleClose = () => {
-    setQuery('');
-    setInputValue('');
-    setSearch({
+    setQueryKey('');
+    setSearchData({
+      ...search,
+      noResults: false,
       tags: [],
       users: [],
       results: [],
       search: { display: '', query: '' },
     });
-    setNoResults(false);
   };
 
   return (
     <div className="search-container">
       <SearchBox
         inputHandler={handleInput}
-        inputValue={inputValue}
+        inputValue={search.search.display.toUpperCase()}
         closeHandler={handleClose}
         enterHandler={handleEnter}
       />
       <Section
         dataTestId="search"
-        refresh={fetchSuggestions}
+        refresh={getSearchSuggestions}
         isLoading={isLoading}
-        shouldRefresh={hasError}
+        shouldRefresh={search.hasError}
       >
-        {noResults && renderNoResults()}
-        {!noResults && renderResults()}
+        {search.noResults && renderNoResults()}
+        {!search.noResults && renderResults()}
       </Section>
     </div>
   );

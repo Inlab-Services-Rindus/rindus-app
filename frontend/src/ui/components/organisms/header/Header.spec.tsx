@@ -3,7 +3,8 @@ import { render, screen } from '@testing-library/react';
 
 let isLoggedInSpy = true;
 
-const useSetSearch = vi.fn();
+const useSetSearchData = vi.fn();
+const useSetQueryKey = vi.fn();
 const useSetCurrentTab = vi.fn();
 
 vi.mock('react', async () => {
@@ -13,7 +14,8 @@ vi.mock('react', async () => {
     useContext: () => ({
       isLoggedIn: isLoggedInSpy,
       userProfileData: { id: 1 },
-      setSearch: useSetSearch,
+      setSearchData: useSetSearchData,
+      setQueryKey: useSetQueryKey,
       setCurrentTab: useSetCurrentTab,
     }),
   };
@@ -75,7 +77,7 @@ describe('Header', () => {
         screen.getByTestId('search').click();
 
         expect(useNavigateSpy).toHaveBeenCalledWith('/search');
-        expect(useSetSearch).toHaveBeenCalledWith({
+        expect(useSetSearchData).toHaveBeenCalledWith({
           tags: [],
           users: [],
           results: [],
