@@ -11,6 +11,7 @@ export const knexConfig: Knex.Config = {
     user: config.database.user,
     password: config.database.password,
     ssl: isLiveEnvironment(config),
+    application_name: 'rindus app',
   },
   pool: {
     min: 2,
