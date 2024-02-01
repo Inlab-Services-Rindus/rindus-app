@@ -15,7 +15,7 @@ jest.mock('google-auth-library', () => ({
   })),
 }));
 
-describe.skip('GoogleJwtValidator', () => {
+describe('GoogleJwtValidator', () => {
   let googleJwtValidator: JwtValidator;
 
   beforeAll(() => {
