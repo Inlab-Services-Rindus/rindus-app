@@ -24,4 +24,4 @@ dev-dist
 *.sw?
 
 .env*
-!.env.*.example
+!.env.example
