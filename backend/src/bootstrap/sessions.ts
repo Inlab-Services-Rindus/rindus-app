@@ -17,7 +17,6 @@ export const cookieConfig = (isLiveEnv: boolean): session.CookieOptions => ({
   httpOnly: isLiveEnv,
   maxAge: config.sessions.maxAge,
   secure: isLiveEnv,
-  sameSite: isLiveEnv ? 'none' : 'lax',
 });
 
 export const SESSION_COOKIE_NAME = 'sid';
