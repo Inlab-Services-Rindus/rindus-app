@@ -6,7 +6,7 @@ const avatarsRouter = createRouter();
 
 avatarsRouter.use(
   '/avatars',
-  proxy('https://images.personio.de/', {
+  proxy('https://rindus.personio.de/', {
     proxyReqOptDecorator: function (proxyReqOpts) {
       if (proxyReqOpts.headers) {
         proxyReqOpts.headers['Referer'] = 'https://rindus.personio.de/';

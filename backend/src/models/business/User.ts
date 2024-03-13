@@ -21,13 +21,13 @@ export interface User extends LoggedInUser {
 export interface WithInfo {
   partner: Partner;
   office: string;
-  slack: Slack;
+  slack?: Slack;
 }
 
 export interface Slack {
-  name: string;
-  slackId: string;
-  profileUrl: string;
+  name?: string;
+  slackId?: string;
+  profileUrl?: string;
 }
 
 export interface WithLanguages {

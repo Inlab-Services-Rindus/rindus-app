@@ -62,7 +62,9 @@ export class ShowUserConverter
       office: source.office,
       department: this.departmentConverter.convert(source.partner),
       languages: source.languages.map((language) => language.name),
-      slack: { name: source.slack.name, profileUrl: source.slack.profileUrl },
+      slack: source.slack?.name
+        ? { name: source.slack.name, profileUrl: source.slack.profileUrl }
+        : undefined,
       isCaptain: source.isTeamCaptain,
     };
   }

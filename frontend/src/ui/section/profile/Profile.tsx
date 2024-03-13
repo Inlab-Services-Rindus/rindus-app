@@ -80,16 +80,18 @@ export function Profile() {
               <a href={`mailto:${user?.email}`}>{user?.email}</a>
             </span>
           </div>
-          <div className="account">
-            <img src={slack} alt="" className="account__logo" />
-            <Link
-              className="account__link"
-              to={user?.slack.profileUrl ?? ''}
-              target="_blank"
-            >
-              <span className="account__address">@{user?.slack.name}</span>
-            </Link>
-          </div>
+          {user?.slack && (
+            <div className="account">
+              <img src={slack} alt="" className="account__logo" />
+              <Link
+                className="account__link"
+                to={user?.slack.profileUrl ?? ''}
+                target="_blank"
+              >
+                <span className="account__address">@{user?.slack.name}</span>
+              </Link>
+            </div>
+          )}
         </div>
         <div className="languages">
           <div className="languages__title-container">

@@ -7,21 +7,23 @@ import { EmployeeLanguagesConverter } from '@/converters/service/seeds/Personio.
 
 export async function seed(knex: Knex): Promise<void> {
   await knex('users_languages').del();
-
   const personioData = parsePersonioJSONFile();
-
   const languagesConverter = new EmployeeLanguagesConverter();
   const processEmployeeLanguages = employeeLanguagesProcessor(
     knex,
     languagesConverter,
   );
-
   const employeesLanguages = await Promise.all(
     personioData.data.items
       .map((employeeData) => employeeData.data)
+      .filter(
+        (data) =>
+          data.email.includes('@rindus.de') ||
+          data.email.includes('@rinduss.de') ||
+          data.email.includes('@mail.de'),
+      )
       .map(async (employee) => await processEmployeeLanguages(employee)),
   );
-
   await knex<UsersLanguagesRecord>('users_languages').insert(
     employeesLanguages.flat(),
   );
@@ -38,6 +40,10 @@ const employeeLanguagesProcessor =
 
 async function findUserId(knex: Knex, email: string) {
   const maybeUser = await knex('users').where('email', email).first();
+
+  if (!maybeUser) {
+    console.log('===========adio', email);
+  }
 
   return maybeUser ? maybeUser.id : 0;
 }

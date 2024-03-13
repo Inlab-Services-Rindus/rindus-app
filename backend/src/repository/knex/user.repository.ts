@@ -162,7 +162,7 @@ export class KnexUserRepository implements UserRepository {
     })
       .join({ p: 'partners' }, 'u.partner_id', 'p.id')
       .join({ o: 'offices' }, 'u.office_id', 'o.id')
-      .join({ s: 'slack_info' }, 'u.email', 's.email')
+      .leftJoin({ s: 'slack_info' }, 'u.email', 's.email')
       .select(
         'u.*',
         { office_name: 'o.name' },

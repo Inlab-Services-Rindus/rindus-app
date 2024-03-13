@@ -20,20 +20,13 @@ export class LoggedInUserConverter
 
   private mapAvatarUrl(picture_url: string | undefined) {
     const pictureUrl = picture_url;
-    const personioImageServer = 'https://images.personio.de/';
     const defaultImage = 'https://placehold.co/200?text=Rinder';
 
     if (!pictureUrl) {
       return defaultImage;
     }
 
-    if (pictureUrl.startsWith(personioImageServer)) {
-      return pictureUrl
-        .replace(personioImageServer, `${config.app.url}/avatars/`)
-        .replace('small', 'large');
-    } else {
-      return pictureUrl;
-    }
+    return pictureUrl;
   }
 }
 

@@ -5,7 +5,7 @@ export interface UserProfile extends User {
   office: string;
   department: Department;
   position: string;
-  slack: Slack;
+  slack?: Slack;
   isCaptain: boolean;
 }
 
@@ -16,6 +16,6 @@ export interface Department {
 }
 
 export interface Slack {
-  name: string;
-  profileUrl: string;
+  name?: string;
+  profileUrl?: string;
 }

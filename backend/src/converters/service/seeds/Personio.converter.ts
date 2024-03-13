@@ -25,7 +25,9 @@ export class PersonioEmployeeConverter
       last_name: source.last_name,
       ascii_last_name: sanitise(source.last_name),
       email: source.email,
-      picture_url: source.profile_picture_url,
+      picture_url: `https://avatar-service-platform.personio.de/${source.first_name.charAt(
+        0,
+      )}${source.last_name?.charAt(0) ?? ''}`,
       birthday: isEmpty(birthday) ? undefined : birthday,
       position: source.position,
       ...references,
