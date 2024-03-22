@@ -41,5 +41,4 @@ describe.skip('Home', () => {
     expect(screen.getByTestId('tab-panel')).toBeInTheDocument();
     expect(screen.getByTestId('events-tab')).toBeInTheDocument();
   });
-
 });
