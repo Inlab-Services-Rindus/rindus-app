@@ -1,3 +1,3 @@
 export default function EventsTab() {
-  return <p> Hola </p>;
+  return <p> Coming soon </p>;
 }
