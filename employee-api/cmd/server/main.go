@@ -39,8 +39,10 @@ func run() error {
 
 	// Services
 	languageService := service.NewLanguageService(queries)
+	officeService := service.NewOfficeService(queries)
+	partnerService := service.NewPartnerService(queries)
 
-	server := app.NewServer(chi.NewRouter(), config, languageService)
+	server := app.NewServer(chi.NewRouter(), config, languageService, officeService, partnerService)
 
 	server.Setup()
 

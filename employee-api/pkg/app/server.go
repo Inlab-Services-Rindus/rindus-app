@@ -15,13 +15,23 @@ type Server struct {
 	router          chi.Router
 	config          *Config
 	languageService service.LanguageService
+	officeService   service.OfficeService
+	partnerService  service.PartnerService
 }
 
-func NewServer(router *chi.Mux, config *Config, languageService service.LanguageService) *Server {
+func NewServer(
+	router *chi.Mux,
+	config *Config,
+	languageService service.LanguageService,
+	officeService service.OfficeService,
+	partnerService service.PartnerService,
+) *Server {
 	return &Server{
 		router,
 		config,
 		languageService,
+		officeService,
+		partnerService,
 	}
 }
 

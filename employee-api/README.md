@@ -2,7 +2,7 @@
 
 ## Outline
 
-- Go REST API `http://localhost:8080`
+- Go REST API `http://localhost:8080/ping`
 - Postgres DB
   - CloudBeaver `http://localhost:8979`
   - Postgres-exporter `http://localhost:9187`

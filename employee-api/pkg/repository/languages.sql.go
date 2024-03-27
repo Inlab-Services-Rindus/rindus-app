@@ -11,20 +11,32 @@ import (
 
 const createLanguage = `-- name: CreateLanguage :one
 INSERT INTO languages (
-  id, name
+  name
 ) VALUES (
-  $1, $2
+  $1
 )
 RETURNING id, name, created_at, updated_at
 `
 
-type CreateLanguageParams struct {
-	ID   int32
-	Name string
+func (q *Queries) CreateLanguage(ctx context.Context, name string) (Language, error) {
+	row := q.db.QueryRow(ctx, createLanguage, name)
+	var i Language
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }
 
-func (q *Queries) CreateLanguage(ctx context.Context, arg CreateLanguageParams) (Language, error) {
-	row := q.db.QueryRow(ctx, createLanguage, arg.ID, arg.Name)
+const getLanguage = `-- name: GetLanguage :one
+SELECT id, name, created_at, updated_at FROM languages
+WHERE id = $1 LIMIT 1
+`
+
+func (q *Queries) GetLanguage(ctx context.Context, id int32) (Language, error) {
+	row := q.db.QueryRow(ctx, getLanguage, id)
 	var i Language
 	err := row.Scan(
 		&i.ID,
@@ -36,25 +48,25 @@ func (q *Queries) CreateLanguage(ctx context.Context, arg CreateLanguageParams) 
 }
 
 const listLanguages = `-- name: ListLanguages :many
-SELECT id, name FROM languages
+SELECT id, name, created_at, updated_at FROM languages
 ORDER BY name
 `
 
-type ListLanguagesRow struct {
-	ID   int32
-	Name string
-}
-
-func (q *Queries) ListLanguages(ctx context.Context) ([]ListLanguagesRow, error) {
+func (q *Queries) ListLanguages(ctx context.Context) ([]Language, error) {
 	rows, err := q.db.Query(ctx, listLanguages)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ListLanguagesRow
+	var items []Language
 	for rows.Next() {
-		var i ListLanguagesRow
-		if err := rows.Scan(&i.ID, &i.Name); err != nil {
+		var i Language
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

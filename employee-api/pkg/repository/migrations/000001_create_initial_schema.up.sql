@@ -1,16 +1,18 @@
 CREATE TABLE IF NOT EXISTS languages (
 	id serial NOT NULL,
-	"name" varchar(255) NOT NULL,
+	"name" varchar(255) NOT NULL UNIQUE,
 	created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT languages_name_unique UNIQUE ("name"),
 	CONSTRAINT languages_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS offices (
 	id serial NOT NULL,
-	"name" varchar(255) NOT NULL,
+	"name" varchar(255) NOT NULL UNIQUE,
 	created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT offices_name_unique UNIQUE ("name"),
 	CONSTRAINT offices_pkey PRIMARY KEY (id)
 );
 

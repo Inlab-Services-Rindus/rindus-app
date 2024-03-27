@@ -1,7 +1,7 @@
 package app
 
 import (
-	"employee-api/pkg/handler"
+	"employee-api/pkg/http"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -12,17 +12,11 @@ func (s *Server) MountRoutes() chi.Router {
 	router := s.router
 
 	router.Route(API_PREFIX, func(r chi.Router) {
-		handler.NewLanguageHandler(s.languageService).Routes(r)
-		handler.NewMetricHandler().Routes(r)
+		http.NewLanguageHandler(s.languageService).Routes(r)
+		http.NewOfficeHandler(s.officeService).Routes(r)
+		http.NewPartnerHandler(s.partnerService).Routes(r)
+		http.NewMetricHandler().Routes(r)
 	})
 
 	return router
-}
-
-func CreateRouter(addRoutes func(chi.Router)) chi.Router {
-	r := chi.NewRouter()
-
-	addRoutes(r)
-
-	return r
 }
