@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"employee-api/pkg"
+	"employee-api/pkg/helpers"
 )
 
 const (
@@ -64,9 +65,10 @@ func sanitisePersonioITPartner(partner string) string {
 }
 
 func partnerNameAsMapKey(partner string) string {
-	replacer := strings.NewReplacer(" ", "-", "ö", "o", "&", "and", "loyalty-partner-solutions", "lps")
+	firstPhase := strings.NewReplacer(" ", "-", "ö", "o", "&", "and", "loyalty-partner-solutions", "lps")
+	secondPhase := strings.NewReplacer("loyalty-partner-solutions", "lps")
 
-	return replacer.Replace(partner)
+	return secondPhase.Replace(firstPhase.Replace(helpers.SanitiseEnumValue(partner)))
 }
 
 func isInternal(partnerID string) bool {

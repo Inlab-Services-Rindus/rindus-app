@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"employee-api/pkg"
+	"employee-api/pkg/helpers"
 	"employee-api/pkg/model"
 	"employee-api/pkg/repository"
 	"errors"
@@ -64,7 +65,7 @@ func parseEmployee(repoEmployee repository.GetEmployeeByUIDRow, languages []stri
 		Position:  repoEmployee.Position,
 		Birthday:  repoEmployee.Birthday.String,
 		Languages: languages,
-		Slack:     &model.SlackInfo{},
+		Slack:     nil,
 	}
 }
 
@@ -76,6 +77,7 @@ func (e *EmployeeService) List(ctx context.Context) ([]*model.Employee, error) {
 // PersonioImport implements EmployeeService.
 func (e *EmployeeService) PersonioImport(ctx context.Context, personioEmpl model.PersonioEmployee) (*model.Employee, error) {
 	personioID := personioEmpl.ID
+	email := personioEmpl.Data.Email
 	_, err := e.q.GetEmployeeByPersonioID(ctx, int32(personioID))
 
 	if err == nil {
@@ -86,36 +88,84 @@ func (e *EmployeeService) PersonioImport(ctx context.Context, personioEmpl model
 		return nil, err
 	}
 
-	slog.Debug("Employee not existing. Creating", "employeeID", personioID)
+	slog.Debug("Employee not existing. Creating", "email", email)
 	slog.Debug("Starting transaction")
 
 	tx, err := e.conn.Begin(ctx)
 	if err != nil {
+		slog.Warn("Not possible to create transaction", "err", err)
 		return nil, err
 	}
 	defer tx.Rollback(ctx)
 
 	qtx := e.q.WithTx(tx)
 
-	partnerID, err := processPartner(ctx, qtx, personioEmpl.Data.DepartmentID)
+	departmentID := personioEmpl.Data.DepartmentID
+	partnerID, err := processPartner(ctx, qtx, departmentID)
 	if err != nil {
+		slog.Warn("Partner was not processed due to", "partner", departmentID, "err", err)
 		return nil, err
 	}
-	if err := processEmployeeData(ctx, qtx, personioEmpl, partnerID); err != nil {
-		return nil, err
-	}
-	// if err := processLanguages(ctx, qtx, employee, personioEmpl.Data.Languages); err != nil {
-	// 	return nil, err
-	// }
 
-	slog.Debug("Finishing transaction")
+	createdEmployeeID, err := processEmployeeData(ctx, qtx, personioEmpl, partnerID)
+	if err != nil {
+		slog.Warn("Employee was not processed due to", "email", email, "err", err)
+		return nil, err
+	}
+
+	if err := processLanguages(ctx, qtx, createdEmployeeID, personioEmpl.Data.Languages); err != nil {
+		slog.Warn("Employee's languages were not processed due to", "email", email, "err", err)
+		return nil, err
+	}
+
+	slog.Debug("Finishing transaction for employee", "email", email)
 	tx.Commit(ctx)
 
 	return nil, nil
 }
 
-func processEmployeeData(ctx context.Context, qtx *repository.Queries, personioEmployee model.PersonioEmployee, partnerID int) error {
-	_, err := qtx.CreateEmployee(ctx, repository.CreateEmployeeParams{
+func processLanguages(ctx context.Context, qtx *repository.Queries, createdEmployeeID int32, languages string) error {
+	personioLanguages := strings.Split(languages, ",")
+
+	for _, rawLanguage := range personioLanguages {
+		if err := assignOrCreate(ctx, qtx, createdEmployeeID, rawLanguage); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func assignOrCreate(ctx context.Context, qtx *repository.Queries, createdEmployeeID int32, rawLanguage string) error {
+	languageEnum := helpers.SanitiseEnumValue(rawLanguage)
+
+	language, err := qtx.GetLanguageByName(ctx, languageEnum)
+
+	if err != nil {
+		if !errors.Is(err, pgx.ErrNoRows) {
+			return err
+		}
+
+		language, err = qtx.CreateLanguage(ctx, languageEnum)
+
+		if err != nil {
+			slog.Warn("Language was not created due to", "lang", languageEnum, "err", err)
+			return err
+		}
+
+		slog.Debug("Language newly created", "lang", languageEnum)
+
+	}
+
+	slog.Debug("Language already existing. Assigning", "lang", languageEnum)
+
+	qtx.AssignEmployeeLanguages(ctx, repository.AssignEmployeeLanguagesParams{EmployeeID: createdEmployeeID, LanguageID: language.ID})
+
+	return nil
+}
+
+func processEmployeeData(ctx context.Context, qtx *repository.Queries, personioEmployee model.PersonioEmployee, partnerID int) (int32, error) {
+	employee, err := qtx.CreateEmployee(ctx, repository.CreateEmployeeParams{
 		PersonioID: int32(personioEmployee.ID),
 		FirstName:  personioEmployee.Data.FirstName,
 		LastName:   parseString(personioEmployee.Data.LastName),
@@ -126,7 +176,11 @@ func processEmployeeData(ctx context.Context, qtx *repository.Queries, personioE
 		PartnerID:  int32(partnerID),
 	})
 
-	return err
+	if err != nil {
+		return -1, err
+	}
+
+	return employee.ID, nil
 }
 
 func parseString(s string) pgtype.Text {
@@ -156,15 +210,16 @@ func processPartner(ctx context.Context, qtx *repository.Queries, departmentID s
 		partner, err = qtx.CreatePartner(ctx, repository.CreatePartnerParams{Name: newPartner.Name, Description: newPartner.Description, LogoUrl: newPartner.LogoUrl})
 
 		if err != nil {
+			slog.Warn("Partner was not created due to", "partner", partnerName, "err", err)
 			return -1, err
 		}
 
-		slog.Debug("Partner %q newly created", partnerName)
+		slog.Debug("Partner newly created", "partner", partnerName)
 
 		return int(partner.ID), nil
 	}
 
-	slog.Debug("Partner %q already existing. Assigning", partnerName)
+	slog.Debug("Partner already existing. Assigning", "partner", partnerName)
 
 	return int(partner.ID), nil
 }
