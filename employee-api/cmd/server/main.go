@@ -38,11 +38,9 @@ func run() error {
 	queries := storage.NewRepository()
 
 	// Services
-	languageService := service.NewLanguageService(queries)
-	officeService := service.NewOfficeService(queries)
-	partnerService := service.NewPartnerService(queries)
+	employeeService := service.NewEmployeeService(storage.Conn(), queries)
 
-	server := app.NewServer(chi.NewRouter(), config, languageService, officeService, partnerService)
+	server := app.NewServer(chi.NewRouter(), config, employeeService)
 
 	server.Setup()
 

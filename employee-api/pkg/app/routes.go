@@ -12,9 +12,7 @@ func (s *Server) MountRoutes() chi.Router {
 	router := s.router
 
 	router.Route(API_PREFIX, func(r chi.Router) {
-		http.NewLanguageHandler(s.languageService).Routes(r)
-		http.NewOfficeHandler(s.officeService).Routes(r)
-		http.NewPartnerHandler(s.partnerService).Routes(r)
+		http.NewEmployeeHandler(s.employeeService).Routes(r)
 		http.NewMetricHandler().Routes(r)
 	})
 

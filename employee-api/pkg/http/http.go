@@ -21,7 +21,7 @@ type Handler interface {
 func JSONResponse(w http.ResponseWriter, r *http.Request, v any) {
 	w.Header().Set("Content-type", "application/json")
 	if err := json.NewEncoder(w).Encode(v); err != nil {
-		LogError(r, pkg.Errorf(pkg.ErrInternal, "Error while encoding response %s=%s %s=%s", "value", v, "err", err))
+		LogError(r, pkg.Errorf(pkg.CodeErrInternal, "Error while encoding response %s=%s %s=%s", "value", v, "err", err))
 	}
 }
 
@@ -34,7 +34,7 @@ func Error(w http.ResponseWriter, r *http.Request, err error) {
 	code, message := pkg.ErrorCode(err), pkg.ErrorMessage(err)
 
 	// Log error
-	if code == pkg.ErrInternal {
+	if code == pkg.CodeErrInternal {
 		LogError(r, err)
 	}
 
@@ -49,12 +49,12 @@ func LogError(r *http.Request, err error) {
 
 // lookup of application error codes to HTTP status codes.
 var codes = map[string]int{
-	pkg.ErrInternal:       http.StatusInternalServerError,
-	pkg.ErrNotValid:       http.StatusBadRequest,
-	pkg.ErrNotFound:       http.StatusNotFound,
-	pkg.ErrNotImplemented: http.StatusNotImplemented,
-	pkg.ErrUnauthorized:   http.StatusUnauthorized,
-	pkg.ErrConflict:       http.StatusConflict,
+	pkg.CodeErrInternal:       http.StatusInternalServerError,
+	pkg.CodeErrNotValid:       http.StatusBadRequest,
+	pkg.CodeErrNotFound:       http.StatusNotFound,
+	pkg.CodeErrNotImplemented: http.StatusNotImplemented,
+	pkg.CodeErrUnauthorized:   http.StatusUnauthorized,
+	pkg.CodeErrConflict:       http.StatusConflict,
 }
 
 // ErrorStatusCode returns the associated HTTP status code for an app error code.

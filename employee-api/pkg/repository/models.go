@@ -11,14 +11,14 @@ import (
 type Employee struct {
 	ID         int32
 	Uid        pgtype.UUID
+	PersonioID int32
 	FirstName  string
 	LastName   pgtype.Text
 	Email      string
 	PictureUrl pgtype.Text
-	OfficeID   int32
-	PartnerID  int32
 	Position   string
 	Birthday   pgtype.Text
+	PartnerID  int32
 	CreatedAt  pgtype.Timestamptz
 	UpdatedAt  pgtype.Timestamptz
 }
@@ -32,13 +32,6 @@ type EmployeesLanguage struct {
 }
 
 type Language struct {
-	ID        int32
-	Name      string
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
-}
-
-type Office struct {
 	ID        int32
 	Name      string
 	CreatedAt pgtype.Timestamptz

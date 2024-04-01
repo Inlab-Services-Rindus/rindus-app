@@ -7,20 +7,11 @@ CREATE TABLE IF NOT EXISTS languages (
 	CONSTRAINT languages_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS offices (
-	id serial NOT NULL,
-	"name" varchar(255) NOT NULL UNIQUE,
-	created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	CONSTRAINT offices_name_unique UNIQUE ("name"),
-	CONSTRAINT offices_pkey PRIMARY KEY (id)
-);
-
 CREATE TABLE IF NOT EXISTS partners (
 	id serial NOT NULL,
 	"name" varchar(255) NOT NULL,
 	logo_url varchar(255) NOT NULL,
-	"description" varchar(255) NOT NULL,
+	"description" varchar(255),
 	created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT partners_pkey PRIMARY KEY (id)
@@ -29,19 +20,18 @@ CREATE TABLE IF NOT EXISTS partners (
 CREATE TABLE IF NOT EXISTS employees (
 	id serial NOT NULL,
 	"uid" uuid NOT NULL DEFAULT gen_random_uuid(),
+	personio_id int NOT NULL,
 	first_name varchar(255) NOT NULL,
 	last_name varchar(255) NULL,
 	email varchar(255) NOT NULL,
 	picture_url varchar(255) NULL,
-	office_id int NOT NULL,
-	partner_id int NOT NULL,
 	position varchar(255) NOT NULL,
 	birthday varchar(255) NULL,
+	partner_id int NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT employees_email_unique UNIQUE (email),
 	CONSTRAINT employees_pkey PRIMARY KEY (id),
-	CONSTRAINT employees_office_id_foreign FOREIGN KEY (office_id) REFERENCES offices(id) ON DELETE CASCADE,
 	CONSTRAINT employees_partner_id_foreign FOREIGN KEY (partner_id) REFERENCES partners(id) ON DELETE CASCADE
 );
 

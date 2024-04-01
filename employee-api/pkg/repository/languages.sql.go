@@ -11,9 +11,9 @@ import (
 
 const createLanguage = `-- name: CreateLanguage :one
 INSERT INTO languages (
-  name
+    name
 ) VALUES (
-  $1
+    $1
 )
 RETURNING id, name, created_at, updated_at
 `
@@ -30,13 +30,14 @@ func (q *Queries) CreateLanguage(ctx context.Context, name string) (Language, er
 	return i, err
 }
 
-const getLanguage = `-- name: GetLanguage :one
-SELECT id, name, created_at, updated_at FROM languages
-WHERE id = $1 LIMIT 1
+const getLanguageByName = `-- name: GetLanguageByName :one
+SELECT id, name, created_at, updated_at
+FROM languages
+WHERE name = $1 LIMIT 1
 `
 
-func (q *Queries) GetLanguage(ctx context.Context, id int32) (Language, error) {
-	row := q.db.QueryRow(ctx, getLanguage, id)
+func (q *Queries) GetLanguageByName(ctx context.Context, name string) (Language, error) {
+	row := q.db.QueryRow(ctx, getLanguageByName, name)
 	var i Language
 	err := row.Scan(
 		&i.ID,
@@ -45,34 +46,4 @@ func (q *Queries) GetLanguage(ctx context.Context, id int32) (Language, error) {
 		&i.UpdatedAt,
 	)
 	return i, err
-}
-
-const listLanguages = `-- name: ListLanguages :many
-SELECT id, name, created_at, updated_at FROM languages
-ORDER BY name
-`
-
-func (q *Queries) ListLanguages(ctx context.Context) ([]Language, error) {
-	rows, err := q.db.Query(ctx, listLanguages)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Language
-	for rows.Next() {
-		var i Language
-		if err := rows.Scan(
-			&i.ID,
-			&i.Name,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
 }

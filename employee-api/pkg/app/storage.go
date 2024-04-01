@@ -17,6 +17,7 @@ const MigrationsPathUrl = "file://pkg/repository/migrations"
 
 type Storage interface {
 	NewRepository() *repository.Queries
+	Conn() *pgxpool.Pool
 	RunMigrations() error
 	RegisterPrometheusCollector(dbName string)
 	Close()
@@ -24,6 +25,11 @@ type Storage interface {
 
 type storage struct {
 	conn *pgxpool.Pool
+}
+
+// Conn implements Storage.
+func (s *storage) Conn() *pgxpool.Pool {
+	return s.conn
 }
 
 func (s *storage) RunMigrations() error {
