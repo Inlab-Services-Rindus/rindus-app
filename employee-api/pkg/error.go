@@ -66,7 +66,7 @@ func ErrNotFound(resourceID any) *Error {
 	return Errorf(CodeErrNotFound, "Resource %q not found", resourceID)
 }
 
-func ErrConflict(resourceID any) *Error {
+func ErrConflict(resourceID string) *Error {
 	return Errorf(CodeErrConflict, "Resource %q already existing", resourceID)
 }
 

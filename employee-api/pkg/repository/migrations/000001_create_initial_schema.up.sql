@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS employees (
 	partner_id int NOT NULL,
 	created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT employees_uid_unique UNIQUE (uid),
+	CONSTRAINT employees_personio_id_unique UNIQUE (personio_id),
 	CONSTRAINT employees_email_unique UNIQUE (email),
 	CONSTRAINT employees_pkey PRIMARY KEY (id),
 	CONSTRAINT employees_partner_id_foreign FOREIGN KEY (partner_id) REFERENCES partners(id) ON DELETE CASCADE

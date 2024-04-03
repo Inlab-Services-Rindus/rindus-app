@@ -1,6 +1,16 @@
 package model
 
-import "context"
+import (
+	"context"
+	"employee-api/pkg/helper"
+	"employee-api/pkg/repository"
+	"fmt"
+	"strings"
+)
+
+const (
+	personioAvatarURL = "https://avatar-service-platform.personio.de/"
+)
 
 type Employee struct {
 	UID        string     `json:"uid"`
@@ -25,4 +35,38 @@ type EmployeeService interface {
 	FindByUID(ctx context.Context, uid string) (*Employee, error)
 	List(ctx context.Context) ([]*Employee, error)
 	PersonioImport(ctx context.Context, data PersonioEmployee) (*Employee, error)
+}
+
+// BuildEmployee constructs a whole model Employee with all the information
+func BuildEmployee(repoEmployee repository.GetEmployeeByUIDRow, languages []string) Employee {
+	return Employee{
+		UID:        helper.UUIDToString(repoEmployee.Uid),
+		FirstName:  repoEmployee.FirstName,
+		LastName:   repoEmployee.LastName.String,
+		Email:      repoEmployee.Email,
+		PictureUrl: repoEmployee.PictureUrl.String,
+		Partner: Partner{
+			ID:      int(repoEmployee.PID),
+			Name:    repoEmployee.PName,
+			LogoUrl: repoEmployee.PLogoUrl,
+		},
+		Position:  repoEmployee.Position,
+		Birthday:  repoEmployee.Birthday.String,
+		Languages: languages,
+		Slack:     nil,
+	}
+}
+
+func EmployeePicture(firstName string, lastName string) string {
+	return fmt.Sprintf("%s%s", personioAvatarURL, initials(firstName, lastName))
+}
+
+func initials(firstName string, lastName string) string {
+	secondLetter := ""
+	firstLetter := firstName[0:1]
+	if len(lastName) >= 1 {
+		secondLetter = lastName[0:1]
+	}
+
+	return strings.ToUpper(firstLetter + secondLetter)
 }

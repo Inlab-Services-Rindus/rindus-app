@@ -1,6 +1,9 @@
 package model
 
-import "employee-api/pkg"
+import (
+	"employee-api/pkg"
+	"employee-api/pkg/helper"
+)
 
 type PersonioEmployee struct {
 	ID   int                  `json:"id"`
@@ -19,6 +22,8 @@ type PersonioEmployeeData struct {
 }
 
 func (e *PersonioEmployee) Validate() error {
+	e.trimSpaces()
+
 	if len(e.Data.FirstName) == 0 {
 		return pkg.ErrNotValid("name", "Cannot be empty")
 	}
@@ -33,4 +38,10 @@ func (e *PersonioEmployee) Validate() error {
 	}
 
 	return nil
+}
+
+func (e *PersonioEmployee) trimSpaces() {
+	e.Data.FirstName = helper.TrimSpace(e.Data.FirstName)
+	e.Data.LastName = helper.TrimSpace(e.Data.LastName)
+	e.Data.Position = helper.TrimSpace(e.Data.Position)
 }
