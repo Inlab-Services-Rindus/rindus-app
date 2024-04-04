@@ -18,8 +18,14 @@ services:
       - 8979:8978
     volumes:
       - cloudbeaver_data:/opt/cloudbeaver/workspace
+      - ./docker/cloudbeaver/conf/initial-data-sources.conf:/opt/cloudbeaver/conf/initial-data-sources.conf
     links:
       - db
+    environment:
+      CB_SERVER_NAME: CloudBeaver
+      CB_SERVER_URL: http://cloudbeaver:8978
+      CB_ADMIN_NAME: cbadmin
+      CB_ADMIN_PASSWORD: admin
 
   postgres-exporter:
     image: prometheuscommunity/postgres-exporter

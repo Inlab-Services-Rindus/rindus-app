@@ -9,7 +9,6 @@ import (
 	"errors"
 	"log/slog"
 	"strconv"
-	"strings"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -123,10 +122,10 @@ func (e *EmployeeService) importTransacting(ctx context.Context, logger *slog.Lo
 }
 
 func processLanguages(ctx context.Context, q *repository.Queries, createdEmployeeID int32, languages string) error {
-	personioLanguages := strings.Split(languages, ",")
+	personioLanguages := model.ParseLanguages(languages)
 
-	for _, rawLanguage := range personioLanguages {
-		if err := assignOrCreate(ctx, q, createdEmployeeID, rawLanguage); err != nil {
+	for _, languageEnum := range personioLanguages {
+		if err := assignOrCreate(ctx, q, createdEmployeeID, languageEnum); err != nil {
 			return err
 		}
 	}
@@ -154,9 +153,7 @@ func processTeamCaptain(ctx context.Context, q *repository.Queries, partnerID in
 	return nil
 }
 
-func assignOrCreate(ctx context.Context, q *repository.Queries, createdEmployeeID int32, rawLanguage string) error {
-	languageEnum := helper.SanitiseEnum(rawLanguage)
-
+func assignOrCreate(ctx context.Context, q *repository.Queries, createdEmployeeID int32, languageEnum string) error {
 	language, err := q.GetLanguageByName(ctx, languageEnum)
 
 	if err != nil {

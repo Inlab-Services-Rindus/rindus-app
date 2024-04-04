@@ -2,6 +2,7 @@ package model
 
 import (
 	"employee-api/pkg"
+	"employee-api/pkg/helper"
 	"fmt"
 	"strings"
 )
@@ -22,8 +23,8 @@ type PersonioEmployeeData struct {
 	Email        string `json:"email"`
 	DepartmentID string `json:"department_id"`
 	Position     string `json:"position"`
-	Birthday     string `json:"dynamic_87778"`
-	TeamCaptain  string `json:"dynamic_1298673"`
+	Birthday     string `json:"dynamic_87778"`   // Possibly empty
+	TeamCaptain  string `json:"dynamic_1298673"` // Possibly empty if rindus employee
 	Languages    string `json:"dynamic_1300584"`
 }
 
@@ -47,14 +48,15 @@ func (e *PersonioEmployee) Validate() error {
 	if len(e.Data.Position) == 0 {
 		return pkg.ErrNotValid("position", "Cannot be empty")
 	}
-	if len(e.Data.TeamCaptain) == 0 {
-		return pkg.ErrNotValid(teamCaptainFieldName, "Cannot be empty")
-	}
 
 	return nil
 }
 
 func ParseTeamCaptain(teamCaptain string) (string, error) {
+	if helper.IsEmpty(teamCaptain) {
+		return "", pkg.ErrNotValid(teamCaptainFieldName, "Cannot be empty")
+	}
+
 	segments := strings.Split(teamCaptain, "|")
 
 	if len(segments) < 2 {
@@ -62,4 +64,17 @@ func ParseTeamCaptain(teamCaptain string) (string, error) {
 	}
 
 	return strings.TrimSpace(segments[1]), nil
+}
+
+func ParseLanguages(languages string) []string {
+	result := make([]string, 0)
+	if helper.IsEmpty(languages) {
+		return make([]string, 0)
+	}
+
+	for _, rawLang := range strings.Split(languages, ",") {
+		result = append(result, helper.SanitiseEnum(rawLang))
+	}
+
+	return result
 }

@@ -1,6 +1,7 @@
 package model
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -17,7 +18,7 @@ func TestPersonioEmployee_Validate(t *testing.T) {
 		{"should not validate missing department", func(e *PersonioEmployee) { e.Data.DepartmentID = "" }, true},
 		{"should not validate missing position", func(e *PersonioEmployee) { e.Data.Position = "" }, true},
 		{"should validate missing birthday", func(e *PersonioEmployee) { e.Data.Birthday = "" }, false},
-		{"should not validate missing team captain", func(e *PersonioEmployee) { e.Data.TeamCaptain = "" }, true},
+		{"should validate missing team captain", func(e *PersonioEmployee) { e.Data.TeamCaptain = "" }, false},
 		{"should validate missing languages", func(e *PersonioEmployee) { e.Data.Languages = "" }, false},
 		{"should not validate nagative IDs", func(e *PersonioEmployee) { e.ID = -5 }, true},
 		{"should not validate zero IDs", func(e *PersonioEmployee) { e.ID = 0 }, true},
@@ -65,6 +66,27 @@ func TestParseTeamCaptain(t *testing.T) {
 			}
 			if got != tt.want {
 				t.Errorf("ParseTeamCaptain() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestParseLanguages(t *testing.T) {
+	tests := []struct {
+		name string
+		arg  string
+		want []string
+	}{
+		{"should parse languages", "English, Spanish", []string{"english", "spanish"}},
+		{"should parse languages without spaces", "English,Spanish", []string{"english", "spanish"}},
+		{"should parse languages with spaces", " English ,   Spanish", []string{"english", "spanish"}},
+		{"should parse no languages if empty", "", []string{}},
+		{"should parse no languages if empty spaces", "   ", []string{}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ParseLanguages(tt.arg); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ParseLanguages() = %v, want %v", got, tt.want)
 			}
 		})
 	}
