@@ -2,11 +2,11 @@ package main
 
 import (
 	"bytes"
+	"employee-api/logger"
 	"employee-api/pkg/model"
 	"encoding/json"
 	"io"
 	"log"
-	"log/slog"
 	"net/http"
 	"os"
 )
@@ -20,8 +20,7 @@ type PersonioItems struct {
 }
 
 func run() error {
-	logFile, _ := os.Create("cmd/import/resources/import.log")
-	logger := slog.New(slog.NewTextHandler(io.MultiWriter(os.Stdout, logFile), nil))
+	logger := logger.NewLogger("importer", nil)
 	file, err := os.Open("cmd/import/resources/users.json")
 
 	if err != nil {

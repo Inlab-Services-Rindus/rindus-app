@@ -5,6 +5,6 @@ bin/
 !.env.docker
 
 tmp/
-logs/
+log/
 
 !.vscode

@@ -16,8 +16,6 @@ func run() error {
 		return err
 	}
 
-	app.ConfigureLogger(config.LogLevel)
-
 	storage, err := app.ConnectStorage(config.DB.Url)
 
 	if err != nil {
