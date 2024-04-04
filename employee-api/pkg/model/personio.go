@@ -7,7 +7,8 @@ import (
 )
 
 const (
-	rindusDomain = "rindus.de"
+	rindusDomain         = "rindus.de"
+	teamCaptainFieldName = "dynamic_1298673"
 )
 
 type PersonioEmployee struct {
@@ -22,7 +23,7 @@ type PersonioEmployeeData struct {
 	DepartmentID string `json:"department_id"`
 	Position     string `json:"position"`
 	Birthday     string `json:"dynamic_87778"`
-	TeamCaptain  string `json:"dynamic_129867"`
+	TeamCaptain  string `json:"dynamic_1298673"`
 	Languages    string `json:"dynamic_1300584"`
 }
 
@@ -47,8 +48,18 @@ func (e *PersonioEmployee) Validate() error {
 		return pkg.ErrNotValid("position", "Cannot be empty")
 	}
 	if len(e.Data.TeamCaptain) == 0 {
-		return pkg.ErrNotValid("dynamic_129867", "Cannot be empty")
+		return pkg.ErrNotValid(teamCaptainFieldName, "Cannot be empty")
 	}
 
 	return nil
+}
+
+func ParseTeamCaptain(teamCaptain string) (string, error) {
+	segments := strings.Split(teamCaptain, "|")
+
+	if len(segments) < 2 {
+		return "", pkg.ErrNotValid(teamCaptainFieldName, "Not enough information")
+	}
+
+	return strings.TrimSpace(segments[1]), nil
 }

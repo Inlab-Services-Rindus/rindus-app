@@ -42,7 +42,7 @@ type Partner struct {
 	ID          int32
 	Name        string
 	LogoUrl     string
-	Description string
+	Description pgtype.Text
 	CreatedAt   pgtype.Timestamptz
 	UpdatedAt   pgtype.Timestamptz
 }

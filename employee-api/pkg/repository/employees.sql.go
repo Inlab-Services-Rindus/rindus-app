@@ -29,6 +29,24 @@ func (q *Queries) AssignEmployeeLanguages(ctx context.Context, arg AssignEmploye
 	return err
 }
 
+const assignTeamCaptain = `-- name: AssignTeamCaptain :exec
+INSERT INTO team_captains (
+    employee_id, partner_id
+) VALUES (
+    $1, $2
+)
+`
+
+type AssignTeamCaptainParams struct {
+	EmployeeID int32
+	PartnerID  int32
+}
+
+func (q *Queries) AssignTeamCaptain(ctx context.Context, arg AssignTeamCaptainParams) error {
+	_, err := q.db.Exec(ctx, assignTeamCaptain, arg.EmployeeID, arg.PartnerID)
+	return err
+}
+
 const createEmployee = `-- name: CreateEmployee :one
 INSERT INTO employees (
     personio_id,
@@ -195,4 +213,21 @@ func (q *Queries) GetEmployeeLanguages(ctx context.Context, id int32) ([]string,
 		return nil, err
 	}
 	return items, nil
+}
+
+const getTeamCaptainIDByEmail = `-- name: GetTeamCaptainIDByEmail :one
+SELECT 
+e.id as employee_id
+FROM employees e
+JOIN partners p on e.partner_id = p.id  
+WHERE e.email = $1
+AND p.name = 'rindus'
+LIMIT 1
+`
+
+func (q *Queries) GetTeamCaptainIDByEmail(ctx context.Context, email string) (int32, error) {
+	row := q.db.QueryRow(ctx, getTeamCaptainIDByEmail, email)
+	var employee_id int32
+	err := row.Scan(&employee_id)
+	return employee_id, err
 }

@@ -7,6 +7,8 @@ package repository
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createPartner = `-- name: CreatePartner :one
@@ -21,7 +23,7 @@ RETURNING id, name, logo_url, description, created_at, updated_at
 type CreatePartnerParams struct {
 	Name        string
 	LogoUrl     string
-	Description string
+	Description pgtype.Text
 }
 
 func (q *Queries) CreatePartner(ctx context.Context, arg CreatePartnerParams) (Partner, error) {

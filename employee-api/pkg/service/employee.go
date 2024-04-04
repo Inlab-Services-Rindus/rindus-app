@@ -71,10 +71,19 @@ func (e *EmployeeService) PersonioImport(ctx context.Context, personioEmpl model
 		return nil, err
 	}
 
+	// Partner and employee basic data (transactional)
 	createdEmployee, err := e.importTransacting(ctx, logger, personioEmpl)
 
 	if err != nil {
 		return nil, err
+	}
+
+	// Following processes do not abort employee creation
+	if err := processLanguages(ctx, e.q, createdEmployee.ID, personioEmpl.Data.Languages); err != nil {
+		logger.Warn("Employee's languages were not processed due to", "err", err)
+	}
+	if err := processTeamCaptain(ctx, e.q, createdEmployee.PartnerID, personioEmpl.Data.TeamCaptain); err != nil {
+		logger.Warn("Employee's team captain was not processed due to", "err", err)
 	}
 
 	return e.FindByUID(ctx, helper.UUIDToString(createdEmployee.Uid))
@@ -109,20 +118,15 @@ func (e *EmployeeService) importTransacting(ctx context.Context, logger *slog.Lo
 		return nil, err
 	}
 
-	if err := processLanguages(ctx, qtx, createdEmployee.ID, personioEmpl.Data.Languages); err != nil {
-		logger.Warn("Employee's languages were not processed due to", "err", err)
-		return nil, err
-	}
-
 	logger.Debug("Finishing transaction for employee")
 	return createdEmployee, tx.Commit(ctx)
 }
 
-func processLanguages(ctx context.Context, qtx *repository.Queries, createdEmployeeID int32, languages string) error {
+func processLanguages(ctx context.Context, q *repository.Queries, createdEmployeeID int32, languages string) error {
 	personioLanguages := strings.Split(languages, ",")
 
 	for _, rawLanguage := range personioLanguages {
-		if err := assignOrCreate(ctx, qtx, createdEmployeeID, rawLanguage); err != nil {
+		if err := assignOrCreate(ctx, q, createdEmployeeID, rawLanguage); err != nil {
 			return err
 		}
 	}
@@ -130,17 +134,37 @@ func processLanguages(ctx context.Context, qtx *repository.Queries, createdEmplo
 	return nil
 }
 
-func assignOrCreate(ctx context.Context, qtx *repository.Queries, createdEmployeeID int32, rawLanguage string) error {
+func processTeamCaptain(ctx context.Context, q *repository.Queries, partnerID int32, teamCaptain string) error {
+	email, err := model.ParseTeamCaptain(teamCaptain)
+
+	if err != nil {
+		return err
+	}
+
+	teamCaptainID, err := q.GetTeamCaptainIDByEmail(ctx, email)
+
+	if err != nil {
+		return err
+	}
+
+	if err := q.AssignTeamCaptain(ctx, repository.AssignTeamCaptainParams{EmployeeID: teamCaptainID, PartnerID: partnerID}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func assignOrCreate(ctx context.Context, q *repository.Queries, createdEmployeeID int32, rawLanguage string) error {
 	languageEnum := helper.SanitiseEnum(rawLanguage)
 
-	language, err := qtx.GetLanguageByName(ctx, languageEnum)
+	language, err := q.GetLanguageByName(ctx, languageEnum)
 
 	if err != nil {
 		if !errors.Is(err, pgx.ErrNoRows) {
 			return err
 		}
 
-		language, err = qtx.CreateLanguage(ctx, languageEnum)
+		language, err = q.CreateLanguage(ctx, languageEnum)
 
 		if err != nil {
 			slog.Warn("Language was not created due to", "lang", languageEnum, "err", err)
@@ -153,7 +177,7 @@ func assignOrCreate(ctx context.Context, qtx *repository.Queries, createdEmploye
 
 	slog.Debug("Language already existing. Assigning", "lang", languageEnum)
 
-	qtx.AssignEmployeeLanguages(ctx, repository.AssignEmployeeLanguagesParams{EmployeeID: createdEmployeeID, LanguageID: language.ID})
+	q.AssignEmployeeLanguages(ctx, repository.AssignEmployeeLanguagesParams{EmployeeID: createdEmployeeID, LanguageID: language.ID})
 
 	return nil
 }
@@ -196,7 +220,7 @@ func processPartner(ctx context.Context, qtx *repository.Queries, departmentID s
 		}
 
 		newPartner := model.NewPartner(partnerName)
-		partner, err = qtx.CreatePartner(ctx, repository.CreatePartnerParams{Name: newPartner.Name, Description: newPartner.Description, LogoUrl: newPartner.LogoUrl})
+		partner, err = qtx.CreatePartner(ctx, repository.CreatePartnerParams{Name: newPartner.Name, Description: helper.ParseString(newPartner.Description), LogoUrl: newPartner.LogoUrl})
 
 		if err != nil {
 			slog.Warn("Partner was not created due to", "partner", partnerName, "err", err)

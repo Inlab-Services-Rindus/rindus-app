@@ -44,3 +44,28 @@ func TestPersonioEmployee_Validate(t *testing.T) {
 		})
 	}
 }
+
+func TestParseTeamCaptain(t *testing.T) {
+	tests := []struct {
+		name    string
+		arg     string
+		want    string
+		wantErr bool
+	}{
+		{"should parse proper team captain string", "Team Captain  | team.captain@rindus.de  |  +XX XXX XXXXXXXX", "team.captain@rindus.de", false},
+		{"should not parse empty team captain string", "", "", true},
+		{"should not parse incorrect team captain", "Team Captain", "", true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := ParseTeamCaptain(tt.arg)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ParseTeamCaptain() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("ParseTeamCaptain() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

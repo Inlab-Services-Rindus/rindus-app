@@ -38,6 +38,15 @@ JOIN partners p on e.partner_id = p.id
 LEFT JOIN slack_info s on e.id = s.employee_id
 WHERE uid = $1 LIMIT 1;
 
+-- name: GetTeamCaptainIDByEmail :one
+SELECT 
+e.id as employee_id
+FROM employees e
+JOIN partners p on e.partner_id = p.id  
+WHERE e.email = $1
+AND p.name = 'rindus'
+LIMIT 1;
+
 -- name: GetEmployeeLanguages :many
 SELECT l.name
 FROM employees e
@@ -48,6 +57,13 @@ WHERE e.id = $1;
 -- name: AssignEmployeeLanguages :exec
 INSERT INTO employees_languages (
     employee_id, language_id
+) VALUES (
+    $1, $2
+);
+
+-- name: AssignTeamCaptain :exec
+INSERT INTO team_captains (
+    employee_id, partner_id
 ) VALUES (
     $1, $2
 );
