@@ -8,19 +8,19 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
-	"employee-api/logger"
-	"employee-api/pkg/service"
+	"employee-api/config"
+	"employee-api/internal/service"
 )
 
 type Server struct {
 	router          chi.Router
-	config          *Config
+	config          *config.Config
 	employeeService service.EmployeeService
 }
 
 func NewServer(
 	router *chi.Mux,
-	config *Config,
+	config *config.Config,
 	employeeService service.EmployeeService,
 ) *Server {
 	return &Server{
@@ -42,13 +42,6 @@ func (s *Server) Setup() {
 	)
 
 	s.MountRoutes()
-	s.initLogger()
-}
-
-func (s *Server) initLogger() {
-	slog.SetDefault(logger.NewLogger("server", &slog.HandlerOptions{
-		Level: s.config.LogLevel,
-	}))
 }
 
 func (s *Server) Run() error {

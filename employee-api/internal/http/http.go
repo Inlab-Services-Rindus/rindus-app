@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"employee-api/pkg"
+	"employee-api/internal"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -21,7 +21,7 @@ type Handler interface {
 func JSONResponse(w http.ResponseWriter, r *http.Request, v any) {
 	w.Header().Set("Content-type", "application/json")
 	if err := json.NewEncoder(w).Encode(v); err != nil {
-		LogError(r, pkg.Errorf(pkg.CodeErrInternal, "Error while encoding response %s=%s %s=%s", "value", v, "err", err))
+		LogError(r, internal.Errorf(internal.CodeErrInternal, "Error while encoding response %s=%s %s=%s", "value", v, "err", err))
 	}
 }
 
@@ -31,10 +31,10 @@ type ErrorResponse struct {
 
 func Error(w http.ResponseWriter, r *http.Request, err error) {
 	// Extract error code & message.
-	code, message := pkg.ErrorCode(err), pkg.ErrorMessage(err)
+	code, message := internal.ErrorCode(err), internal.ErrorMessage(err)
 
 	// Log error
-	if code == pkg.CodeErrInternal {
+	if code == internal.CodeErrInternal {
 		LogError(r, err)
 	}
 
@@ -49,12 +49,12 @@ func LogError(r *http.Request, err error) {
 
 // lookup of application error codes to HTTP status codes.
 var codes = map[string]int{
-	pkg.CodeErrInternal:       http.StatusInternalServerError,
-	pkg.CodeErrNotValid:       http.StatusBadRequest,
-	pkg.CodeErrNotFound:       http.StatusNotFound,
-	pkg.CodeErrNotImplemented: http.StatusNotImplemented,
-	pkg.CodeErrUnauthorized:   http.StatusUnauthorized,
-	pkg.CodeErrConflict:       http.StatusConflict,
+	internal.CodeErrInternal:       http.StatusInternalServerError,
+	internal.CodeErrNotValid:       http.StatusBadRequest,
+	internal.CodeErrNotFound:       http.StatusNotFound,
+	internal.CodeErrNotImplemented: http.StatusNotImplemented,
+	internal.CodeErrUnauthorized:   http.StatusUnauthorized,
+	internal.CodeErrConflict:       http.StatusConflict,
 }
 
 // ErrorStatusCode returns the associated HTTP status code for an app error code.

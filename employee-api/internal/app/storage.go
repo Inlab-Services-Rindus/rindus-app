@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"employee-api/pkg/repository"
+	"employee-api/internal/repository"
 	"log/slog"
 
 	"github.com/IBM/pgxpoolprometheus"
@@ -13,7 +13,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-const MigrationsPathUrl = "file://pkg/repository/migrations"
+const MigrationsPathUrl = "file://internal/repository/migrations"
 
 type Storage interface {
 	NewRepository() *repository.Queries

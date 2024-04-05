@@ -2,7 +2,7 @@ include .env
 
 MAIN_CMD := cmd/server/main.go
 MAIN_BIN := bin/main
-MIGRATIONS_PATH := pkg/repository/migrations
+MIGRATIONS_PATH := internal/repository/migrations
 MIGRATE_CLI := migrate -database ${DB_URL} -path ${MIGRATIONS_PATH}
 
 ## App
@@ -49,7 +49,7 @@ migration/create:
 	migrate create -ext sql -dir migrations -seq ${MIGRATION_NAME}
 
 db/generate:
-	rm -f pkg/repository/*.go
+	rm -f internal/repository/*.go
 	sqlc generate
 
 seed:

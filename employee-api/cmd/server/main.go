@@ -1,8 +1,10 @@
 package main
 
 import (
-	"employee-api/pkg/app"
-	"employee-api/pkg/service"
+	"employee-api/config"
+	"employee-api/internal/app"
+	"employee-api/internal/service"
+	"employee-api/logger"
 	"log/slog"
 	"os"
 
@@ -10,11 +12,13 @@ import (
 )
 
 func run() error {
-	config, err := app.LoadConfig()
+	config, err := config.LoadConfig()
 
 	if err != nil {
 		return err
 	}
+
+	initLogger(config.LogLevel)
 
 	storage, err := app.ConnectStorage(config.DB.Url)
 
@@ -49,6 +53,12 @@ func run() error {
 	}
 
 	return nil
+}
+
+func initLogger(logLevel slog.Level) {
+	slog.SetDefault(logger.NewLogger("server", &slog.HandlerOptions{
+		Level: logLevel,
+	}))
 }
 
 func main() {

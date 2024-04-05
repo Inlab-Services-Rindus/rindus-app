@@ -1,8 +1,8 @@
 package model
 
 import (
-	"employee-api/pkg"
-	"employee-api/pkg/helper"
+	"employee-api/internal"
+	"employee-api/internal/helper"
 	"fmt"
 	"strings"
 )
@@ -31,22 +31,22 @@ type PersonioEmployeeData struct {
 func (e *PersonioEmployee) Validate() error {
 	email := e.Data.Email
 	if e.ID <= 0 {
-		return pkg.ErrNotValid("personio_id", "Has to be positive integer")
+		return internal.ErrNotValid("personio_id", "Has to be positive integer")
 	}
 	if len(e.Data.FirstName) == 0 {
-		return pkg.ErrNotValid("name", "Cannot be empty")
+		return internal.ErrNotValid("name", "Cannot be empty")
 	}
 	if len(email) == 0 {
-		return pkg.ErrNotValid("email", "Cannot be empty")
+		return internal.ErrNotValid("email", "Cannot be empty")
 	}
 	if !strings.Contains(email, rindusDomain) {
-		return pkg.ErrNotValid("email", fmt.Sprintf("Cannot be outside %q domain", rindusDomain))
+		return internal.ErrNotValid("email", fmt.Sprintf("Cannot be outside %q domain", rindusDomain))
 	}
 	if len(e.Data.DepartmentID) == 0 {
-		return pkg.ErrNotValid("department_id", "Cannot be empty")
+		return internal.ErrNotValid("department_id", "Cannot be empty")
 	}
 	if len(e.Data.Position) == 0 {
-		return pkg.ErrNotValid("position", "Cannot be empty")
+		return internal.ErrNotValid("position", "Cannot be empty")
 	}
 
 	return nil
@@ -54,13 +54,13 @@ func (e *PersonioEmployee) Validate() error {
 
 func ParseTeamCaptain(teamCaptain string) (string, error) {
 	if helper.IsEmpty(teamCaptain) {
-		return "", pkg.ErrNotValid(teamCaptainFieldName, "Cannot be empty")
+		return "", internal.ErrNotValid(teamCaptainFieldName, "Cannot be empty")
 	}
 
 	segments := strings.Split(teamCaptain, "|")
 
 	if len(segments) < 2 {
-		return "", pkg.ErrNotValid(teamCaptainFieldName, "Not enough information")
+		return "", internal.ErrNotValid(teamCaptainFieldName, "Not enough information")
 	}
 
 	return strings.TrimSpace(segments[1]), nil

@@ -1,7 +1,7 @@
 package app
 
 import (
-	"employee-api/pkg/http"
+	"employee-api/internal/http"
 
 	"github.com/go-chi/chi/v5"
 )

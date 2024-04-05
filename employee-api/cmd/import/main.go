@@ -2,8 +2,8 @@ package main
 
 import (
 	"bytes"
+	"employee-api/internal/model"
 	"employee-api/logger"
-	"employee-api/pkg/model"
 	"encoding/json"
 	"io"
 	"log"

@@ -1,9 +1,9 @@
 package http
 
 import (
-	"employee-api/pkg"
-	"employee-api/pkg/model"
-	"employee-api/pkg/service"
+	"employee-api/internal"
+	"employee-api/internal/model"
+	"employee-api/internal/service"
 	"encoding/json"
 	"net/http"
 
@@ -41,7 +41,7 @@ func (h *employeeHandler) get(w http.ResponseWriter, r *http.Request) {
 func (h *employeeHandler) importPersonio(w http.ResponseWriter, r *http.Request) {
 	var importReq model.PersonioEmployee
 	if err := json.NewDecoder(r.Body).Decode(&importReq); err != nil {
-		Error(w, r, pkg.Errorf(pkg.CodeErrNotValid, "Could not decode incoming request \"err\"=%s", err))
+		Error(w, r, internal.Errorf(internal.CodeErrNotValid, "Could not decode incoming request \"err\"=%s", err))
 		return
 	}
 

@@ -2,8 +2,8 @@ package model
 
 import (
 	"context"
-	"employee-api/pkg/helper"
-	"employee-api/pkg/repository"
+	"employee-api/internal/helper"
+	"employee-api/internal/repository"
 	"fmt"
 	"strings"
 )

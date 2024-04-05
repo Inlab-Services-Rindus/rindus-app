@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"employee-api/pkg"
-	"employee-api/pkg/helper"
+	"employee-api/internal"
+	"employee-api/internal/helper"
 )
 
 const (
@@ -47,7 +47,7 @@ func ParsePersonioPartnerID(partnerID string) (string, error) {
 		return Rindus, nil
 	}
 
-	return "", pkg.Errorf(pkg.CodeErrNotValid, "Personio department ID %q not valid", partnerID)
+	return "", internal.Errorf(internal.CodeErrNotValid, "Personio department ID %q not valid", partnerID)
 }
 
 func NewPartner(name string) *Partner {

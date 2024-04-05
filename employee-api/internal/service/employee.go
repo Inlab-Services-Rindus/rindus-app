@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	"employee-api/pkg"
-	"employee-api/pkg/helper"
-	"employee-api/pkg/model"
-	"employee-api/pkg/repository"
+	"employee-api/internal"
+	"employee-api/internal/helper"
+	"employee-api/internal/model"
+	"employee-api/internal/repository"
 	"errors"
 	"log/slog"
 	"strconv"
@@ -27,7 +27,7 @@ func (e *EmployeeService) FindByUID(ctx context.Context, uid string) (*model.Emp
 
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, pkg.ErrNotFound(uid)
+			return nil, internal.ErrNotFound(uid)
 		}
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (e *EmployeeService) PersonioImport(ctx context.Context, personioEmpl model
 	if err == nil {
 		logger.Debug("Employee already exists. Aborting")
 
-		return nil, pkg.ErrConflict(strconv.FormatInt(int64(personioID), 10))
+		return nil, internal.ErrConflict(strconv.FormatInt(int64(personioID), 10))
 	}
 
 	// Other error
@@ -111,7 +111,7 @@ func (e *EmployeeService) importTransacting(ctx context.Context, logger *slog.Lo
 	createdEmployee, err := processEmployeeData(ctx, qtx, personioEmpl, partnerID)
 	if err != nil {
 		if helper.IsUniqueViolation(err, "email") {
-			return nil, pkg.ErrConflict(personioEmpl.Data.Email)
+			return nil, internal.ErrConflict(personioEmpl.Data.Email)
 		}
 		logger.Warn("Employee was not processed due to", "err", err)
 		return nil, err
