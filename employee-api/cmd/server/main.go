@@ -17,7 +17,7 @@ func run() error {
 		return err
 	}
 
-	initLogger(config.LogLevel)
+	setLogLevel(config.LogLevel)
 
 	storage, err := app.ConnectStorage(config.DB.Url)
 
@@ -54,15 +54,20 @@ func run() error {
 	return nil
 }
 
-func initLogger(logLevel slog.Level) {
-	slog.SetDefault(logger.NewLogger("server", &slog.HandlerOptions{
-		Level: logLevel,
-	}))
+func initLogger() {
+	slog.SetDefault(logger.NewLogger("server", nil))
+}
+
+func setLogLevel(logLevel slog.Level) {
+	slog.SetLogLoggerLevel(logLevel)
 }
 
 func main() {
+	initLogger()
+
+	logger := slog.Default().With("module", "main")
 	if err := run(); err != nil {
-		slog.Error("Startup error", "message", err)
+		logger.Error("Startup error", "message", err)
 		os.Exit(1)
 	}
 }

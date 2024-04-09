@@ -5,18 +5,21 @@ import (
 	"os"
 )
 
-type DBConfig struct {
+type Database struct {
 	Name string
 	Url  string
 }
 
-func dbConfig() DBConfig {
+func parseDB() Database {
 	host := os.Getenv("DB_HOST")
 	dbName := os.Getenv("DB_NAME")
 	user := os.Getenv("DB_USER")
 	pass := os.Getenv("DB_PASS")
 
-	return DBConfig{Name: dbName, Url: buildDbUrl(user, pass, host, dbName)}
+	return Database{
+		Name: dbName,
+		Url:  buildDbUrl(user, pass, host, dbName),
+	}
 }
 
 func buildDbUrl(user string, pass string, host string, dbName string) string {

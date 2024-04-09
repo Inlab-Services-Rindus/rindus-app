@@ -4,74 +4,52 @@ import (
 	"log/slog"
 	"os"
 	"strconv"
-	"strings"
 
 	"github.com/joho/godotenv"
 )
 
 const (
-	EnvLocal  = "local"
-	EnvDocker = "docker"
+	defaultPort = 8080
 )
 
 type Config struct {
 	Env      string
 	LogLevel slog.Level
 	Port     int
-	DB       DBConfig
+	DB       Database
+	CORS     CORS
+	OAuth    OAuth
 }
 
 func LoadConfig() (*Config, error) {
+	logger := slog.Default().With("module", "config")
 	// We check first if we are in env that provides this value out of the box
 	env := os.Getenv("ENV")
 
-	envFiles := getEnvFiles(env)
+	envFiles := getEnvFiles(logger, env)
 	err := godotenv.Load(envFiles...)
 
 	if err != nil {
 		return nil, err
 	}
 
-	logLevel := parseLogLevel(os.Getenv("LOG_LEVEL"))
+	return &Config{
+		Env:      os.Getenv("ENV"),
+		LogLevel: parseLogLevel(logger, os.Getenv("LOG_LEVEL")),
+		Port:     parsePort(logger, os.Getenv("PORT")),
+		DB:       parseDB(),
+		CORS:     parseCORS(),
+		OAuth:    parseOAuth(),
+	}, nil
+}
 
-	port, err := parsePort(os.Getenv("PORT"))
+func parsePort(logger *slog.Logger, envPort string) int {
+	port, err := strconv.Atoi(envPort)
 
 	if err != nil {
-		return nil, err
+		logger.Warn("Error while parsing port config", "err", err)
+		return defaultPort
 	}
 
-	return &Config{Env: os.Getenv("ENV"), LogLevel: logLevel, Port: port, DB: dbConfig()}, nil
-}
-
-func getEnvFiles(env string) []string {
-	envFiles := []string{".env"}
-	switch env {
-	case EnvDocker:
-		envFiles = append(envFiles, ".env.docker")
-	}
-
-	return envFiles
-}
-
-func parseLogLevel(osLogLevel string) slog.Level {
-	var logLevel slog.Level
-
-	switch strings.ToUpper(osLogLevel) {
-	case "DEBUG":
-		logLevel = slog.LevelDebug
-	case "INFO":
-		logLevel = slog.LevelInfo
-	case "WARN":
-		logLevel = slog.LevelWarn
-	case "ERROR":
-		logLevel = slog.LevelError
-	default:
-		logLevel = slog.LevelInfo
-	}
-
-	return logLevel
-}
-
-func parsePort(envPort string) (int, error) {
-	return strconv.Atoi(envPort)
+	return port
 }
