@@ -46,7 +46,7 @@ migrate/down:
 	@${MIGRATE_CLI} down
 
 migration/create:
-	migrate create -ext sql -dir migrations -seq ${MIGRATION_NAME}
+	migrate create -ext sql -dir ${MIGRATIONS_PATH} -seq ${MIGRATION_NAME}
 
 db/generate:
 	rm -f internal/repository/*.go

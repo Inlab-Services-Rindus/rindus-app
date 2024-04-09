@@ -33,6 +33,10 @@ Use the VSCode launch configuration for debug mode. It will first build the app 
 
 ## References
 
+### Development
+
+Run `npm install` to get dependencies like the SQL prettier plugin.
+
 ### CloudBeaver
 
 Until default configuration is added, first time you access the server in `http://localhost:8979/` you need to configurate the main settings and create the admin account.

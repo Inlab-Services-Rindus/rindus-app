@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS team_captains;
+DROP TABLE IF EXISTS new_team_captains;
 
 DROP TABLE IF EXISTS employees_languages;
 
