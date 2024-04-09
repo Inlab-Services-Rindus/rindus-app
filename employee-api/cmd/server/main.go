@@ -2,13 +2,12 @@ package main
 
 import (
 	"employee-api/config"
+	"employee-api/database"
 	"employee-api/internal/app"
 	"employee-api/internal/service"
 	"employee-api/logger"
 	"log/slog"
 	"os"
-
-	"github.com/go-chi/chi/v5"
 )
 
 func run() error {
@@ -30,7 +29,7 @@ func run() error {
 
 	storage.RegisterPrometheusCollector(config.DB.Name)
 
-	err = storage.RunMigrations()
+	err = database.NewMigrator(config.DB.Url).Up()
 
 	if err != nil {
 		return err
@@ -42,7 +41,7 @@ func run() error {
 	// Services
 	employeeService := service.NewEmployeeService(storage.Conn(), queries)
 
-	server := app.NewServer(chi.NewRouter(), config, employeeService)
+	server := app.NewServer(config, employeeService)
 
 	server.Setup()
 

@@ -3,22 +3,15 @@ package app
 import (
 	"context"
 	"employee-api/internal/repository"
-	"log/slog"
 
 	"github.com/IBM/pgxpoolprometheus"
-	"github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-const MigrationsPathUrl = "file://internal/repository/migrations"
-
 type Storage interface {
 	NewRepository() *repository.Queries
 	Conn() *pgxpool.Pool
-	RunMigrations() error
 	RegisterPrometheusCollector(dbName string)
 	Close()
 }
@@ -30,26 +23,6 @@ type storage struct {
 // Conn implements Storage.
 func (s *storage) Conn() *pgxpool.Pool {
 	return s.conn
-}
-
-func (s *storage) RunMigrations() error {
-	slog.Debug("Starting database migration")
-
-	m, err := migrate.New(MigrationsPathUrl, s.conn.Config().ConnString())
-
-	if err != nil {
-		return err
-	}
-
-	err = m.Up()
-
-	if err != nil && err.Error() != "no change" {
-		return err
-	}
-
-	slog.Info("Database migrated succesfully")
-
-	return nil
 }
 
 func (s *storage) NewRepository() *repository.Queries {
