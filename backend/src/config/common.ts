@@ -27,7 +27,7 @@ export const getCommonConfig = (
     url: processVariables.URL,
     google: {
       clientId:
-        '794492959607-21m9v38tca8f0i957p9bk67li2g7nt9b.apps.googleusercontent.com',
+        '107296892437-s1m61pk81b6qqj9g9u60ocml7m8vmnq2.apps.googleusercontent.com',
     },
   },
   cors: {
