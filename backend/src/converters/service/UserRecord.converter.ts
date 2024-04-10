@@ -1,4 +1,3 @@
-import { config } from '@/config';
 import { Converter } from '@/converters/Converter';
 import { LoggedInUser, User, WithInfo } from '@/models/business/User';
 import {
