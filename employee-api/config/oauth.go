@@ -1,8 +1,7 @@
 package config
 
 import (
-	"employee-api/internal/helper"
-	"os"
+	"employee-api/helper"
 	"strconv"
 	"time"
 )
@@ -23,7 +22,7 @@ type ClientCredentials struct {
 }
 
 func parseOAuth() OAuth {
-	secretKey := os.Getenv("OAUTH_SECRET_KEY")
+	secretKey := getEnv("OAUTH_SECRET_KEY")
 
 	return OAuth{
 		SecretKey:         secretKey,
@@ -33,8 +32,8 @@ func parseOAuth() OAuth {
 }
 
 func parseClientCredentials() ClientCredentials {
-	clientID := os.Getenv("OAUTH_CLIENT_ID")
-	clientSecret := os.Getenv("OAUTH_CLIENT_SECRET")
+	clientID := getEnv("OAUTH_CLIENT_ID")
+	clientSecret := getEnv("OAUTH_CLIENT_SECRET")
 
 	return ClientCredentials{
 		ClientID:     clientID,
@@ -43,7 +42,7 @@ func parseClientCredentials() ClientCredentials {
 }
 
 func parseTokenTTL() time.Duration {
-	tokenTTL := os.Getenv("OAUTH_TOKEN_TTL")
+	tokenTTL := getEnv("OAUTH_TOKEN_TTL")
 
 	if helper.IsEmpty(tokenTTL) {
 		return defaultTokenTTL

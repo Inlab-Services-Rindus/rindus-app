@@ -10,13 +10,13 @@ import (
 )
 
 type Storage interface {
-	NewRepository() *repository.Queries
+	Queries() *repository.Queries
 	Conn() *pgxpool.Pool
 	RegisterPrometheusCollector(dbName string)
-	Close()
 }
 
 type storage struct {
+	q    *repository.Queries
 	conn *pgxpool.Pool
 }
 
@@ -25,12 +25,9 @@ func (s *storage) Conn() *pgxpool.Pool {
 	return s.conn
 }
 
-func (s *storage) NewRepository() *repository.Queries {
-	return repository.New(s.conn)
-}
-
-func (s *storage) Close() {
-	s.conn.Close()
+// Queries implements Storage.
+func (s *storage) Queries() *repository.Queries {
+	return s.q
 }
 
 func (s *storage) RegisterPrometheusCollector(dbName string) {
@@ -49,5 +46,5 @@ func ConnectStorage(connUrl string) (Storage, error) {
 }
 
 func NewStorage(conn *pgxpool.Pool) Storage {
-	return &storage{conn}
+	return &storage{conn: conn, q: repository.New(conn)}
 }

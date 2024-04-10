@@ -1,6 +1,8 @@
 package config
 
 import (
+	"employee-api/helper"
+	"fmt"
 	"log/slog"
 	"os"
 	"strconv"
@@ -9,7 +11,8 @@ import (
 )
 
 const (
-	defaultPort = 8080
+	envKeyPrefix = "API"
+	defaultPort  = 8080
 )
 
 type Config struct {
@@ -24,19 +27,22 @@ type Config struct {
 func LoadConfig() (*Config, error) {
 	logger := slog.Default().With("module", "config")
 	// We check first if we are in env that provides this value out of the box
-	env := os.Getenv("ENV")
+	env := getEnv("ENV")
 
-	envFiles := getEnvFiles(logger, env)
-	err := godotenv.Load(envFiles...)
+	// If local environment, load local .env file. Otherwise read env variables.
+	if helper.IsEmpty(env) || IsLocalEnv(env) {
+		envFiles := getEnvFiles(logger, env)
+		err := godotenv.Load(envFiles...)
 
-	if err != nil {
-		return nil, err
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &Config{
-		Env:      os.Getenv("ENV"),
-		LogLevel: parseLogLevel(logger, os.Getenv("LOG_LEVEL")),
-		Port:     parsePort(logger, os.Getenv("PORT")),
+		Env:      getEnv("ENV"),
+		LogLevel: parseLogLevel(logger, getEnv("LOG_LEVEL")),
+		Port:     parsePort(logger, getEnv("PORT")),
 		DB:       parseDB(),
 		CORS:     parseCORS(),
 		OAuth:    parseOAuth(),
@@ -44,12 +50,22 @@ func LoadConfig() (*Config, error) {
 }
 
 func parsePort(logger *slog.Logger, envPort string) int {
+	if helper.IsEmpty(envPort) {
+		logger.Warn("Empty port config. Defaulting to", "default", defaultPort)
+		return defaultPort
+	}
+
 	port, err := strconv.Atoi(envPort)
 
 	if err != nil {
-		logger.Warn("Error while parsing port config", "err", err)
+		logger.Warn("Error while parsing port config. Defaulting to", "default", defaultPort, "err", err)
 		return defaultPort
 	}
 
 	return port
+}
+
+// Prefixes config keys
+func getEnv(key string) string {
+	return os.Getenv(fmt.Sprintf("%s_%s", envKeyPrefix, key))
 }

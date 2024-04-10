@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"employee-api/config"
 	"employee-api/database"
 	"employee-api/internal/app"
+	"employee-api/internal/repository"
 	"employee-api/internal/service"
 	"employee-api/logger"
 	"log/slog"
@@ -11,37 +13,45 @@ import (
 )
 
 func run() error {
-	config, err := config.LoadConfig()
+	cfg, err := config.LoadConfig()
 
 	if err != nil {
 		return err
 	}
 
-	setLogLevel(config.LogLevel)
+	setLogLevel(cfg.LogLevel)
 
-	storage, err := app.ConnectStorage(config.DB.Url)
-
-	if err != nil {
-		return err
-	}
-
-	defer storage.Close()
-
-	storage.RegisterPrometheusCollector(config.DB.Name)
-
-	err = database.NewMigrator(config.DB.Url).Up()
+	ctx := context.Background()
+	db, err := database.NewDatabase(ctx, cfg.DB.Url)
 
 	if err != nil {
 		return err
 	}
 
+	defer db.Close()
+
+	db.RegisterPrometheusCollector(cfg.DB.Name)
+
+	err = database.NewMigrator(cfg.DB.Url).Up()
+
+	if err != nil {
+		return err
+	}
+
+	conn := db.Conn()
 	// sqlc queries
-	queries := storage.NewRepository()
+	q := repository.New(conn)
+
+	if config.IsDevEnv(cfg.Env) {
+		if err := database.NewSeeder(slog.Default(), cfg, q, conn).Seed(ctx); err != nil {
+			return err
+		}
+	}
 
 	// Services
-	employeeService := service.NewEmployeeService(storage.Conn(), queries)
+	employeeService := service.NewEmployeeService(conn, q)
 
-	server := app.NewServer(config, employeeService)
+	server := app.NewServer(cfg, employeeService)
 
 	server.Setup()
 

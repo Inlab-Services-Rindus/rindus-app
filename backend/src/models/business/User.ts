@@ -20,7 +20,6 @@ export interface User extends LoggedInUser {
 
 export interface WithInfo {
   partner: Partner;
-  office: string;
   slack?: Slack;
 }
 

@@ -2,7 +2,7 @@ package model
 
 import (
 	"context"
-	"employee-api/internal/helper"
+	"employee-api/helper"
 	"employee-api/internal/repository"
 	"fmt"
 	"strings"

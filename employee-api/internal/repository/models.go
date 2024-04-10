@@ -31,6 +31,25 @@ type EmployeesLanguage struct {
 	UpdatedAt  pgtype.Timestamptz
 }
 
+type EmployeesView struct {
+	ID             int32
+	Uid            pgtype.UUID
+	PersonioID     int32
+	FirstName      string
+	LastName       pgtype.Text
+	Email          string
+	PictureUrl     pgtype.Text
+	Position       string
+	Birthday       pgtype.Text
+	PartnerID      int32
+	CreatedAt      pgtype.Timestamptz
+	UpdatedAt      pgtype.Timestamptz
+	AsciiFirstName string
+	AsciiLastName  string
+	IsBirthday     bool
+	IsTeamCaptain  interface{}
+}
+
 type Language struct {
 	ID        int32
 	Name      string

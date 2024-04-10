@@ -1,4 +1,4 @@
-package service
+package importer
 
 import (
 	"context"
@@ -8,56 +8,67 @@ import (
 	"employee-api/internal/repository"
 	"errors"
 	"log/slog"
+	"os"
 	"strconv"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type EmployeeService struct {
-	conn *pgxpool.Pool
-	q    *repository.Queries
+const (
+	DefaultFilePath = "cmd/import/resources/employees.json"
+)
+
+type PersonioImporter interface {
+	ImportEmployees(context.Context, string) error
+	ImportEmployee(context.Context, model.PersonioEmployee) (*pgtype.UUID, error)
 }
 
-// FindByUID implements EmployeeService.
-func (e *EmployeeService) FindByUID(ctx context.Context, uid string) (*model.Employee, error) {
-	logger := slog.With("employeeUID", uid)
-	uuid := helper.ParseUUID(uid)
-	repoEmployee, err := e.q.GetEmployeeByUID(ctx, uuid)
+type personioImporter struct {
+	l    *slog.Logger
+	q    *repository.Queries
+	conn *pgxpool.Pool
+}
+
+// ImportEmployees implements PersonioImporter.
+func (i *personioImporter) ImportEmployees(ctx context.Context, filePath string) error {
+	logger := i.l
+
+	employees, err := readPersonioEmployeesFromFile(filePath)
+	if err != nil {
+		return err
+	}
+
+	for _, empl := range employees.Data.Items {
+		i.ImportEmployee(ctx, empl)
+
+		logger.Info("Processing", "email", empl.Data.Email)
+	}
+
+	return nil
+}
+
+func readPersonioEmployeesFromFile(filePath string) (*model.PersonioEmployees, error) {
+	file, err := os.Open(filePath)
 
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, internal.ErrNotFound(uid)
-		}
+		return nil, err
+	}
+	defer file.Close()
+
+	personioUsers, err := helper.JSONDecode[model.PersonioEmployees](file)
+	if err != nil {
 		return nil, err
 	}
 
-	employeeID := repoEmployee.EmployeeID
-	languages, err := e.q.GetEmployeeLanguages(ctx, employeeID)
-
-	if err != nil {
-		if !errors.Is(err, pgx.ErrNoRows) {
-			logger.Warn("Err while querying employee languages", "err", err)
-		}
-		slog.Debug("No languages found")
-		languages = make([]string, 0)
-	}
-
-	employee := model.BuildEmployee(repoEmployee, languages)
-
-	return &employee, nil
+	return personioUsers, nil
 }
 
-// List implements EmployeeService.
-func (e *EmployeeService) List(ctx context.Context) ([]*model.Employee, error) {
-	panic("unimplemented")
-}
-
-// PersonioImport implements EmployeeService.
-func (e *EmployeeService) PersonioImport(ctx context.Context, personioEmpl model.PersonioEmployee) (*model.Employee, error) {
+func (p *personioImporter) ImportEmployee(ctx context.Context, personioEmpl model.PersonioEmployee) (*pgtype.UUID, error) {
 	personioID := personioEmpl.ID
 	logger := slog.With("personioID", personioID)
-	_, err := e.q.GetEmployeeByPersonioID(ctx, int32(personioID))
+	_, err := p.q.GetEmployeeByPersonioID(ctx, int32(personioID))
 
 	if err == nil {
 		logger.Debug("Employee already exists. Aborting")
@@ -71,37 +82,37 @@ func (e *EmployeeService) PersonioImport(ctx context.Context, personioEmpl model
 	}
 
 	// Partner and employee basic data (transactional)
-	createdEmployee, err := e.importTransacting(ctx, logger, personioEmpl)
+	createdEmployee, err := p.importTransacting(ctx, logger, personioEmpl)
 
 	if err != nil {
 		return nil, err
 	}
 
 	// Following processes do not abort employee creation
-	if err := processLanguages(ctx, e.q, createdEmployee.ID, personioEmpl.Data.Languages); err != nil {
+	if err := processLanguages(ctx, p.q, createdEmployee.ID, personioEmpl.Data.Languages); err != nil {
 		logger.Warn("Employee's languages were not processed due to", "err", err)
 	}
-	if err := processTeamCaptain(ctx, e.q, createdEmployee.PartnerID, personioEmpl.Data.TeamCaptain); err != nil {
+	if err := processTeamCaptain(ctx, p.q, createdEmployee.PartnerID, personioEmpl.Data.TeamCaptain); err != nil {
 		if !helper.IsUniqueViolation(err, "team_captain") {
 			logger.Warn("Employee's team captain was not processed due to", "err", err)
 		}
 	}
 
-	return e.FindByUID(ctx, helper.UUIDToString(createdEmployee.Uid))
+	return &createdEmployee.Uid, nil
 }
 
-func (e *EmployeeService) importTransacting(ctx context.Context, logger *slog.Logger, personioEmpl model.PersonioEmployee) (*repository.Employee, error) {
+func (p *personioImporter) importTransacting(ctx context.Context, logger *slog.Logger, personioEmpl model.PersonioEmployee) (*repository.Employee, error) {
 	logger.Debug("Employee not existing. Creating")
 	logger.Debug("Starting transaction")
 
-	tx, err := e.conn.Begin(ctx)
+	tx, err := p.conn.Begin(ctx)
 	if err != nil {
 		logger.Warn("Not possible to create transaction", "err", err)
 		return nil, err
 	}
 	defer tx.Rollback(ctx)
 
-	qtx := e.q.WithTx(tx)
+	qtx := p.q.WithTx(tx)
 
 	departmentID := personioEmpl.Data.DepartmentID
 	partnerID, err := processPartner(ctx, qtx, departmentID)
@@ -236,6 +247,6 @@ func processPartner(ctx context.Context, qtx *repository.Queries, departmentID s
 	return int(partner.ID), nil
 }
 
-func NewEmployeeService(conn *pgxpool.Pool, q *repository.Queries) EmployeeService {
-	return EmployeeService{conn, q}
+func NewPersonioImporter(l *slog.Logger, queries *repository.Queries, conn *pgxpool.Pool) PersonioImporter {
+	return &personioImporter{l, queries, conn}
 }

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"employee-api/helper"
 	"employee-api/internal"
-	"employee-api/internal/helper"
 )
 
 const (

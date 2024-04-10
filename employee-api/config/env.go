@@ -22,3 +22,15 @@ func getEnvFiles(logger *slog.Logger, env string) []string {
 
 	return envFiles
 }
+
+func IsLocalEnv(env string) bool {
+	return env == envLocal
+}
+
+func IsDockerEnv(env string) bool {
+	return env == envDocker
+}
+
+func IsDevEnv(env string) bool {
+	return IsLocalEnv(env) || IsDockerEnv(env)
+}

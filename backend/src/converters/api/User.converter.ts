@@ -59,7 +59,6 @@ export class ShowUserConverter
     return {
       ...this.userConverter.convert(source),
       position: source.position,
-      office: source.office,
       department: this.departmentConverter.convert(source.partner),
       languages: source.languages.map((language) => language.name),
       slack: source.slack?.name

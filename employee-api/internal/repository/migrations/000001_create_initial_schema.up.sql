@@ -60,14 +60,14 @@ CREATE TABLE IF NOT EXISTS employees_languages (
   CONSTRAINT employees_languages_user_id_foreign FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS new_team_captains (
+CREATE TABLE IF NOT EXISTS team_captains (
   id serial NOT NULL,
   employee_id int NOT NULL,
   partner_id int NOT NULL,
   created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT new_team_captains_pkey PRIMARY KEY (id),
-  CONSTRAINT new_team_captains_employee_id_partner_id_unique UNIQUE (employee_id, partner_id),
-  CONSTRAINT new_team_captains_partner_id_foreign FOREIGN KEY (partner_id) REFERENCES partners (id) ON DELETE CASCADE,
-  CONSTRAINT new_team_captains_employee_id_foreign FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE
+  CONSTRAINT team_captains_pkey PRIMARY KEY (id),
+  CONSTRAINT team_captains_employee_id_partner_id_unique UNIQUE (employee_id, partner_id),
+  CONSTRAINT team_captains_partner_id_foreign FOREIGN KEY (partner_id) REFERENCES partners (id) ON DELETE CASCADE,
+  CONSTRAINT team_captains_employee_id_foreign FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE
 );

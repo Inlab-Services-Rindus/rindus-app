@@ -70,7 +70,6 @@ export class UserWithInfoConverter
 
     return {
       ...this.userViewConverter.convert(source),
-      office: source.office_name,
       partner: this.withPartnerRecordRecordConverter.convert({ ...source }),
       slack: {
         name: source.slack_name,

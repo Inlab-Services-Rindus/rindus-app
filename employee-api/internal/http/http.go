@@ -1,12 +1,11 @@
 package http
 
 import (
-	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
-	"strconv"
 
+	"employee-api/helper"
 	"employee-api/internal"
 
 	"github.com/go-chi/chi/v5"
@@ -20,7 +19,7 @@ type Handler interface {
 // Encodes response and sets appropiate content header
 func JSONResponse(w http.ResponseWriter, r *http.Request, v any) {
 	w.Header().Set("Content-type", "application/json")
-	if err := json.NewEncoder(w).Encode(v); err != nil {
+	if err := helper.JSONEncode(w, v); err != nil {
 		LogError(r, internal.Errorf(internal.CodeErrInternal, "Error while encoding response %s=%s %s=%s", "value", v, "err", err))
 	}
 }
@@ -64,14 +63,4 @@ func ErrorStatusCode(code string) int {
 	}
 
 	return http.StatusInternalServerError
-}
-
-func parseID(param string) (int64, error) {
-	id, err := strconv.ParseInt(param, 10, 32)
-
-	if err != nil {
-		return 0, err
-	}
-
-	return id, nil
 }

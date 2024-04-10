@@ -187,6 +187,18 @@ func (q *Queries) GetEmployeeByUID(ctx context.Context, uid pgtype.UUID) (GetEmp
 	return i, err
 }
 
+const getEmployeeCount = `-- name: GetEmployeeCount :one
+SELECT count(*)
+FROM employees
+`
+
+func (q *Queries) GetEmployeeCount(ctx context.Context) (int64, error) {
+	row := q.db.QueryRow(ctx, getEmployeeCount)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const getEmployeeLanguages = `-- name: GetEmployeeLanguages :many
 SELECT l.name
 FROM employees e

@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"os"
 )
 
 type Database struct {
@@ -11,10 +10,10 @@ type Database struct {
 }
 
 func parseDB() Database {
-	host := os.Getenv("DB_HOST")
-	dbName := os.Getenv("DB_NAME")
-	user := os.Getenv("DB_USER")
-	pass := os.Getenv("DB_PASS")
+	host := getEnv("DB_HOST")
+	dbName := getEnv("DB_NAME")
+	user := getEnv("DB_USER")
+	pass := getEnv("DB_PASS")
 
 	return Database{
 		Name: dbName,

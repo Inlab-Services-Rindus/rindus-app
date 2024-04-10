@@ -33,7 +33,7 @@ export type UserProfileQueryRecord = UserViewRecord &
 declare module 'knex/types/tables' {
   interface Tables {
     users: UserRecord;
-    users_view: UserViewRecord;
+    employees_view: UserViewRecord;
     users_composite: Knex.CompositeTableType<
       UserRecord,
       Pick<UserRecord, 'first_name' | 'email' | 'office_id'> &

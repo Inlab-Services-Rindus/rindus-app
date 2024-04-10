@@ -1,3 +1,7 @@
+-- name: GetEmployeeCount :one
+SELECT count(*)
+FROM employees;
+
 -- name: GetEmployeeByPersonioID :one
 SELECT *
 FROM employees

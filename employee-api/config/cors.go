@@ -1,8 +1,7 @@
 package config
 
 import (
-	"employee-api/internal/helper"
-	"os"
+	"employee-api/helper"
 	"strings"
 )
 
@@ -15,7 +14,7 @@ func parseCORS() CORS {
 }
 
 func parseAllowedOrigins() []string {
-	allowedOrigins := os.Getenv("CORS_ALLOWED_ORIGINS")
+	allowedOrigins := getEnv("CORS_ALLOWED_ORIGINS")
 
 	split := strings.Split(allowedOrigins, ",")
 

@@ -43,12 +43,12 @@ export class KnexUserRepository implements UserRepository {
   }
 
   public async allByLanguage(languageId: number): Promise<User[]> {
-    const userRecords = await this.knex({ ul: 'users_languages' })
+    const userRecords = await this.knex({ ul: 'employees_languages' })
       .join(
         {
-          u: 'users_view',
+          u: 'employees_view',
         },
-        'ul.user_id',
+        'ul.employee_id',
         'u.id',
       )
       .where('ul.language_id', languageId);
@@ -57,7 +57,7 @@ export class KnexUserRepository implements UserRepository {
   }
 
   public async allPositions(): Promise<string[]> {
-    const positionRecords = await this.knex('users')
+    const positionRecords = await this.knex('employees')
       .select('position')
       .distinct();
 
@@ -65,7 +65,7 @@ export class KnexUserRepository implements UserRepository {
   }
 
   async all(): Promise<User[]> {
-    const userRecords = await this.knex('users_view');
+    const userRecords = await this.knex('employees_view');
 
     return this.mapToBusinesss(userRecords);
   }
@@ -75,14 +75,14 @@ export class KnexUserRepository implements UserRepository {
     pageSize: number,
     sessionUserId: number,
   ): Promise<Page<User>> {
-    const queryUserRecords = this.knex('users_view')
+    const queryUserRecords = this.knex('employees_view')
       .whereNot('id', sessionUserId)
       .orderBy('is_birthday', 'desc')
       .orderBy('ascii_first_name', 'asc')
       .offset((page - 1) * pageSize)
       .limit(pageSize);
 
-    const queryTotalRecords = this.knex('users')
+    const queryTotalRecords = this.knex('employees')
       .count<Record<string, number>>()
       .first();
 
@@ -129,7 +129,7 @@ export class KnexUserRepository implements UserRepository {
   }
 
   private selectLoggedInUserRecord() {
-    return this.knex('users').select('id', 'picture_url');
+    return this.knex('employees').select('id', 'picture_url');
   }
 
   private toLoggedInUser(record: LoggedInUserRecord | undefined) {
@@ -158,14 +158,12 @@ export class KnexUserRepository implements UserRepository {
     id: number,
   ): Promise<(User & WithInfo) | undefined> {
     const maybeRecord = await this.knex<UserProfileQueryRecord>({
-      u: 'users_view',
+      u: 'employees_view',
     })
       .join({ p: 'partners' }, 'u.partner_id', 'p.id')
-      .join({ o: 'offices' }, 'u.office_id', 'o.id')
-      .leftJoin({ s: 'slack_info' }, 'u.email', 's.email')
+      .leftJoin({ s: 'slack_info' }, 'u.id', 's.employee_id')
       .select(
         'u.*',
-        { office_name: 'o.name' },
         { partner_id: 'p.id' },
         { partner_name: 'p.name' },
         { partner_logo_url: 'p.logo_url' },
@@ -182,10 +180,10 @@ export class KnexUserRepository implements UserRepository {
   }
 
   private async userLanguages(userId: number): Promise<Language[]> {
-    const languageRecords = await this.knex({ ul: 'users_languages' })
+    const languageRecords = await this.knex({ ul: 'employees_languages' })
       .join({ l: 'languages' }, 'ul.language_id', 'l.id')
       .select('l.name', 'l.id')
-      .where('ul.user_id', userId);
+      .where('ul.employee_id', userId);
 
     return languageRecords.map((record) => ({
       id: record.id,

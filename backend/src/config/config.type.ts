@@ -5,17 +5,17 @@ export type Environment = 'local' | 'development' | 'production' | 'test';
 export type LogLevel = Level;
 
 export interface ProcessVariables {
-  NODE_ENV: Environment;
-  PORT?: string;
-  LOG_LEVEL?: LogLevel;
-  DOMAIN?: string;
-  URL?: string;
-  DB_HOST: string;
-  DB_USER: string;
-  DB_PASSWORD: string;
-  DB_NAME: string;
-  DB_PORT: string;
-  SESSIONS_SECRET: string;
+  BACKEND_NODE_ENV: Environment;
+  BACKEND_PORT?: string;
+  BACKEND_LOG_LEVEL?: LogLevel;
+  BACKEND_DOMAIN?: string;
+  BACKEND_URL?: string;
+  BACKEND_DB_HOST: string;
+  BACKEND_DB_USER: string;
+  BACKEND_DB_PASSWORD: string;
+  BACKEND_DB_NAME: string;
+  BACKEND_DB_PORT: string;
+  BACKEND_SESSIONS_SECRET: string;
 }
 
 export interface Config {

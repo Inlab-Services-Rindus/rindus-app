@@ -7,7 +7,7 @@ import { getCommonConfig } from '@/config/common';
 
 function getConfig(): Config {
   const environment: Environment =
-    (process.env.NODE_ENV as Environment) || 'local';
+    (process.env.BACKEND_NODE_ENV as Environment) || 'local';
 
   dotenvConfig();
 

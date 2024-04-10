@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"employee-api/internal/repository"
 
 	"github.com/IBM/pgxpoolprometheus"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -10,30 +9,31 @@ import (
 )
 
 type Database interface {
+	Conn() *pgxpool.Pool
 	Close()
-	NewRepository() *repository.Queries
 	RegisterPrometheusCollector(dbName string)
 }
 
 type database struct {
-	Conn *pgxpool.Pool
+	conn *pgxpool.Pool
 }
 
-func (d *database) NewRepository() *repository.Queries {
-	return repository.New(d.Conn)
+// Conn implements Database.
+func (d *database) Conn() *pgxpool.Pool {
+	return d.conn
 }
 
 func (d *database) Close() {
-	d.Conn.Close()
+	d.conn.Close()
 }
 
 func (d *database) RegisterPrometheusCollector(dbName string) {
-	collector := pgxpoolprometheus.NewCollector(d.Conn, map[string]string{"db_name": dbName})
+	collector := pgxpoolprometheus.NewCollector(d.conn, map[string]string{"db_name": dbName})
 	prometheus.MustRegister(collector)
 }
 
-func NewDatabase(connUrl string) (Database, error) {
-	conn, err := pgxpool.New(context.Background(), connUrl)
+func NewDatabase(ctx context.Context, connUrl string) (Database, error) {
+	conn, err := pgxpool.New(ctx, connUrl)
 
 	if err != nil {
 		return nil, err

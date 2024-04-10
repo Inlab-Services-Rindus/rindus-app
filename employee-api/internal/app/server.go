@@ -55,7 +55,7 @@ func (s *Server) MountRoutes() chi.Router {
 	authServer := s.createAuthServer()
 	resourceServer := oauth.NewResourceServer("secret")
 
-	router.Post("/auth", authServer.ClientCredentialsHandler)
+	router.Post(oauth.AuthEndpoint, authServer.ClientCredentialsHandler)
 
 	router.Route(API_PREFIX, func(r chi.Router) {
 		r.Use(resourceServer.Authorize)

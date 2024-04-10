@@ -1,8 +1,8 @@
 package model
 
 import (
+	"employee-api/helper"
 	"employee-api/internal"
-	"employee-api/internal/helper"
 	"fmt"
 	"strings"
 )
@@ -11,6 +11,14 @@ const (
 	rindusDomain         = "rindus.de"
 	teamCaptainFieldName = "dynamic_1298673"
 )
+
+type PersonioEmployees struct {
+	Data PersonioItems `json:"data"`
+}
+
+type PersonioItems struct {
+	Items []PersonioEmployee `json:"items"`
+}
 
 type PersonioEmployee struct {
 	ID   int                  `json:"id"`
