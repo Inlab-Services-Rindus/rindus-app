@@ -12,12 +12,14 @@
 
 ## Running for the first time
 
-1. Get the JSON export of Personio (see [the following README](employee-api/cmd/import/README.md))
+1. Get the JSON exports of Personio (see [the following README](employee-api/cmd/import/README.md))
 2. Run the following command:
 
 ```shell
-$ make create-env    # Copies .env.example in .env
-$ make docker/start  # Start all containers
+$ make create-env         # Copies .env.example in .env
+$ # Fill in SLACK_API_TOKEN in .env
+$ make scrape-slack-info
+$ make docker/start       # Start all containers
 ```
 
 ## Running

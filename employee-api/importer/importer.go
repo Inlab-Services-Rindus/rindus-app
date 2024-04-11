@@ -66,6 +66,10 @@ func readPersonioEmployeesFromFile(filePath string) (*model.PersonioEmployees, e
 }
 
 func (p *personioImporter) ImportEmployee(ctx context.Context, personioEmpl model.PersonioEmployee) (*pgtype.UUID, error) {
+	if err := personioEmpl.Validate(); err != nil {
+		return nil, err
+	}
+
 	personioID := personioEmpl.ID
 	logger := slog.With("personioID", personioID)
 	_, err := p.q.GetEmployeeByPersonioID(ctx, int32(personioID))

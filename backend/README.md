@@ -24,6 +24,10 @@ $ cp .env.example .env
 $ # Restart api container
 ```
 
+### Read Swagger
+
+Go to https://editor-next.swagger.io/ and copy the contents of `openapi.yml`.
+
 ### Debug
 
 Attach to default port 9229
