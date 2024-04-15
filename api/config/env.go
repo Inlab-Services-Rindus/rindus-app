@@ -30,6 +30,18 @@ func IsDockerEnv(env string) bool {
 	return env == envDocker
 }
 
+func isProductionEnv(env string) bool {
+	return env == envProduction
+}
+
+func isStagingEnv(env string) bool {
+	return env == envStaging
+}
+
 func IsDevEnv(env string) bool {
 	return IsLocalEnv(env) || IsDockerEnv(env)
+}
+
+func IsLiveEnv(env string) bool {
+	return isProductionEnv(env) || isStagingEnv(env)
 }

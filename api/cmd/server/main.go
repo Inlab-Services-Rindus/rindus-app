@@ -19,7 +19,7 @@ func run() error {
 		return err
 	}
 
-	setLogLevel(cfg.LogLevel)
+	slog.SetDefault(logger.NewLogger("server", *cfg))
 
 	ctx := context.Background()
 	db, err := database.NewDatabase(ctx, cfg.DB.Url)
@@ -64,17 +64,7 @@ func run() error {
 	return nil
 }
 
-func initLogger() {
-	slog.SetDefault(logger.NewLogger("server", nil))
-}
-
-func setLogLevel(logLevel slog.Level) {
-	slog.SetLogLoggerLevel(logLevel)
-}
-
 func main() {
-	initLogger()
-
 	logger := slog.Default().With("module", "main")
 	if err := run(); err != nil {
 		logger.Error("Startup error", "message", err)

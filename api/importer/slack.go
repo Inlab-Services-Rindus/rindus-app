@@ -27,9 +27,11 @@ func (s *slackImporter) ImportSlackMember(ctx context.Context, member SlackMembe
 		return errors.New("missing email")
 	}
 
+	logger := s.l.With("email", *email)
 	employee, err := s.q.GetEmployeeByEmail(ctx, *email)
 
 	if err != nil {
+		logger.Warn("Employee could not be found", "err", err)
 		return err
 	}
 
@@ -38,8 +40,11 @@ func (s *slackImporter) ImportSlackMember(ctx context.Context, member SlackMembe
 		Name:       name,
 		SlackID:    id,
 	}); err != nil {
+		logger.Warn("Employee slack info could not be created", "err", err)
 		return err
 	}
+
+	logger.Info("Employee slack info succesfully created")
 
 	return nil
 }
@@ -47,7 +52,9 @@ func (s *slackImporter) ImportSlackMember(ctx context.Context, member SlackMembe
 // ImportSlackInfo implements SlackImporter.
 func (s *slackImporter) ImportSlackMembers(ctx context.Context, members SlackMembers) error {
 	for _, member := range members.Members {
-		s.ImportSlackMember(ctx, member)
+		if !member.Deleted {
+			s.ImportSlackMember(ctx, member)
+		}
 	}
 
 	return nil

@@ -10,12 +10,12 @@ import (
 )
 
 func run() error {
-	logger := logger.NewLogger("importer", nil)
-
 	config, err := config.LoadConfig()
 	if err != nil {
 		return err
 	}
+
+	logger := logger.NewLogger("importer", *config)
 
 	ctx := context.Background()
 	db, err := database.NewDatabase(ctx, config.DB.Url)

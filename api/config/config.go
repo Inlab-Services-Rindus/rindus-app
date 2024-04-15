@@ -16,13 +16,13 @@ const (
 )
 
 type Config struct {
-	Env      string
-	LogLevel slog.Level
-	Port     int
-	DB       Database
-	CORS     CORS
-	OAuth    OAuth
-	Metrics  Metrics
+	Env     string
+	Port    int
+	DB      Database
+	CORS    CORS
+	OAuth   OAuth
+	Metrics Metrics
+	Logging Logging
 }
 
 func LoadConfig() (*Config, error) {
@@ -43,13 +43,13 @@ func LoadConfig() (*Config, error) {
 	env = getEnv("ENV")
 
 	return &Config{
-		Env:      env,
-		LogLevel: parseLogLevel(logger, getEnv("LOG_LEVEL")),
-		Port:     parsePort(logger, getEnv("PORT")),
-		DB:       parseDB(env),
-		CORS:     parseCORS(),
-		OAuth:    parseOAuth(),
-		Metrics:  parseMetrics(),
+		Env:     env,
+		Port:    parsePort(logger, getEnv("PORT")),
+		DB:      parseDB(env),
+		CORS:    parseCORS(),
+		OAuth:   parseOAuth(),
+		Metrics: parseMetrics(),
+		Logging: parseLogging(logger),
 	}, nil
 }
 

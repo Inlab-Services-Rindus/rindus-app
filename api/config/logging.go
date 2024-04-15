@@ -12,6 +12,18 @@ const (
 	levelError = "ERROR"
 )
 
+type Logging struct {
+	LokiURL  string
+	LogLevel slog.Level
+}
+
+func parseLogging(logger *slog.Logger) Logging {
+	return Logging{
+		LokiURL:  getEnv("LOGGING_LOKI_URL"),
+		LogLevel: parseLogLevel(logger, getEnv("LOG_LEVEL")),
+	}
+}
+
 func parseLogLevel(logger *slog.Logger, osLogLevel string) slog.Level {
 	var logLevel slog.Level
 
