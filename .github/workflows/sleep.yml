@@ -11,6 +11,3 @@ jobs:
     steps:
       - name: Wake up production server
         run: curl https://api.app.rindus.de/
-
-      - name: Wake up staging server
-        run: curl https://staging.api.app.rindus.de/
