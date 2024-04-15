@@ -5,9 +5,9 @@ export function authenticated(
   response: Response,
   next: NextFunction,
 ) {
-  // if (request.session.userId) {
-  next();
-  // } else {
-  //   response.sendStatus(401);
-  // }
+  if (request.session.userId) {
+    next();
+  } else {
+    response.sendStatus(401);
+  }
 }
