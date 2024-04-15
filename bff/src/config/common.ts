@@ -8,23 +8,23 @@ function parseNumber(numberString: string | undefined): number | undefined {
 export const getCommonConfig = (
   processVariables: ProcessVariables,
 ): Config => ({
-  environment: (processVariables.BACKEND_NODE_ENV as Environment) || 'development',
-  logLevel: processVariables.BACKEND_LOG_LEVEL || 'info',
+  environment: (processVariables.BFF_NODE_ENV as Environment) || 'development',
+  logLevel: processVariables.BFF_LOG_LEVEL || 'info',
   database: {
-    host: processVariables.BACKEND_DB_HOST || '127.0.0.1',
-    name: processVariables.BACKEND_DB_NAME || 'backend',
-    port: parseNumber(processVariables.BACKEND_DB_PORT) || 5432,
-    user: processVariables.BACKEND_DB_USER || 'api',
-    password: processVariables.BACKEND_DB_PASSWORD || 'secret',
+    host: processVariables.BFF_DB_HOST || '127.0.0.1',
+    name: processVariables.BFF_DB_NAME || 'backend',
+    port: parseNumber(processVariables.BFF_DB_PORT) || 5432,
+    user: processVariables.BFF_DB_USER || 'api',
+    password: processVariables.BFF_DB_PASSWORD || 'secret',
   },
   sessions: {
-    secret: processVariables.BACKEND_SESSIONS_SECRET || 'mysupersecret',
+    secret: processVariables.BFF_SESSIONS_SECRET || 'mysupersecret',
     maxAge: 86400000,
   },
   app: {
-    domain: processVariables.BACKEND_DOMAIN || 'localhost',
-    port: parseNumber(processVariables.BACKEND_PORT) || 3000,
-    url: processVariables.BACKEND_URL,
+    domain: processVariables.BFF_DOMAIN || 'localhost',
+    port: parseNumber(processVariables.BFF_PORT) || 3000,
+    url: processVariables.BFF_URL,
     google: {
       clientId:
         '107296892437-s1m61pk81b6qqj9g9u60ocml7m8vmnq2.apps.googleusercontent.com',
