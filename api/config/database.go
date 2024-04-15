@@ -9,7 +9,7 @@ type Database struct {
 	Url  string
 }
 
-func parseDB() Database {
+func parseDB(env string) Database {
 	host := getEnv("DB_HOST")
 	dbName := getEnv("DB_NAME")
 	user := getEnv("DB_USER")
@@ -17,10 +17,15 @@ func parseDB() Database {
 
 	return Database{
 		Name: dbName,
-		Url:  buildDbUrl(user, pass, host, dbName),
+		Url:  buildDbUrl(user, pass, host, dbName, env),
 	}
 }
 
-func buildDbUrl(user string, pass string, host string, dbName string) string {
-	return fmt.Sprintf("postgres://%s:%s@%s:5432/%s?sslmode=disable", user, pass, host, dbName)
+func buildDbUrl(user string, pass string, host string, dbName string, env string) string {
+	sslMode := "required"
+	if IsDevEnv(env) {
+		sslMode = "disable"
+	}
+
+	return fmt.Sprintf("postgres://%s:%s@%s:5432/%s?sslmode=%s", user, pass, host, dbName, sslMode)
 }

@@ -39,11 +39,13 @@ func LoadConfig() (*Config, error) {
 		}
 	}
 
+	env = getEnv("ENV")
+
 	return &Config{
-		Env:      getEnv("ENV"),
+		Env:      env,
 		LogLevel: parseLogLevel(logger, getEnv("LOG_LEVEL")),
 		Port:     parsePort(logger, getEnv("PORT")),
-		DB:       parseDB(),
+		DB:       parseDB(env),
 		CORS:     parseCORS(),
 		OAuth:    parseOAuth(),
 	}, nil
