@@ -5,6 +5,7 @@ import "log/slog"
 const (
 	envLocal      = "local"
 	envDocker     = "docker"
+	envStaging    = "staging"
 	envProduction = "production"
 )
 
@@ -14,8 +15,6 @@ func getEnvFiles(logger *slog.Logger, env string) []string {
 	switch env {
 	case envDocker:
 		envFiles = append(envFiles, ".env.docker")
-	case envProduction:
-		envFiles = append(envFiles, ".env.production")
 	default:
 		logger.Warn("ENV information not provided, default to .env value")
 	}

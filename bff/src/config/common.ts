@@ -22,9 +22,8 @@ export const getCommonConfig = (
     maxAge: 86400000,
   },
   app: {
-    domain: processVariables.BFF_DOMAIN || 'localhost',
     port: parseNumber(processVariables.BFF_PORT) || 3000,
-    url: processVariables.BFF_URL,
+    url: processVariables.BFF_APP_URL,
     google: {
       clientId:
         '107296892437-s1m61pk81b6qqj9g9u60ocml7m8vmnq2.apps.googleusercontent.com',
@@ -32,6 +31,7 @@ export const getCommonConfig = (
   },
   cors: {
     // Frontend app | swagger-editor | swagger-ui
-    origin: /http:\/\/localhost:(5173|8888|3080)/,
+    origin:
+      processVariables.BFF_CORS_ORIGIN || /http:\/\/localhost:(5173|8888|3080)/,
   },
 });

@@ -1,6 +1,6 @@
 import { Level } from 'pino';
 
-export type Environment = 'local' | 'development' | 'production' | 'test';
+export type Environment = 'local' | 'staging' | 'production' | 'test';
 
 export type LogLevel = Level;
 
@@ -9,13 +9,14 @@ export interface ProcessVariables {
   BFF_PORT?: string;
   BFF_LOG_LEVEL?: LogLevel;
   BFF_DOMAIN?: string;
-  BFF_URL?: string;
+  BFF_APP_URL?: string;
   BFF_DB_HOST: string;
   BFF_DB_USER: string;
   BFF_DB_PASSWORD: string;
   BFF_DB_NAME: string;
   BFF_DB_PORT: string;
   BFF_SESSIONS_SECRET: string;
+  BFF_CORS_ORIGIN: string;
 }
 
 export interface Config {
@@ -42,7 +43,6 @@ export interface Session {
 
 export interface App {
   port: number;
-  domain: string;
   url?: string;
   google: Google;
 }
