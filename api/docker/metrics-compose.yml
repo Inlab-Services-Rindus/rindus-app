@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    ports:
+      - 9187:9187
+    links:
+      - db
+    environment:
+      DATA_SOURCE_URI: ${DB_HOST}:5432/${DB_NAME}?sslmode=disable
+      DATA_SOURCE_USER: ${DB_USER}
+      DATA_SOURCE_PASS: ${DB_PASS}
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./docker/prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    links:
+      - api
+      - postgres-exporter
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_storage:/var/lib/grafana
+      - ./docker/grafana/provisioning/:/etc/grafana/provisioning/
+    links:
+      - prometheus
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: true
+
+volumes:
+  prometheus_data:
+  grafana_storage:
