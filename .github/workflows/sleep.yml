@@ -13,4 +13,4 @@ jobs:
         run: curl https://api.app.rindus.de/
 
       - name: Wake up staging server
-        run: curl https://staging.api.app.rindus.de/
+        run: curl https://api-prod-8x7s.onrender.com

@@ -39,9 +39,9 @@ jobs:
           node-version: 18
 
       - name: Install backend dependencies
-        working-directory: ./backend
+        working-directory: ./bff
         run: npm install
 
       - name: Run backend linter
-        working-directory: ./backend
+        working-directory: ./bff
         run: npm run lint
