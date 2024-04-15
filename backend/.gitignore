@@ -10,8 +10,6 @@ node_modules/
 !.vscode/launch.json
 
 .env*
-!.env.example
-!.env.docker
 
 seeds/employees/*
 !seeds/employees/.gitkeep
