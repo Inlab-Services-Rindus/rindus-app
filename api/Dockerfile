@@ -1,5 +1,7 @@
 FROM golang:1.22
 
+ENV ENV=production
+
 WORKDIR /app
 
 COPY go.mod go.sum ./
