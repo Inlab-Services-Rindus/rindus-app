@@ -2,7 +2,7 @@ name: Wake up servers
 
 on:
   schedule:
-    - cron: "*/10 * * * *" # Runs every 10 minutes
+    - cron: '*/5 * * * *'
 
 jobs:
   wake-up-servers:

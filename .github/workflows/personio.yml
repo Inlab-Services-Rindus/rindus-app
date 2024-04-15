@@ -2,7 +2,7 @@ name: Daily Update
 
 on:
   schedule:
-    - cron: "0 12 * * *" # Run every day at 12:00 PM UTC
+    - cron: '* 0 * * *'
 
 jobs:
   update:
@@ -21,6 +21,10 @@ jobs:
         working-directory: ./backend
         run: npm install
 
+      - name: Build
+        working-directory: ./backend
+        run: npm build
+
       - name: Run personio update
         working-directory: ./backend
-        run: npm run lint
+        run: npm run personio
