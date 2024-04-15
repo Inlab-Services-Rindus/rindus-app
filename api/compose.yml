@@ -29,7 +29,7 @@ services:
 
   api:
     build:
-      dockerfile: ./docker/api/Dockerfile
+      dockerfile: ./Dockerfile.local
       context: .
     ports:
       - 8080:8080
