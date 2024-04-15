@@ -1,4 +1,3 @@
-import { WithOfficeRecord } from '@/models/service/database/OfficeRecord';
 import { WithPartnerRecord } from '@/models/service/database/PartnerRecord';
 import { Identifiable } from '@/models/service/database/Record';
 import { WithSlackInfoRecord } from '@/models/service/database/SlackInfoRecord';
@@ -27,8 +26,7 @@ export interface UserViewRecord extends UserRecord {
 
 export type UserProfileQueryRecord = UserViewRecord &
   WithPartnerRecord &
-  WithSlackInfoRecord &
-  WithOfficeRecord;
+  WithSlackInfoRecord;
 
 declare module 'knex/types/tables' {
   interface Tables {
