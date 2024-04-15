@@ -21,6 +21,10 @@ jobs:
         working-directory: ./backend
         run: npm install
 
+      - name: Build
+        working-directory: ./backend
+        run: npm build
+
       - name: Run personio update
         working-directory: ./backend
         run: npm run personio
