@@ -1,0 +1,10 @@
+bin/
+
+.env*
+
+tmp/
+log/
+
+!.vscode
+
+node_modules/
