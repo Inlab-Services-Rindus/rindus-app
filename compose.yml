@@ -1,4 +1,4 @@
 include:
-  - employee-api/compose.yml
-  - backend/compose.yml
+  - api/compose.yml
+  - bff/compose.yml
   - frontend/compose.yml

@@ -12,7 +12,7 @@
 
 ## Running for the first time
 
-1. Get the JSON exports of Personio (see [the following README](employee-api/cmd/import/README.md))
+1. Get the JSON exports of Personio (see [the following README](api/cmd/import/README.md))
 2. Run the following command:
 
 ```shell
