@@ -22,7 +22,7 @@ func parseDB(env string) Database {
 }
 
 func buildDbUrl(user string, pass string, host string, dbName string, env string) string {
-	sslMode := "required"
+	sslMode := "require"
 	if IsDevEnv(env) {
 		sslMode = "disable"
 	}
