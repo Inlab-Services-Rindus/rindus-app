@@ -103,6 +103,32 @@ func (q *Queries) CreateEmployee(ctx context.Context, arg CreateEmployeeParams) 
 	return i, err
 }
 
+const getEmployeeByEmail = `-- name: GetEmployeeByEmail :one
+SELECT id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at
+FROM employees
+WHERE email = $1 LIMIT 1
+`
+
+func (q *Queries) GetEmployeeByEmail(ctx context.Context, email string) (Employee, error) {
+	row := q.db.QueryRow(ctx, getEmployeeByEmail, email)
+	var i Employee
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.PersonioID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Email,
+		&i.PictureUrl,
+		&i.Position,
+		&i.Birthday,
+		&i.PartnerID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const getEmployeeByPersonioID = `-- name: GetEmployeeByPersonioID :one
 SELECT id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at
 FROM employees

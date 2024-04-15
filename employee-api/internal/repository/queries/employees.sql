@@ -7,6 +7,11 @@ SELECT *
 FROM employees
 WHERE personio_id = $1 LIMIT 1;
 
+-- name: GetEmployeeByEmail :one
+SELECT *
+FROM employees
+WHERE email = $1 LIMIT 1;
+
 -- name: CreateEmployee :one
 INSERT INTO employees (
     personio_id,

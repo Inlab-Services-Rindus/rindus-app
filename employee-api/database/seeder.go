@@ -35,7 +35,24 @@ func (s *seeder) Seed(ctx context.Context) error {
 		return nil
 	}
 
-	if err := importer.NewPersonioImporter(logger, s.q, s.c).ImportEmployees(ctx, importer.DefaultFilePath); err != nil {
+	queries := s.q
+	conn := s.c
+
+	employees, err := importer.ReadPersonioEmployeesFromFile()
+	if err != nil {
+		return err
+	}
+
+	if err := importer.NewPersonioImporter(logger, queries, conn).ImportEmployees(ctx, *employees); err != nil {
+		return err
+	}
+
+	slackMembers, err := importer.ReadSlackMembersFromFile()
+	if err != nil {
+		return err
+	}
+
+	if err := importer.NewSlackImporter(logger, queries).ImportSlackMembers(ctx, *slackMembers); err != nil {
 		return err
 	}
 

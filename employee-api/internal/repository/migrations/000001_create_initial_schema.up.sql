@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS slack_info (
   created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT slack_info_pkey PRIMARY KEY (id),
+  CONSTRAINT slack_info_employee_id_unique UNIQUE (employee_id),
   CONSTRAINT employees_id_foreign FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE
 );
 

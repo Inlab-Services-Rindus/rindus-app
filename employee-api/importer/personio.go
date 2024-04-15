@@ -8,7 +8,6 @@ import (
 	"employee-api/internal/repository"
 	"errors"
 	"log/slog"
-	"os"
 	"strconv"
 
 	"github.com/jackc/pgx/v5"
@@ -16,12 +15,8 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-const (
-	DefaultFilePath = "cmd/import/resources/employees.json"
-)
-
 type PersonioImporter interface {
-	ImportEmployees(context.Context, string) error
+	ImportEmployees(context.Context, model.PersonioEmployees) error
 	ImportEmployee(context.Context, model.PersonioEmployee) (*pgtype.UUID, error)
 }
 
@@ -32,13 +27,8 @@ type personioImporter struct {
 }
 
 // ImportEmployees implements PersonioImporter.
-func (i *personioImporter) ImportEmployees(ctx context.Context, filePath string) error {
+func (i *personioImporter) ImportEmployees(ctx context.Context, employees model.PersonioEmployees) error {
 	logger := i.l
-
-	employees, err := readPersonioEmployeesFromFile(filePath)
-	if err != nil {
-		return err
-	}
 
 	for _, empl := range employees.Data.Items {
 		i.ImportEmployee(ctx, empl)
@@ -47,22 +37,6 @@ func (i *personioImporter) ImportEmployees(ctx context.Context, filePath string)
 	}
 
 	return nil
-}
-
-func readPersonioEmployeesFromFile(filePath string) (*model.PersonioEmployees, error) {
-	file, err := os.Open(filePath)
-
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	personioUsers, err := helper.JSONDecode[model.PersonioEmployees](file)
-	if err != nil {
-		return nil, err
-	}
-
-	return personioUsers, nil
 }
 
 func (p *personioImporter) ImportEmployee(ctx context.Context, personioEmpl model.PersonioEmployee) (*pgtype.UUID, error) {

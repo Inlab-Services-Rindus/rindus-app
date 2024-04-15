@@ -4,7 +4,6 @@ import (
 	"context"
 	"employee-api/config"
 	"employee-api/database"
-	"employee-api/importer"
 	"employee-api/internal/repository"
 	"employee-api/logger"
 	"log"
@@ -20,9 +19,17 @@ func run() error {
 
 	ctx := context.Background()
 	db, err := database.NewDatabase(ctx, config.DB.Url)
+	if err != nil {
+		return err
+	}
+	conn := db.Conn()
 	queries := repository.New(db.Conn())
 
-	return importer.NewPersonioImporter(logger, queries, db.Conn()).ImportEmployees(ctx, importer.DefaultFilePath)
+	if err := database.NewSeeder(logger, config, queries, conn).Seed(ctx); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func main() {
