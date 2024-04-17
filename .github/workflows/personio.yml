@@ -23,7 +23,7 @@ jobs:
 
       - name: Build
         working-directory: ./bff
-        run: npm build
+        run: npm run build
 
       - name: Run personio update
         working-directory: ./bff
