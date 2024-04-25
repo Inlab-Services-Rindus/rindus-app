@@ -4,6 +4,7 @@ export interface Event {
   id: string;
   status: string;
   htmlLink: string;
+  description?: string;
   created: string;
   updated: string;
   summary: string;
