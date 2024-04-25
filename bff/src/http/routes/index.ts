@@ -24,6 +24,6 @@ protectedRouter
   .use(avatarsRouter)
   .use(staticRouter);
 
-googleProtectedRouter.use(googleRouter);
+googleProtectedRouter.use(authenticated).use(googleRouter);
 
 export { unprotectedRouter, protectedRouter, googleProtectedRouter };

@@ -39,4 +39,16 @@ export class GoogleRepository implements GoogleRepositoryInterface {
 
     return events;
   }
+
+  public async event(eventId: string): Promise<Event> {
+    const response = await google.calendar('v3').events.get({
+      auth: this.auth,
+      calendarId: 'info@rindus.de',
+      eventId: eventId,
+    });
+
+    const event = response.data as Event;
+
+    return event;
+  }
 }
