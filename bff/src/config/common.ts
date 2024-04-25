@@ -34,4 +34,5 @@ export const getCommonConfig = (
     origin:
       processVariables.BFF_CORS_ORIGIN || /http:\/\/localhost:(5173|8888|3080)/,
   },
+  googleAuthCredentials: processVariables.BFF_GOOGLE_AUTH_CREDENTIALS,
 });

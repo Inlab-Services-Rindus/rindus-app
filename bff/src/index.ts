@@ -1,9 +1,16 @@
 import { config } from '@/config';
 
 import { app } from '@/bootstrap';
-import { unprotectedRouter, protectedRouter } from '@/http/routes';
+import {
+  unprotectedRouter,
+  protectedRouter,
+  googleProtectedRouter,
+} from '@/http/routes';
 
 import { logger } from '@/bootstrap/logger';
+
+//Before to / because if not, it will be catched by the / route
+app.use('/google/v1', googleProtectedRouter);
 
 app.use('/', unprotectedRouter);
 app.use('/', protectedRouter);

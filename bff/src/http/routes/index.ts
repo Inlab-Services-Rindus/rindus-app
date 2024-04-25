@@ -6,9 +6,11 @@ import { avatarsRouter } from '@/http/routes/avatars.routes';
 import { partnersRouter } from '@/http/routes/partners.routes';
 import { searchRouter } from '@/http/routes/search.routes';
 import { staticRouter } from '@/http/routes/static.routes';
+import { googleRouter } from '@/http/routes/google.routes';
 
 const unprotectedRouter = createRouter();
 const protectedRouter = createRouter();
+const googleProtectedRouter = createRouter();
 
 unprotectedRouter
   .get('/', (_req, res) => res.send('Hello World!'))
@@ -22,4 +24,6 @@ protectedRouter
   .use(avatarsRouter)
   .use(staticRouter);
 
-export { unprotectedRouter, protectedRouter };
+googleProtectedRouter.use(googleRouter);
+
+export { unprotectedRouter, protectedRouter, googleProtectedRouter };
