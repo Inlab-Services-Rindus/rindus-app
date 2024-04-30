@@ -8,7 +8,6 @@ import { Login } from '@/ui/section/login/Login';
 import { Partner } from '@/ui/section/partner/Partner';
 import { Profile } from '@/ui/section/profile/Profile';
 import { Search } from '@/ui/section/search/Search';
-import { EventDetail } from '@/ui/section/event-detail/EventDetail';
 
 import { AuthContext } from '@/ui/context/auth/Auth';
 
@@ -31,7 +30,6 @@ export function Router() {
         <Route element={<Search />} path="/search" />
         <Route element={<Profile />} path="/profile/:id" />
         <Route element={<Partner />} path="/partner/:id" />
-        <Route element={<EventDetail />} path="event/:id" /> 
       </Route>
       <Route
         path="*"
