@@ -1,8 +1,8 @@
 import { AttendeeRepository } from '@/modules/attendees/domain/AttendeeRepository';
 
-export async function getGuests(
+export async function getTotalGuests(
   attendeeRepository: AttendeeRepository,
-  id: string,
+  eventID: string,
 ): Promise<number> {
-  return attendeeRepository.getTotalGuests(id);
+  return attendeeRepository.getTotalGuests(eventID);
 }

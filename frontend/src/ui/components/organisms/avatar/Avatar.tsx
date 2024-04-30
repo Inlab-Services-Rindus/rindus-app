@@ -10,7 +10,7 @@ interface AvatarProps {
   isBirthday?: boolean;
   isCaptain?: boolean;
   size?: AvatarSize;
-  isAttendance?: boolean;
+  isAttendee?: boolean;
 }
 
 export function Avatar({
@@ -18,7 +18,7 @@ export function Avatar({
   isCaptain,
   profilePictureUrl,
   size = 'medium',
-  isAttendance,
+  isAttendee = false,
 }: AvatarProps): JSX.Element {
   function renderBadge() {
     if (isBirthday) {
@@ -40,7 +40,7 @@ export function Avatar({
         </div>
       );
     }
-    if (isAttendance) {
+    if (isAttendee) {
       return (
         <div
           className={`avatar__badge avatar__badge--check avatar__badge--${size}`}

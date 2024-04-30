@@ -3,8 +3,8 @@ import { Attendee } from '@/modules/attendees/domain/Attendee';
 
 export async function getAttendees(
   attendeeRepository: AttendeeRepository,
-  id:string, 
+  eventID:string, 
 ): Promise<Attendee[]> {
-  return attendeeRepository.getAttendees(id);
+  return attendeeRepository.getAttendees(eventID);
 }
 
