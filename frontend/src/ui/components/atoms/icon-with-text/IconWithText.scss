@@ -1,0 +1,21 @@
+@use '@scss/colors' as *;
+@import '@/assets/scss/_fonts.scss';
+
+.iconWithText {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 12px;
+  margin-bottom: 12px;
+
+  &__title {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  &__subtitle {
+    margin: 0;
+    color: $rindus-medium-gray;
+    font-size: 12px;
+  }
+}
