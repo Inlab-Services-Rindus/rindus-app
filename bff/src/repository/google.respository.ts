@@ -1,5 +1,4 @@
-import { Event } from '@/models/business/Google';
-import { google } from 'googleapis';
+import { calendar_v3, google } from 'googleapis';
 import { config } from '@/config';
 import { GoogleRepository as GoogleRepositoryInterface } from '@/models/service/google/google.repository';
 import { GoogleAuth } from 'google-auth-library';
@@ -27,7 +26,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     this.auth = auth;
   }
 
-  public async events(): Promise<Event[]> {
+  public async events(): Promise<calendar_v3.Schema$Events[]> {
     const response = await google.calendar('v3').events.list({
       auth: this.auth,
       calendarId: 'info@rindus.de',
@@ -35,19 +34,19 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       showDeleted: true, //This param works in reverse mode, true means it will not show deleted events
     });
 
-    const events = response.data.items as Event[];
+    const events = response?.data?.items ?? [];
 
     return events;
   }
 
-  public async event(eventId: string): Promise<Event> {
+  public async event(eventId: string): Promise<calendar_v3.Schema$Event> {
     const response = await google.calendar('v3').events.get({
       auth: this.auth,
       calendarId: 'info@rindus.de',
       eventId: eventId,
     });
 
-    const event = response.data as Event;
+    const event = response?.data;
 
     return event;
   }
