@@ -44,7 +44,7 @@ func run() error {
 
 	if config.IsDevEnv(cfg.Env) {
 		if err := database.NewSeeder(slog.Default(), cfg, q, conn).Seed(ctx); err != nil {
-			return err
+			slog.Warn("An error happened while seeding database. Skipping", "err", err)
 		}
 	}
 

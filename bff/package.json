@@ -12,7 +12,7 @@
     "unit:watch": "npm run unit -- --watch",
     "integration": "jest repository",
     "test": "npm run unit",
-    "personio": "node dist/src/services/personio/personio.js"
+    "personio": "npm run build && node dist/src/services/personio/personio.js"
   },
   "dependencies": {
     "body-parser": "1.20.2",
