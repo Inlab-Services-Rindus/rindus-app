@@ -1,13 +1,13 @@
 @use '@scss/colors' as *;
-@use '@/assets/scss/_fonts.scss';
+@use '@scss/fonts' as *;
 
 .eventInfo {
+  @include text($font-poppins-regular);
   align-items: center;
   background-color: $rindus-off-white;
   border-radius: 8px;
   border: 0px, 0px, 1px, 0px;
   display: flex;
-  font-family: $font-poppins-regular;
   height: 80px;
   justify-content: space-between;
   margin: 0 12px 12px 12px;
