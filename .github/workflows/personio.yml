@@ -18,13 +18,13 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        working-directory: ./backend
+        working-directory: ./bff
         run: npm install
 
       - name: Build
-        working-directory: ./backend
-        run: npm build
+        working-directory: ./bff
+        run: npm run build
 
       - name: Run personio update
-        working-directory: ./backend
+        working-directory: ./bff
         run: npm run personio
