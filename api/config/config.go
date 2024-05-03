@@ -22,6 +22,7 @@ type Config struct {
 	DB       Database
 	CORS     CORS
 	OAuth    OAuth
+	Metrics  Metrics
 }
 
 func LoadConfig() (*Config, error) {
@@ -48,6 +49,7 @@ func LoadConfig() (*Config, error) {
 		DB:       parseDB(env),
 		CORS:     parseCORS(),
 		OAuth:    parseOAuth(),
+		Metrics:  parseMetrics(),
 	}, nil
 }
 
