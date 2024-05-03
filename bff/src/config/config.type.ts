@@ -17,6 +17,7 @@ export interface ProcessVariables {
   BFF_DB_PORT: string;
   BFF_SESSIONS_SECRET: string;
   BFF_CORS_ORIGIN: string;
+  BFF_GOOGLE_AUTH_CREDENTIALS: string;
 }
 
 export interface Config {
@@ -26,6 +27,7 @@ export interface Config {
   sessions: Session;
   app: App;
   cors: Cors;
+  googleAuthCredentials: string;
 }
 
 export interface Database {

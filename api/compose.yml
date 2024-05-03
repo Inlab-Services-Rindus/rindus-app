@@ -1,9 +1,3 @@
-version: "3.8"
-
-# Uncomment for metrics containers
-# include:
-#   - docker/metrics-compose.yml
-
 services:
   db:
     image: postgres
