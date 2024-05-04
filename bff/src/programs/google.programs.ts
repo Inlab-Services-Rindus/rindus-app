@@ -19,17 +19,27 @@ export class GooglePrograms {
     const BusinessEvents = await this.googleRepository.events();
 
     const ApiEvents = BusinessEvents.map((event) => {
-      return this.minimalEventConverter.convert(event);
+      try {
+        return this.minimalEventConverter.convert(event);
+      } catch (error) {
+        return null;
+      }
     });
 
-    return ApiEvents;
+    const filteredEvents = ApiEvents.filter(
+      (event): event is MinimalEvent => event !== null,
+    );
+
+    return filteredEvents;
   }
 
-  public async event(eventId: string): Promise<DetailedEvent> {
+  public async event(eventId: string): Promise<DetailedEvent | null> {
     const BusinessEvent = await this.googleRepository.event(eventId);
 
-    const ApiEvent = this.detailEventConverter.convert(BusinessEvent);
-
-    return ApiEvent;
+    try {
+      return this.detailEventConverter.convert(BusinessEvent);
+    } catch (error) {
+      return null;
+    }
   }
 }

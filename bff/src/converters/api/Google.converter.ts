@@ -3,7 +3,7 @@ import {
   MinimalEvent as ApiMinimalEvent,
   DetailedEvent as ApiDetailedEvent,
 } from '@/models/api/google/Google';
-import { Event as BusinessEvent } from '@/models/business/Google';
+import { calendar_v3 } from 'googleapis';
 
 const MONTHS_COLORS = [
   '#2C4D6E',
@@ -20,6 +20,7 @@ const MONTHS_COLORS = [
   '#E8505B',
 ];
 
+
 function getMonthColor(dateTime: string): string {
   return MONTHS_COLORS[new Date(dateTime).getMonth()];
 }
@@ -34,9 +35,19 @@ function getWeekday(dateTime: string): string {
 }
 
 export class MinimalEventConverter
-  implements Converter<BusinessEvent, ApiMinimalEvent>
+  implements Converter<calendar_v3.Schema$Event, ApiMinimalEvent>
 {
-  convert(event: BusinessEvent): ApiMinimalEvent {
+  convert(event: calendar_v3.Schema$Event): ApiMinimalEvent {
+    if (
+      !event ||
+      !event?.id ||
+      !event?.summary ||
+      !event?.start ||
+      !event?.start?.dateTime
+    ) {
+      throw new Error('Invalid event');
+    }
+
     return {
       id: event.id,
       name: event.summary,
@@ -49,9 +60,19 @@ export class MinimalEventConverter
 }
 
 export class DetailedEventConverter
-  implements Converter<BusinessEvent, ApiDetailedEvent>
+  implements Converter<calendar_v3.Schema$Event, ApiDetailedEvent>
 {
-  convert(event: BusinessEvent): ApiDetailedEvent {
+  convert(event: calendar_v3.Schema$Event): ApiDetailedEvent {
+    if (
+      !event ||
+      !event?.id ||
+      !event?.summary ||
+      !event?.start ||
+      !event?.start?.dateTime
+    ) {
+      throw new Error('Invalid detailed event');
+    }
+
     return {
       id: event.id,
       summary: {
