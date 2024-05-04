@@ -19,6 +19,20 @@ const MONTHS_COLORS = [
   '#00C18C',
   '#E8505B',
 ];
+
+function getMonthColor(dateTime: string): string {
+  return MONTHS_COLORS[new Date(dateTime).getMonth()];
+}
+function getMonthName(dateTime: string): string {
+  return new Date(dateTime).toLocaleDateString('en', { month: 'long' });
+}
+function getDay(dateTime: string): string {
+  return new Date(dateTime).getDate().toString();
+}
+function getWeekday(dateTime: string): string {
+  return new Date(dateTime).toLocaleDateString('en', { weekday: 'long' });
+}
+
 export class MinimalEventConverter
   implements Converter<BusinessEvent, ApiMinimalEvent>
 {
@@ -26,12 +40,10 @@ export class MinimalEventConverter
     return {
       id: event.id,
       name: event.summary,
-      month: (new Date(event.start.dateTime).getMonth() + 1).toString(),
-      day: new Date(event.start.dateTime).getUTCDay().toString(),
-      weekday: new Date(event.start.dateTime).toLocaleDateString('en', {
-        weekday: 'long',
-      }),
-      colour: MONTHS_COLORS[new Date(event.start.dateTime).getMonth()],
+      month: getMonthName(event.start.dateTime),
+      day: getDay(event.start.dateTime),
+      weekday: getWeekday(event.start.dateTime),
+      colour: getMonthColor(event.start.dateTime),
     };
   }
 }
@@ -44,12 +56,10 @@ export class DetailedEventConverter
       id: event.id,
       summary: {
         name: event.summary,
-        month: (new Date(event.start.dateTime).getMonth() + 1).toString(),
-        day: new Date(event.start.dateTime).getUTCDay().toString(),
-        weekday: new Date(event.start.dateTime).toLocaleDateString('en', {
-          weekday: 'long',
-        }),
-        colour: MONTHS_COLORS[new Date(event.start.dateTime).getMonth()],
+        month: getMonthName(event.start.dateTime),
+        day: getDay(event.start.dateTime),
+        weekday: getWeekday(event.start.dateTime),
+        colour: getMonthColor(event.start.dateTime),
       },
       description: event?.description || '',
       location: event?.location || '',

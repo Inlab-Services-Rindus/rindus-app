@@ -31,13 +31,22 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     const response = await google.calendar('v3').events.list({
       auth: this.auth,
       calendarId: 'info@rindus.de',
-      timeMin: '2024-01-01T10:00:00-07:00',
+      timeMin: new Date().toISOString(),
+      timeMax: new Date(
+        new Date().setFullYear(new Date().getFullYear() + 1),
+      ).toISOString(),
+      orderBy: 'startTime',
+      singleEvents: true,
       showDeleted: true, //This param works in reverse mode, true means it will not show deleted events
     });
 
     const events = response.data.items as Event[];
 
-    return events;
+    const eventsWithoutWeekly = events.filter(
+      (event) => !event.summary.includes('Weekly'),
+    );
+
+    return eventsWithoutWeekly;
   }
 
   public async event(eventId: string): Promise<Event> {
