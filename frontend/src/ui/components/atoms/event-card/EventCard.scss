@@ -1,17 +1,15 @@
 @use '@scss/colors' as *;
 @use '@scss/fonts' as *;
 
-.eventInfo {
+.eventCard {
   @include text($font-poppins-regular);
   align-items: center;
   background-color: $rindus-off-white;
   border-radius: 8px;
-  border: 0px, 0px, 1px, 0px;
   display: flex;
   height: 80px;
   justify-content: space-between;
   margin: 0 12px 12px 12px;
-  width: --webkit-fill-available;
 
   &__dateDetails {
     display: flex;
@@ -46,18 +44,18 @@
       flex-direction: column;
       justify-content: space-evenly;
 
-      &__boldTitle {
-        color: $rindus-dark-gray;
-        font-size: 24px;
-        font-weight: 600;
-        margin: 0; // TODO: Revisar reset css
-      }
-
       &__title {
         color: $rindus-dark-gray;
         font-size: 16px;
         font-weight: 400;
         margin: 0; // TODO: Revisar reset css
+
+        &--bold {
+          color: $rindus-dark-gray;
+          font-size: 24px;
+          font-weight: 600;
+          margin: 0; // TODO: Revisar reset css
+        }
       }
 
       &__info {
@@ -72,7 +70,7 @@
     }
   }
 
-  .eventInfo__button {
+  .eventCard__button {
     align-items: center;
     display: flex;
     justify-content: center;

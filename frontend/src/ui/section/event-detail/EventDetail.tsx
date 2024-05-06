@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 
 import { eventMock } from '@/mocks/event';
+import EventInfo from '@/ui/components/atoms/event-card/EventCard';
 import EventDescription from '@/ui/components/atoms/event-description/EventDescription';
-import EventInfo from '@/ui/components/atoms/event-info/EventInfo';
 import { IconWithText } from '@/ui/components/atoms/icon-with-text/IconWithText';
 import calendarClockImage from '@assets/icons/Calendar_clock_24.svg';
 import locationImage from '@assets/icons/Location_24.svg';

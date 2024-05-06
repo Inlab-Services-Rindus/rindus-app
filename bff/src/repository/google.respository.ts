@@ -42,7 +42,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     const events = response?.data?.items ?? [];
 
     const eventsWithoutWeekly = events.filter(
-      (event) => !event.summary.includes('Weekly'),
+      (event) => !event?.summary?.includes('Weekly'),
     );
 
     return eventsWithoutWeekly;
