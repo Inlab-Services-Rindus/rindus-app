@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 
 import { eventMock } from '@/mocks/event';
+import EventInfo from '@/ui/components/atoms/event-card/EventCard';
 import EventDescription from '@/ui/components/atoms/event-description/EventDescription';
-import EventInfo from '@/ui/components/atoms/event-info/EventInfo';
 import { IconWithText } from '@/ui/components/atoms/icon-with-text/IconWithText';
 import calendarClockImage from '@assets/icons/Calendar_clock_24.svg';
 import locationImage from '@assets/icons/Location_24.svg';
@@ -21,7 +21,6 @@ export function EventDetail() {
     description,
     time,
     petsAllowed,
-    isSurveyFilled = false,
   } = eventMock;
 
   // TODO: When backend is ready check if event exist or not and modify this condition
@@ -34,8 +33,7 @@ export function EventDetail() {
           day={day}
           isBoldTitle
           weekday={weekday}
-          location={location.url}
-          isSurveyFilled={isSurveyFilled}
+          colour="#000000"
         />
       ) : (
         <p>

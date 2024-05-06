@@ -1,5 +1,8 @@
 import { createContext, useState, ReactNode } from 'react';
 
+import { getAllEvents } from '@/modules/events/application/get-all/getAllEvents';
+import { Event } from '@/modules/events/domain/Event';
+import { createEventRepository } from '@/modules/events/infrastructure/EventRepository';
 import { getAllPartners } from '@/modules/partners/application/get-all/getAllPartners';
 import { getPartnerInfo } from '@/modules/partners/application/get-info/getPartnerInfo';
 import { getPartnerUsers } from '@/modules/partners/application/get-users/getPartnerUsers';
@@ -49,6 +52,12 @@ interface TabData {
   currentTab: number;
 }
 
+interface EventsData {
+  data: Event[];
+  hasError: boolean;
+  isLoading: boolean;
+}
+
 interface StoreContextType {
   users: UserData;
   partners: PartnersData;
@@ -56,60 +65,74 @@ interface StoreContextType {
   search: SearchData;
   tab: TabData;
   query: string;
+  events: EventsData;
   setQueryKey: (key: string) => void;
   getUsers: (first?: boolean) => void;
   getPartners: () => void;
   getLastPartner: (id: number) => void;
   getSearchSuggestions: () => void;
   getSearchResults: (item: Item, custom: boolean) => void;
+  getEvents: () => void;
   setSearchData: (item: Partial<SearchData>) => void;
   setCurrentTab: (currentTab: number) => void;
 }
 
-export const StoreContext = createContext<StoreContextType>({
-  users: {
-    data: [],
-    hasMore: false,
-    hasError: false,
-    lastPage: 0,
-    totalPages: 0,
-  },
-  partners: {
-    data: [],
-    hasError: false,
-    isLoading: false,
-  },
-  lastPartner: {
-    partnerInfo: {
-      id: 0,
-      logoUrl: '',
-      name: '',
-      description: '',
+export function getInitialStoreContext() {
+  return {
+    users: {
+      data: [],
+      hasMore: false,
+      hasError: false,
+      lastPage: 0,
+      totalPages: 0,
     },
-    members: [],
-    captains: [],
-    hasError: false,
-  },
-  search: {
-    tags: [],
-    users: [],
-    results: [],
-    search: { display: '', query: '' },
-    hasError: false,
-    noResults: false,
-  },
-  setSearchData: () => {},
-  setQueryKey: () => {},
-  query: '',
-  tab: {
-    currentTab: 0,
-  },
-  getUsers: () => {},
-  getPartners: () => {},
-  getLastPartner: () => {},
-  getSearchSuggestions: () => {},
-  getSearchResults: () => {},
-  setCurrentTab: () => {},
+    partners: {
+      data: [],
+      hasError: false,
+      isLoading: false,
+    },
+    lastPartner: {
+      partnerInfo: {
+        id: 0,
+        logoUrl: '',
+        name: '',
+        description: '',
+      },
+      members: [],
+      captains: [],
+      hasError: false,
+    },
+    search: {
+      tags: [],
+      users: [],
+      results: [],
+      search: { display: '', query: '' },
+      hasError: false,
+      noResults: false,
+    },
+    setSearchData: () => {},
+    setQueryKey: () => {},
+    query: '',
+    tab: {
+      currentTab: 0,
+    },
+    events: {
+      data: [],
+      hasError: false,
+      isLoading: false,
+    },
+    getEvents: () => {},
+    getUsers: () => {},
+    getPartners: () => {},
+    getLastPartner: () => {},
+    getSearchSuggestions: () => {},
+    getSearchResults: () => {},
+    setCurrentTab: () => {},
+  };
+}
+
+export const StoreContext = createContext<StoreContextType>({
+  ...getInitialStoreContext(),
 });
 
 interface StoreProviderProps {
@@ -129,6 +152,7 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
   const userRepository = createUserRepository();
   const partnerRepository = createPartnerRepository();
   const searchRepository = createSearchRepository();
+  const eventRepository = createEventRepository();
 
   const isMobile = useIsMobile();
 
@@ -158,6 +182,12 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
 
   const [tabData, setTabData] = useState<TabData>({
     currentTab: 0,
+  });
+
+  const [eventsData, setEventsData] = useState<EventsData>({
+    data: [],
+    hasError: false,
+    isLoading: false,
   });
 
   const getUsers = async (first?: boolean) => {
@@ -282,6 +312,28 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     }
   };
 
+  const getEvents = async () => {
+    if (eventsData.data.length === 0) {
+      setEventsData({ ...eventsData, isLoading: true });
+
+      try {
+        const events = await getAllEvents(eventRepository);
+
+        setEventsData({
+          data: events,
+          hasError: false,
+          isLoading: false,
+        });
+      } catch (error) {
+        setEventsData({
+          data: [],
+          hasError: true,
+          isLoading: false,
+        });
+      }
+    }
+  };
+
   const setQueryKey = (key: string) => {
     setQuery(key);
   };
@@ -311,6 +363,8 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     lastPartner,
     getLastPartner,
     query: query,
+    events: eventsData,
+    getEvents,
     setQueryKey,
     getSearchSuggestions,
     getSearchResults,

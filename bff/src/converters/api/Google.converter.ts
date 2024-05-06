@@ -20,7 +20,6 @@ const MONTHS_COLORS = [
   '#E8505B',
 ];
 
-
 function getMonthColor(dateTime: string): string {
   return MONTHS_COLORS[new Date(dateTime).getMonth()];
 }
