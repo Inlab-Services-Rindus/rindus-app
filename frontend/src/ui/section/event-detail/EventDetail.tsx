@@ -21,7 +21,6 @@ export function EventDetail() {
     description,
     time,
     petsAllowed,
-    isSurveyFilled = false,
   } = eventMock;
 
   // TODO: When backend is ready check if event exist or not and modify this condition
@@ -34,8 +33,7 @@ export function EventDetail() {
           day={day}
           isBoldTitle
           weekday={weekday}
-          location={location.url}
-          isSurveyFilled={isSurveyFilled}
+          colour="#000000"
         />
       ) : (
         <p>
