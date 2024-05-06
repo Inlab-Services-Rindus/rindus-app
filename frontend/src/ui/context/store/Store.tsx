@@ -1,7 +1,7 @@
 import { createContext, useState, ReactNode } from 'react';
 
-import { getAttendees } from '@/modules/attendees/application/get-attendees/getAttendees';
-import { Attendee } from '@/modules/attendees/domain/Attendee';
+import { getAttendance as getTotalAttendance } from '@/modules/attendees/application/get-attendance/getAttendance';
+import { EventAttendance } from '@/modules/attendees/domain/Attendee';
 import { createMockAttendeeRepository } from '@/modules/attendees/infrastructure/MockAttendeeRepository';
 import { getAllEvents } from '@/modules/events/application/get-all/getAllEvents';
 import { Event } from '@/modules/events/domain/Event';
@@ -46,8 +46,8 @@ export interface SearchData {
 interface TabData {
   currentTab: number;
 }
-interface AttendeesData {
-  data: Attendee[];
+interface AttendanceData {
+  data: EventAttendance;
   hasError: boolean;
   isLoading: boolean;
 }
@@ -63,7 +63,7 @@ interface StoreContextType {
   partners: PartnersData;
   search: SearchData;
   tab: TabData;
-  attendees: AttendeesData;
+  attendance: AttendanceData;
   query: string;
   events: EventsData;
   setQueryKey: (key: string) => void;
@@ -100,8 +100,11 @@ export function getInitialStoreContext() {
       hasError: false,
       noResults: false,
     },
-    attendees: {
-      data: [],
+    attendance: {
+      data: {
+        totalGuests: 0,
+        attendees: [],
+      },
       hasError: false,
       isLoading: false,
     },
@@ -169,8 +172,11 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
   const [tabData, setTabData] = useState<TabData>({
     currentTab: 0,
   });
-  const [atendeesData, setAtendeesData] = useState<AttendeesData>({
-    data: [],
+  const [attendanceData, setAttendanceData] = useState<AttendanceData>({
+    data: {
+      totalGuests: 0,
+      attendees: [],
+    },
     hasError: false,
     isLoading: false,
   });
@@ -298,18 +304,24 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
   };
 
   const getAttendance = async (id: number) => {
-    setAtendeesData({ ...atendeesData, isLoading: true });
+    setAttendanceData({ ...attendanceData, isLoading: true });
 
     try {
-      const attendees = await getAttendees(attendeeRepository, id.toFixed());
-      setAtendeesData({
-        data: attendees,
+      const attendance = await getTotalAttendance(
+        attendeeRepository,
+        id.toFixed(),
+      );
+      setAttendanceData({
+        data: attendance,
         hasError: false,
         isLoading: false,
       });
     } catch (error) {
-      setAtendeesData({
-        data: [],
+      setAttendanceData({
+        data: {
+          totalGuests: 0,
+          attendees: [],
+        },
         hasError: true,
         isLoading: false,
       });
@@ -342,8 +354,7 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     setSearchData,
     tab: tabData,
     setCurrentTab,
-
-    attendees: atendeesData,
+    attendance: attendanceData,
     getAttendance,
     query: query,
     events: eventsData,

@@ -1,6 +1,6 @@
 import { Avatar } from '@/ui/components/organisms/avatar/Avatar';
 
-// import '@/ui/components/organisms/display-atendees/DisplayAttendees.scss';
+import '@/ui/components/organisms/atendee-tile/AttendeeTile.scss';
 
 interface DisplayAttendeesProps {
   profilePictureUrl: string;
@@ -12,9 +12,9 @@ export default function AtendeeTile({
   firstName,
 }: DisplayAttendeesProps): JSX.Element {
   return (
-    <div className="display-attendees">
-      <div className="avatar__container">
-        <Avatar size="large" profilePictureUrl={profilePictureUrl} isAttendee />
+    <div className="attendees-tile">
+      <div className="attendees__container">
+        <Avatar size="medium" profilePictureUrl={profilePictureUrl} isAttendee />
       </div>
       <div>{firstName}</div>
     </div>

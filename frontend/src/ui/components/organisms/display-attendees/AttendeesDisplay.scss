@@ -1,0 +1,30 @@
+@import '@/assets/scss/_fonts.scss';
+@import '@/assets/scss/_colors.scss';
+
+.attendees {
+  gap: 12px;
+  opacity: 0px;
+
+  &__number {
+    padding: 12px 0px 12px 0px;
+    line-height: 22px;
+    text-align: left;
+
+    @include text($font-poppins-regular, 16px, 400);
+    color: var(--Gray-Dark, #303140);
+  }
+}
+
+.attendees-display__container {
+  display: flex;
+  flex-direction: row;
+  padding: 12px 0px 12px 0px;
+  border: 0px 0px 1px 0px;
+  align-content: flex-start;
+  justify-content: space-evenly;
+  overflow-x: scroll;
+  gap: 8px;
+  margin-top: 23px;
+  height: 220px;
+  // width: 328px;
+}

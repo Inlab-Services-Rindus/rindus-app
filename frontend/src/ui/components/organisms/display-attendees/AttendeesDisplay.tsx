@@ -6,12 +6,14 @@ import AtendeeTile from '@/ui/components/organisms/atendee-tile/AtendeeTile';
 
 import { StoreContext } from '@/ui/context/store/Store';
 
+import '@/ui/components/organisms/display-attendees/AttendeesDisplay.scss';
+
 // import '@/ui/section/home/display-attendees/DisplayAttendees.scss';
 
 export default function AttendeesDisplay() {
   const id = 1;
   const {
-    attendees: { data, isLoading, hasError },
+    attendance: { data, isLoading, hasError },
     getAttendance,
   } = useContext(StoreContext);
 
@@ -31,14 +33,19 @@ export default function AttendeesDisplay() {
   }
 
   return (
-    <div>
-      {data?.map((attendee, index) => (
-        <AtendeeTile
-          profilePictureUrl={attendee.profilePictureUrl}
-          firstName={attendee.firstName}
-          key={index}
-        />
-      ))}
+    <div className="attendees">
+      <div className="attendees__number">
+        <b>{data?.totalGuests}</b> guests already attending
+      </div>
+      <div className="attendees-display__container">
+        {data?.attendees.map((attendee, index) => (
+          <AtendeeTile
+            profilePictureUrl={attendee.profilePictureUrl}
+            firstName={attendee.firstName}
+            key={index}
+          />
+        ))}
+      </div>
     </div>
   );
 }

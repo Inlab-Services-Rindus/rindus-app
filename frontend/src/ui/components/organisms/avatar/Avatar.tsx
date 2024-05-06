@@ -1,6 +1,6 @@
 import cake from '@/assets/icons/Cake_24.svg';
 import captain from '@/assets/icons/Capitan_24.svg';
-import check from '@/assets/icons/Check.svg';
+import ok from '@/assets/icons/Ok_24.svg';
 
 import '@/ui/components/organisms/avatar/Avatar.scss';
 
@@ -43,9 +43,9 @@ export function Avatar({
     if (isAttendee) {
       return (
         <div
-          className={`avatar__badge avatar__badge--check avatar__badge--${size}`}
+          className={`avatar__badge avatar__badge--ok avatar__badge--${size}`}
         >
-          <img src={check} alt="check" />
+          <img src={ok} alt="ok" />
         </div>
       );
     }
