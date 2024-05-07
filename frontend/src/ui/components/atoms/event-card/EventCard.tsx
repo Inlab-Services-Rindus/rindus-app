@@ -26,7 +26,11 @@ function EventCard({
   return (
     <div className="eventCard" data-testid="event-card">
       <div className="eventCard__dateDetails">
-        <div className="date" style={{ backgroundColor: colour }}>
+        <div
+          className="date"
+          data-testid="event-card-date"
+          style={{ backgroundColor: colour }}
+        >
           <p className="day">{day}</p>
           <p className="month">{month.substring(0, 3)}</p>
         </div>
@@ -37,6 +41,7 @@ function EventCard({
               'title',
               isBoldTitle && 'bold',
             )}
+            data-testid="event-card-title"
           >
             {title}
           </h2>
