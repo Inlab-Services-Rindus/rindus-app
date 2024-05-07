@@ -41,7 +41,6 @@ function EventCard({
               'title',
               isBoldTitle && 'bold',
             )}
-            data-testid="event-card-title"
           >
             {title}
           </h2>

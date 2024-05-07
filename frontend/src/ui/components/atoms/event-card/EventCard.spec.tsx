@@ -14,12 +14,12 @@ describe('EventCard', () => {
     render(<EventCard {...defaultProps} />);
     const RightButton = screen.queryByRole('button', { name: 'SVG right' });
     const eventCardDate = screen.getByTestId('event-card-date');
-    const eventCardTitle = screen.getByTestId('event-card-title');
+    const eventCardTitle = screen.queryByText(defaultProps.title);
 
-    expect(screen.getByText('Jan'));
-    expect(screen.getByText('Pizza Day'));
-    expect(screen.getByText('01'));
-    expect(screen.getByText('Monday'));
+    expect(screen.getByText('Jan')).toBeInTheDocument();
+    expect(screen.getByText(defaultProps.title)).toBeInTheDocument();
+    expect(screen.getByText(defaultProps.day)).toBeInTheDocument();
+    expect(screen.getByText(defaultProps.weekday)).toBeInTheDocument();
     expect(eventCardDate).toHaveStyle({ backgroundColor: '#000000' });
     expect(RightButton).not.toBeInTheDocument();
     expect(eventCardTitle).not.toHaveClass('details__title--bold');
@@ -34,7 +34,7 @@ describe('EventCard', () => {
 
   it('should render bold title when isBoldTitle is true', () => {
     render(<EventCard {...defaultProps} isBoldTitle />);
-    const eventCardTitle = screen.getByTestId('event-card-title');
+    const eventCardTitle = screen.getByText(defaultProps.title);
 
     expect(eventCardTitle).toHaveClass('details__title--bold');
   });
