@@ -37,7 +37,7 @@ export default function AttendeesDisplay() {
       <div className="attendees__number">
         <b>{data?.totalGuests}</b> guests already attending
       </div>
-      <div className="attendees-display__container">
+      <div className="attendees__display__container">
         {data?.attendees.map((attendee, index) => (
           <AtendeeTile
             profilePictureUrl={attendee.profilePictureUrl}
