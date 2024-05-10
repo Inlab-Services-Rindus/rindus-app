@@ -28,13 +28,7 @@ import { SearchController } from '@/http/controllers/search.controller';
 import { GoogleRepository } from '@/repository/google.respository';
 import { GoogleController } from '@/http/controllers/google.controller';
 import { GooglePrograms } from '@/programs/google.programs';
-import { importPersonioData } from '@/services/personio/personio';
-import { getSlackInfo } from '@/services/slack/slack';
-
-async function populateAPI() {
-  await importPersonioData();
-  await getSlackInfo();
-}
+import { run as createEmployees } from '@/cmd/create-employees';
 
 const store = connectDatabase();
 const expressApp = express();
@@ -79,7 +73,7 @@ export const searchController = new SearchController(searchPrograms);
 export const googleController = new GoogleController(googlePrograms);
 
 if (config.environment === 'local') {
-  setTimeout(populateAPI, 5000);
+  setTimeout(createEmployees, 5000);
 }
 
 export const app = configure(expressApp, store);

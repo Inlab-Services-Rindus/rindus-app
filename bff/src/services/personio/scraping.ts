@@ -1,7 +1,9 @@
-import { Config } from '@/config/config.type';
 import https from 'https';
 
-export async function getPersonioData(config: Config): Promise<[]> {
+import { Config } from '@/config/config.type';
+import { Employee } from '@/services/personio/personio';
+
+export async function getPersonioData(config: Config): Promise<Employee[]> {
   const firstResponse = await firstRequest(config.personio.password);
 
   if (

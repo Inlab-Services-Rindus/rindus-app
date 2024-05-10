@@ -1,5 +1,5 @@
 import { config } from '@/config';
-interface Auth {
+export interface Auth {
   access_token: string;
   refresh_token: string;
   token_type: string;

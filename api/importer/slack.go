@@ -2,6 +2,7 @@ package importer
 
 import (
 	"api/helper"
+	"api/internal"
 	"api/internal/repository"
 	"context"
 	"errors"
@@ -31,7 +32,7 @@ func (s *slackImporter) ImportSlackMember(ctx context.Context, member SlackMembe
 	employee, err := s.q.GetEmployeeByEmail(ctx, *email)
 
 	if err != nil {
-		return err
+		return internal.ErrNotFound(*email)
 	}
 
 	if _, err := s.q.CreateSlackInfo(ctx, repository.CreateSlackInfoParams{
@@ -40,7 +41,9 @@ func (s *slackImporter) ImportSlackMember(ctx context.Context, member SlackMembe
 		SlackID:    id,
 		AvatarUrl:  helper.ParseString(*member.Profile.Image192),
 	}); err != nil {
-		return err
+		if !helper.IsUniqueViolation(err, "employee_id") {
+			return err
+		}
 	}
 
 	return nil

@@ -1,5 +1,6 @@
-import { config } from '@/config';
-import { authBackend } from '@/services/auth/auth';
+import { logger } from '@/bootstrap/logger';
+import { Config } from '@/config/config.type';
+import { Auth } from '@/services/auth/auth';
 
 interface Member {
   id: string;
@@ -45,6 +46,7 @@ interface Member {
   updated: number;
   is_email_confirmed: boolean;
   who_can_share_contact_card: string;
+  is_invited_user?: boolean;
 }
 
 interface SlackResponse {
@@ -56,7 +58,7 @@ interface SlackResponse {
   };
 }
 
-export async function getSlackInfo() {
+export async function getSlackInfo(config: Config, auth: Auth) {
   const response = await fetch('https://slack.com/api/users.list', {
     method: 'GET',
     headers: {
@@ -65,19 +67,45 @@ export async function getSlackInfo() {
     },
   });
 
+  logger.debug('Received status code from slack %d', response.status);
+
   const slackInfos = (await response.json()) as SlackResponse;
 
-  const { access_token, token_type } = await authBackend();
+  const { access_token, token_type } = auth;
 
-  for (const member of slackInfos.members) {
-    await fetch(`${config.api.url}/api/v1/employees/import/slack-info`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `${token_type} ${access_token}`,
+  for (const member of slackInfos.members ?? []) {
+    if (member.deleted) {
+      logger.debug('Skipping slack info for deleted entry %s', member.name);
+      continue;
+    }
+
+    if (member.is_invited_user) {
+      logger.debug('Skipping slack info for invited user %s', member.name);
+      continue;
+    }
+
+    if (member.is_bot) {
+      logger.debug('Skipping slack info for bot %s', member.name);
+      continue;
+    }
+
+    logger.debug('Sending slack info for employee %s', member.name);
+    const response = await fetch(
+      `${config.api.url}/api/v1/employees/import/slack-info`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token_type} ${access_token}`,
+        },
+        body: JSON.stringify(member),
       },
-      body: JSON.stringify(member),
-    });
+    );
+    logger.debug(
+      'Received response for employee %s - %d',
+      member.name,
+      response.status,
+    );
   }
 
   return slackInfos;
