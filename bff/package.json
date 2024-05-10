@@ -12,7 +12,8 @@
     "unit:watch": "npm run unit -- --watch",
     "integration": "jest repository",
     "test": "npm run unit",
-    "personio": "npm run build && node dist/src/services/personio/personio.js"
+    "personio": "npm run build && node dist/src/services/personio/personio.js",
+    "slack": "npm run build && node dist/src/services/slack/slack.js"
   },
   "dependencies": {
     "body-parser": "1.20.2",

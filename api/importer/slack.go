@@ -1,6 +1,7 @@
 package importer
 
 import (
+	"api/helper"
 	"api/internal/repository"
 	"context"
 	"errors"
@@ -37,6 +38,7 @@ func (s *slackImporter) ImportSlackMember(ctx context.Context, member SlackMembe
 		EmployeeID: employee.ID,
 		Name:       name,
 		SlackID:    id,
+		AvatarUrl:  helper.ParseString(*member.Profile.Image192),
 	}); err != nil {
 		return err
 	}

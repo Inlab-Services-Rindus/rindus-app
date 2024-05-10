@@ -11,5 +11,6 @@ type SlackMember struct {
 }
 
 type SlackProfile struct {
-	Email *string `json:"email,omitempty"`
+	Email    *string `json:"email,omitempty"`
+	Image192 *string `json:"image_192,omitempty"`
 }

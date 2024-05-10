@@ -1,7 +1,8 @@
+import { Config } from '@/config/config.type';
 import https from 'https';
 
-export async function getPersonioData(): Promise<[]> {
-  const firstResponse = await firstRequest();
+export async function getPersonioData(config: Config): Promise<[]> {
+  const firstResponse = await firstRequest(config.personio.password);
 
   if (
     !firstResponse?.location &&
@@ -81,10 +82,10 @@ interface firstResponse {
   };
 }
 
-async function firstRequest(): Promise<firstResponse> {
+async function firstRequest(password: string): Promise<firstResponse> {
   const urlencoded = new URLSearchParams();
   urlencoded.append('email', 'inlab-services@rindus.de');
-  urlencoded.append('password', 'changeme');
+  urlencoded.append('password', password);
 
   const response = await fetch('https://rindus.personio.de/login/index', {
     method: 'POST',

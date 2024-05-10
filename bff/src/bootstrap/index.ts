@@ -1,5 +1,6 @@
 import express from 'express';
 
+import { config } from '@/config';
 import { connectDatabase } from '@/bootstrap/database';
 import { configure } from '@/bootstrap/configure';
 import {
@@ -27,6 +28,13 @@ import { SearchController } from '@/http/controllers/search.controller';
 import { GoogleRepository } from '@/repository/google.respository';
 import { GoogleController } from '@/http/controllers/google.controller';
 import { GooglePrograms } from '@/programs/google.programs';
+import { importPersonioData } from '@/services/personio/personio';
+import { getSlackInfo } from '@/services/slack/slack';
+
+async function populateAPI() {
+  await importPersonioData();
+  await getSlackInfo();
+}
 
 const store = connectDatabase();
 const expressApp = express();
@@ -69,5 +77,9 @@ export const partnersController = new PartnersController(partnerRepository);
 export const searchController = new SearchController(searchPrograms);
 
 export const googleController = new GoogleController(googlePrograms);
+
+if (config.environment === 'local') {
+  setTimeout(populateAPI, 5000);
+}
 
 export const app = configure(expressApp, store);

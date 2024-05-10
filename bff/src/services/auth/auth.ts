@@ -1,3 +1,4 @@
+import { config } from '@/config';
 interface Auth {
   access_token: string;
   refresh_token: string;
@@ -11,7 +12,7 @@ export async function authBackend() {
   urlencoded.append('client_id', 'client');
   urlencoded.append('client_secret', 'secret');
 
-  const response = await fetch('http://localhost:8080/auth', {
+  const response = await fetch(`${config.api.url}/auth`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
