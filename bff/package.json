@@ -12,7 +12,7 @@
     "unit:watch": "npm run unit -- --watch",
     "integration": "jest repository",
     "test": "npm run unit",
-    "personio": "npm run build && node dist/src/services/personio/personio.js"
+    "create-employees": "npm run build && node dist/src/cmd/create-employees.js cronjob | pino-pretty -c"
   },
   "dependencies": {
     "body-parser": "1.20.2",

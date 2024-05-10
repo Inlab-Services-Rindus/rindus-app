@@ -95,7 +95,7 @@ describe('Auth', () => {
       await waitFor(() => {
         expect(getByText('Is logged in: true')).toBeTruthy();
         expect(getByText('Is loading: false')).toBeTruthy();
-        expect(useNavigateSpy).toHaveBeenCalledWith('/');
+        expect(useNavigateSpy).not.toBeCalled();
       });
     });
 

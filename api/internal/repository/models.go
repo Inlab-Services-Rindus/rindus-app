@@ -73,6 +73,7 @@ type SlackInfo struct {
 	EmployeeID int32
 	CreatedAt  pgtype.Timestamptz
 	UpdatedAt  pgtype.Timestamptz
+	AvatarUrl  pgtype.Text
 }
 
 type TeamCaptain struct {
