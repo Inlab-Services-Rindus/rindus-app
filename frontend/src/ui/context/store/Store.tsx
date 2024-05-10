@@ -4,8 +4,6 @@ import { getAllEvents } from '@/modules/events/application/get-all/getAllEvents'
 import { Event } from '@/modules/events/domain/Event';
 import { createEventRepository } from '@/modules/events/infrastructure/EventRepository';
 import { getAllPartners } from '@/modules/partners/application/get-all/getAllPartners';
-import { getPartnerInfo } from '@/modules/partners/application/get-info/getPartnerInfo';
-import { getPartnerUsers } from '@/modules/partners/application/get-users/getPartnerUsers';
 import { Partner } from '@/modules/partners/domain/Partner';
 import { createPartnerRepository } from '@/modules/partners/infrastructure/PartnerRepository';
 import { getResults } from '@/modules/search/application/get-results/getResults';
@@ -34,12 +32,6 @@ interface PartnersData {
   isLoading: boolean;
 }
 
-interface PartnerInfo {
-  partnerInfo: Partner;
-  members: UserExtended[];
-  captains: UserExtended[];
-  hasError: boolean;
-}
 export interface SearchData {
   tags: Item[];
   users: UserExtended[];
@@ -61,7 +53,6 @@ interface EventsData {
 interface StoreContextType {
   users: UserData;
   partners: PartnersData;
-  lastPartner: PartnerInfo;
   search: SearchData;
   tab: TabData;
   query: string;
@@ -69,7 +60,6 @@ interface StoreContextType {
   setQueryKey: (key: string) => void;
   getUsers: (first?: boolean) => void;
   getPartners: () => void;
-  getLastPartner: (id: number) => void;
   getSearchSuggestions: () => void;
   getSearchResults: (item: Item, custom: boolean) => void;
   getEvents: () => void;
@@ -90,17 +80,6 @@ export function getInitialStoreContext() {
       data: [],
       hasError: false,
       isLoading: false,
-    },
-    lastPartner: {
-      partnerInfo: {
-        id: 0,
-        logoUrl: '',
-        name: '',
-        description: '',
-      },
-      members: [],
-      captains: [],
-      hasError: false,
     },
     search: {
       tags: [],
@@ -124,7 +103,6 @@ export function getInitialStoreContext() {
     getEvents: () => {},
     getUsers: () => {},
     getPartners: () => {},
-    getLastPartner: () => {},
     getSearchSuggestions: () => {},
     getSearchResults: () => {},
     setCurrentTab: () => {},
@@ -167,17 +145,6 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     data: [],
     hasError: false,
     isLoading: false,
-  });
-  const [lastPartner, setLastPartner] = useState<PartnerInfo>({
-    partnerInfo: {
-      id: 0,
-      logoUrl: '',
-      name: '',
-      description: '',
-    },
-    members: [],
-    captains: [],
-    hasError: false,
   });
 
   const [tabData, setTabData] = useState<TabData>({
@@ -234,34 +201,6 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
           data: [],
           hasError: true,
           isLoading: false,
-        });
-      }
-    }
-  };
-
-  const getLastPartner = async (id: number) => {
-    if (id !== lastPartner.partnerInfo.id) {
-      try {
-        const partnerInfo = await getPartnerInfo(partnerRepository, id);
-        const users = await getPartnerUsers(partnerRepository, id);
-
-        setLastPartner({
-          partnerInfo,
-          members: users.members,
-          captains: users.captains,
-          hasError: false,
-        });
-      } catch (error) {
-        setLastPartner({
-          partnerInfo: {
-            id: 0,
-            logoUrl: '',
-            name: '',
-            description: '',
-          },
-          members: [],
-          captains: [],
-          hasError: true,
         });
       }
     }
@@ -360,8 +299,6 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     setSearchData,
     tab: tabData,
     setCurrentTab,
-    lastPartner,
-    getLastPartner,
     query: query,
     events: eventsData,
     getEvents,
