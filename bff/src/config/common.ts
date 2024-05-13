@@ -48,4 +48,8 @@ export const getCommonConfig = (
   api: {
     url: process.env.BFF_API_URL ?? 'http://localhost:8080',
   },
+  admin: {
+    user: process.env.BFF_ADMIN_USER ?? 'admin',
+    password: process.env.BFF_ADMIN_PASS ?? 'secret',
+  },
 });

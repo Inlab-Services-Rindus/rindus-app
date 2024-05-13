@@ -29,6 +29,7 @@ import { GoogleRepository } from '@/repository/google.respository';
 import { GoogleController } from '@/http/controllers/google.controller';
 import { GooglePrograms } from '@/programs/google.programs';
 import { run as createEmployees } from '@/cmd/create-employees';
+import { AdminController } from '@/http/controllers/admin.controller';
 
 const store = connectDatabase();
 const expressApp = express();
@@ -48,6 +49,8 @@ const languages = initLanguagesFuse(languageRepository);
 // Services
 const jwtValidator = new GoogleJwtValidator();
 const userSearchService = new FuseSearchService(
+  userRepository,
+  languageRepository,
   usersByName,
   usersByPosition,
   positions,
@@ -69,7 +72,7 @@ export const sessionController = new SessionController(
 export const usersController = new UsersController(userPrograms);
 export const partnersController = new PartnersController(partnerRepository);
 export const searchController = new SearchController(searchPrograms);
-
+export const adminController = new AdminController(userSearchService);
 export const googleController = new GoogleController(googlePrograms);
 
 if (config.environment === 'local') {

@@ -4,16 +4,14 @@ import { app } from '@/bootstrap';
 import {
   unprotectedRouter,
   protectedRouter,
-  googleProtectedRouter,
+  httpBasicProtectedRouter,
 } from '@/http/routes';
 
 import { logger } from '@/bootstrap/logger';
 
-//Before to / because if not, it will be catched by the / route
-app.use('/google/v1', googleProtectedRouter);
-
 app.use('/', unprotectedRouter);
 app.use('/', protectedRouter);
+app.use('/admin/', httpBasicProtectedRouter);
 
 const port = config.app.port;
 const url = config.app.url;

@@ -21,6 +21,8 @@ export interface ProcessVariables {
   BFF_PERSONIO_PASSWORD: string;
   BFF_SLACK_API_TOKEN: string;
   BFF_API_URL: string;
+  BFF_ADMIN_USER: string;
+  BFF_ADMIN_PASS: string;
 }
 
 export interface Config {
@@ -34,6 +36,7 @@ export interface Config {
   personio: Personio;
   slack: Slack;
   api: Api;
+  admin: AdminAccount;
 }
 
 export interface Database {
@@ -69,6 +72,11 @@ interface Slack {
 
 interface Api {
   url: string;
+}
+
+interface AdminAccount {
+  user: string;
+  password: string;
 }
 
 export interface Cors {
