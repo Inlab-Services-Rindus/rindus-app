@@ -5,7 +5,7 @@ export const manifestForPlugin: Partial<VitePWAOptions> = {
   workbox: {
     runtimeCaching: [
       {
-        urlPattern: /^https:\/\/api\.app\.rindus\.de\/avatars\/.*/i,
+        urlPattern: /^https:\/\/avatars\.slack-edge\.com\/.*/i,
         handler: 'CacheFirst',
         options: {
           cacheName: 'avatars-cache',

@@ -1,0 +1,20 @@
+@use '@scss/colors' as *;
+
+.eventSummary {
+  display: flex;
+
+  &__breakIcon {
+    display: flex;
+    margin: 0 7px;
+  }
+
+  &__survey {
+    font-weight: 600;
+    margin: 0px; // TODO: Revisar reset css
+
+    .surveyFilled {
+      color: $rindus-green-medium;
+      display: flex;
+    }
+  }
+}

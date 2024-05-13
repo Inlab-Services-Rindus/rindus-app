@@ -1,18 +1,31 @@
-# Development stage
-FROM node:18 as development
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY tsconfig.json ./
-COPY ./ ./
-ENV NODE_ENV development
-CMD [ "npm", "run", "start" ]
+FROM node:lts as builder
 
-# Builder stage
-FROM development as builder
-WORKDIR /app
-# Build the app with devDependencies still installed from "development" stage
+# Create app directory
+WORKDIR /usr/src/app
+
+# Install app dependencies
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
 RUN npm run build
-# Clear dependencies and reinstall for production (no devDependencies)
-RUN rm -rf node_modules
-RUN npm ci --only=production
+
+FROM node:lts-slim
+
+USER node
+
+# Create app directory
+WORKDIR /app
+
+# Install app dependencies
+COPY package*.json ./
+
+RUN npm ci --production
+
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/public ./public
+
+EXPOSE 3000
+CMD [ "node", "dist/src/index.js" ]

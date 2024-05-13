@@ -87,7 +87,6 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
       if (user) {
         setIsLoggedIn(true);
         setUserProfileData(user);
-        navigate('/');
       }
     } catch (error: any) {
       setIsLoading(false);

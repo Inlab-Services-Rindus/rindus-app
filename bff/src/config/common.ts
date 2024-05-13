@@ -34,4 +34,22 @@ export const getCommonConfig = (
     origin:
       processVariables.BFF_CORS_ORIGIN || /http:\/\/localhost:(5173|8888|3080)/,
   },
+  // Google API credentials are in base64 format and should be decoded before using
+  googleAuthCredentials: Buffer.from(
+    process.env.BFF_GOOGLE_AUTH_CREDENTIALS ?? '',
+    'base64',
+  ).toString('utf-8'),
+  personio: {
+    password: process.env.BFF_PERSONIO_PASSWORD ?? '',
+  },
+  slack: {
+    apiToken: process.env.BFF_SLACK_API_TOKEN ?? '',
+  },
+  api: {
+    url: process.env.BFF_API_URL ?? 'http://localhost:8080',
+  },
+  admin: {
+    user: process.env.BFF_ADMIN_USER ?? 'admin',
+    password: process.env.BFF_ADMIN_PASS ?? 'secret',
+  },
 });

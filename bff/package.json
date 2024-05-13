@@ -12,7 +12,7 @@
     "unit:watch": "npm run unit -- --watch",
     "integration": "jest repository",
     "test": "npm run unit",
-    "personio": "node dist/src/services/personio/personio.js"
+    "create-employees": "npm run build && node dist/src/cmd/create-employees.js cronjob | pino-pretty -c"
   },
   "dependencies": {
     "body-parser": "1.20.2",
@@ -21,11 +21,12 @@
     "cors": "2.8.5",
     "create-cert": "1.0.6",
     "dotenv": "16.3.1",
-    "express": "4.18.2",
+    "express": "^4.19.2",
     "express-http-proxy": "2.0.0",
     "express-session": "1.17.3",
     "fuse.js": "7.0.0",
-    "google-auth-library": "9.0.0",
+    "google-auth-library": "9.9.0",
+    "googleapis": "134.0.0",
     "knex": "2.5.1",
     "pg": "8.11.3",
     "pino": "8.15.1",
