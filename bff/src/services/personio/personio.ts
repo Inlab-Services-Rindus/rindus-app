@@ -28,7 +28,12 @@ export interface Employee {
 }
 
 export async function importPersonioData(config: Config, auth: Auth) {
-  const personioData = await getPersonioData(config);
+  let personioData = [] as Employee[];
+  try {
+    personioData = await getPersonioData(config);
+  } catch (e) {
+    logger.warn('Error while trying to obtain personio data', e);
+  }
 
   if (personioData.length === 0) {
     return;
