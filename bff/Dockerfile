@@ -25,6 +25,7 @@ COPY package*.json ./
 RUN npm ci --production
 
 COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/public ./public
 
 EXPOSE 3000
 CMD [ "node", "dist/src/index.js" ]
