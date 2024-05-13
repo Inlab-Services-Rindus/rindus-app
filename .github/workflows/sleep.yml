@@ -2,7 +2,7 @@ name: Wake up servers
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/5 8-22 * * *'
 
 jobs:
   wake-up-servers:
@@ -11,6 +11,3 @@ jobs:
     steps:
       - name: Wake up production server
         run: curl https://api.app.rindus.de/
-
-      - name: Wake up staging server
-        run: curl https://api-prod-8x7s.onrender.com
