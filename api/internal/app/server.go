@@ -57,12 +57,12 @@ func (s *Server) MountRoutes() chi.Router {
 
 	router.Post(oauth.AuthEndpoint, authServer.ClientCredentialsHandler)
 
-	router.Group(func(r chi.Router) {
-		r.Use(middleware.BasicAuth("api", map[string]string{
-			s.cfg.Metrics.BasicAuth.User: s.cfg.Metrics.BasicAuth.Pass,
-		}))
-		handlers.NewMetricHandler().Routes(r)
-	})
+	// router.Group(func(r chi.Router) {
+	// 	r.Use(middleware.BasicAuth("api", map[string]string{
+	// 		s.cfg.Metrics.BasicAuth.User: s.cfg.Metrics.BasicAuth.Pass,
+	// 	}))
+	// 	handlers.NewMetricHandler().Routes(r)
+	// })
 
 	router.Route(API_PREFIX, func(r chi.Router) {
 		r.Use(resourceServer.Authorize)
