@@ -15,7 +15,10 @@ SELECT
   e.updated_at,
   unaccent (LOWER(e.first_name)) AS ascii_first_name,
   unaccent (LOWER(e.last_name)) AS ascii_last_name,
-  e.birthday = TO_CHAR (CURRENT_DATE, 'Mon DD') AS is_birthday,
+  COALESCE(
+    e.birthday = TO_CHAR (CURRENT_DATE, 'Mon DD'),
+    false
+  ) AS is_birthday,
   (
     SELECT
       id
