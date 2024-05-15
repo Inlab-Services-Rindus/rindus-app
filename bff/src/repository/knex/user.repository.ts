@@ -3,17 +3,20 @@ import { Knex } from 'knex';
 import {
   LoggedInUser,
   User,
+  UserAttendee,
   WithInfo,
   WithLanguages,
 } from '@/models/business/User';
 import { UserRepository } from '@/repository/user.repository';
 import {
   LoggedInUserRecord,
+  UserAttendeeRecord,
   UserProfileQueryRecord,
   UserViewRecord,
 } from '@/models/service/database/UserRecord';
 import {
   LoggedInUserConverter,
+  UserAttendeeConverter,
   UserViewConverter,
   UserWithInfoConverter,
 } from '@/converters/service/UserRecord.converter';
@@ -28,6 +31,7 @@ export class KnexUserRepository implements UserRepository {
   private readonly userPageConverter: PageConverter<UserViewRecord, User>;
   private readonly loggedInConverter: LoggedInUserConverter;
   private readonly userWithInfoConverter: UserWithInfoConverter;
+  private readonly userAttendeeConverter: UserAttendeeConverter;
 
   public static readonly DEFAULT_PAGE = 1;
   public static readonly PAGE_SIZE = 18;
@@ -40,6 +44,7 @@ export class KnexUserRepository implements UserRepository {
     );
     this.loggedInConverter = new LoggedInUserConverter();
     this.userWithInfoConverter = new UserWithInfoConverter();
+    this.userAttendeeConverter = new UserAttendeeConverter();
   }
 
   public async allByLanguage(languageId: number): Promise<User[]> {
@@ -112,12 +117,25 @@ export class KnexUserRepository implements UserRepository {
     return 0;
   }
 
-  async findUserByEmail(email: string): Promise<LoggedInUser | undefined> {
-    const maybeRecord = await this.selectLoggedInUserRecord()
+  async findUserByEmail(email: string): Promise<UserAttendee | undefined> {
+    const maybeRecord = await this.selectUserRecord()
       .where('email', email)
       .first();
 
-    return this.toLoggedInUser(maybeRecord);
+    return this.toUserAttendee(maybeRecord);
+  }
+
+  private selectUserRecord() {
+    return this.knex('employees_view').select(
+      'id',
+      'first_name',
+      'last_name',
+      'picture_url',
+    );
+  }
+
+  private toUserAttendee(record: UserAttendeeRecord | undefined) {
+    return record ? this.userAttendeeConverter.convert(record) : undefined;
   }
 
   async findUserById(id: number): Promise<LoggedInUser | undefined> {

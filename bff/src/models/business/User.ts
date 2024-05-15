@@ -6,6 +6,11 @@ export interface LoggedInUser {
   pictureUrl: string;
 }
 
+export interface UserAttendee extends LoggedInUser {
+  firstName: string;
+  lastName?: string;
+}
+
 export interface User extends LoggedInUser {
   firstName: string;
   asciiFirstName: string;
