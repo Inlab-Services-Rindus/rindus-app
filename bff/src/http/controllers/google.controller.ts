@@ -30,4 +30,16 @@ export class GoogleController {
 
     return response.sendStatus(404);
   }
+
+  public async attendees(request: Request, response: Response) {
+    const eventId = request?.params?.eventId;
+
+    const event = await this.googlePrograms.attendees(eventId);
+
+    if (event) {
+      return response.send(event);
+    }
+
+    return response.sendStatus(404);
+  }
 }

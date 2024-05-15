@@ -16,7 +16,8 @@ const httpBasicProtectedRouter = createRouter();
 
 unprotectedRouter
   .get('/', (_req, res) => res.send('Hello World!'))
-  .use(sessionRouter);
+  .use(sessionRouter)
+  .use('/google/v1', googleRouter);
 
 protectedRouter
   .use(authenticated)
@@ -24,8 +25,7 @@ protectedRouter
   .use(partnersRouter)
   .use(searchRouter)
   .use(avatarsRouter)
-  .use(staticRouter)
-  .use('/google/v1', googleRouter);
+  .use(staticRouter);
 
 httpBasicProtectedRouter.use(httpBasicAuthenticated).use(searchEngineRouter);
 

@@ -2,6 +2,7 @@ import { Page } from '@/models/business/Pagination';
 import {
   LoggedInUser,
   User,
+  UserAttendee,
   WithInfo,
   WithLanguages,
 } from '@/models/business/User';
@@ -13,7 +14,7 @@ export interface UserRepository {
     pageSize: number,
     sessionUserId: number,
   ): Promise<Page<User>>;
-  findUserByEmail(email: string): Promise<LoggedInUser | undefined>;
+  findUserByEmail(email: string): Promise<UserAttendee | undefined>;
   findUserById(id: number): Promise<LoggedInUser | undefined>;
   findUserWithInfo(
     id: number,

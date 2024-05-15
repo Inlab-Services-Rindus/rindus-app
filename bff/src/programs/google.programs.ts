@@ -1,5 +1,9 @@
 import { GoogleRepository } from '@/models/service/google/google.repository';
-import { DetailedEvent, MinimalEvent } from '@/models/api/google/Google';
+import {
+  AttendeesEvent,
+  DetailedEvent,
+  MinimalEvent,
+} from '@/models/api/google/Google';
 import {
   DetailedEventConverter,
   MinimalEventConverter,
@@ -41,5 +45,11 @@ export class GooglePrograms {
     } catch (error) {
       return null;
     }
+  }
+
+  public async attendees(eventId: string): Promise<AttendeesEvent | null> {
+    const attendees = await this.googleRepository.attendees(eventId);
+
+    return attendees;
   }
 }

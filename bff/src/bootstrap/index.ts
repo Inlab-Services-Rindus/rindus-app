@@ -39,7 +39,7 @@ const userRepository = new KnexUserRepository(store);
 const partnerRepository = new KnexPartnerRepository(store);
 const languageRepository = new KnexLanguageRepository(store);
 
-const googleRepository = new GoogleRepository();
+const googleRepository = new GoogleRepository(userRepository);
 
 const usersByName = initUsersFuseByName(userRepository);
 const usersByPosition = initUsersFuseByPosition(userRepository);

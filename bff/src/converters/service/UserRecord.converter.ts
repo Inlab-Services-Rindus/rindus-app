@@ -1,7 +1,13 @@
 import { Converter } from '@/converters/Converter';
-import { LoggedInUser, User, WithInfo } from '@/models/business/User';
+import {
+  LoggedInUser,
+  User,
+  UserAttendee,
+  WithInfo,
+} from '@/models/business/User';
 import {
   LoggedInUserRecord,
+  UserAttendeeRecord,
   UserProfileQueryRecord,
   UserViewRecord,
 } from '@/models/service/database/UserRecord';
@@ -26,6 +32,19 @@ export class LoggedInUserConverter
     }
 
     return pictureUrl;
+  }
+}
+
+export class UserAttendeeConverter
+  implements Converter<UserAttendeeRecord, LoggedInUser>
+{
+  convert(source: UserAttendeeRecord): UserAttendee {
+    return {
+      id: source.id,
+      firstName: source.first_name,
+      lastName: source.last_name,
+      pictureUrl: source.picture_url ?? '',
+    };
   }
 }
 

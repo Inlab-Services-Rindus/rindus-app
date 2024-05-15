@@ -24,6 +24,11 @@ export interface UserViewRecord extends UserRecord {
   is_team_captain: boolean;
 }
 
+export interface UserAttendeeRecord extends LoggedInUserRecord {
+  first_name: string;
+  last_name?: string;
+}
+
 export type UserProfileQueryRecord = UserViewRecord &
   WithPartnerRecord &
   WithSlackInfoRecord;
