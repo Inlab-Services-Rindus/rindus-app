@@ -9,13 +9,13 @@ import { StoreContext } from '@/ui/context/store/Store';
 import '@/ui/components/organisms/attendance/Attendance.scss';
 
 export default function Attendance() {
-  const id = 1;
+  const id = '497ib8tk658ck2mon1n2ujh0rq';
   const {
     attendance: { data, isLoading, hasError },
     getAttendance,
   } = useContext(StoreContext);
 
-  const actionGetAttendance = (id: number) => {
+  const actionGetAttendance = (id: string) => {
     getAttendance(id);
   };
 

@@ -74,7 +74,7 @@ interface StoreContextType {
   getEvents: () => void;
   setSearchData: (item: Partial<SearchData>) => void;
   setCurrentTab: (currentTab: number) => void;
-  getAttendance: (id: number) => void;
+  getAttendance: (id: string) => void;
 }
 
 export function getInitialStoreContext() {
@@ -303,13 +303,13 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     }
   };
 
-  const getAttendance = async (id: number) => {
+  const getAttendance = async (id: string) => {
     setAttendanceData({ ...attendanceData, isLoading: true });
 
     try {
       const attendance = await getTotalAttendance(
         attendeeRepository,
-        id.toFixed(),
+        id,
       );
       setAttendanceData({
         data: attendance,
