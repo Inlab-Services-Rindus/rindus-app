@@ -6,11 +6,9 @@ import AtendeeTile from '@/ui/components/organisms/atendee-tile/AtendeeTile';
 
 import { StoreContext } from '@/ui/context/store/Store';
 
-import '@/ui/components/organisms/display-attendees/AttendeesDisplay.scss';
+import '@/ui/components/organisms/attendance/Attendance.scss';
 
-// import '@/ui/section/home/display-attendees/DisplayAttendees.scss';
-
-export default function AttendeesDisplay() {
+export default function Attendance() {
   const id = 1;
   const {
     attendance: { data, isLoading, hasError },
@@ -26,7 +24,7 @@ export default function AttendeesDisplay() {
   }, []);
 
   if (hasError) {
-    return <p> Something went wrong</p>;
+    return <p>Something went wrong</p>;
   }
   if (isLoading) {
     return <Loader />;
