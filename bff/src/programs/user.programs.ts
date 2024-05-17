@@ -13,13 +13,8 @@ export class UserPrograms {
     page: number,
     pageSize: number,
     mockBirthdays: boolean,
-    sessionUserId: number,
   ): Promise<Page<User>> {
-    const usersPage = await this.userRepository.page(
-      page,
-      pageSize,
-      sessionUserId,
-    );
+    const usersPage = await this.userRepository.page(page, pageSize);
     const { data: users } = usersPage;
 
     return {
