@@ -75,15 +75,11 @@ export class KnexUserRepository implements UserRepository {
     return this.mapToBusinesss(userRecords);
   }
 
-  async page(
-    page: number,
-    pageSize: number,
-    sessionUserId: number,
-  ): Promise<Page<User>> {
+  async page(page: number, pageSize: number): Promise<Page<User>> {
     const queryUserRecords = this.knex('employees_view')
-      .whereNot('id', sessionUserId)
       .orderBy('is_birthday', 'desc')
       .orderBy('ascii_first_name', 'asc')
+      .orderBy('id', 'asc')
       .offset((page - 1) * pageSize)
       .limit(pageSize);
 

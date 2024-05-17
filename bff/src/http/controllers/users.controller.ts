@@ -31,13 +31,11 @@ export class UsersController {
       request.headers[UsersController.MOCK_BIRTHDAYS_HTTP_HEADER.toLowerCase()];
     const page = parsePageQueryParam(request);
     const pageSize = parsePageSizeQueryParam(request);
-    const sessionUserId = request.session.userId as number; // Safe cast because it is a protected route
 
     const users = await this.userPrograms.index(
       page,
       pageSize,
       !!mockBirthdays,
-      sessionUserId,
     );
 
     const index = this.usersIndexConverter.convert(users);
