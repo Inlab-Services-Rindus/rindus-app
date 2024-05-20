@@ -104,7 +104,7 @@ export function EventDetail() {
           </div>
         </>
       )}
-      <Attendance />
+      {id ? <Attendance id={id} /> : ''}
     </Section>
   );
 }

@@ -1,5 +1,5 @@
 export interface EventAttendance {
-  totalGuests: number;
+  totalGuest: number;
   attendees: Attendee[];
 }
 

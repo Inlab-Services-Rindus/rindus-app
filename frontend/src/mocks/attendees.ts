@@ -1,5 +1,5 @@
 export const attendeesMock = {
-  totalGuests: 8,
+  totalGuest: 8,
   attendees: [
     {
       id: 2,

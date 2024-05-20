@@ -1,8 +1,5 @@
 import { createContext, useState, ReactNode } from 'react';
 
-import { getAttendance as getTotalAttendance } from '@/modules/attendees/application/get-attendance/getAttendance';
-import { EventAttendance } from '@/modules/attendees/domain/Attendee';
-import { createMockAttendeeRepository } from '@/modules/attendees/infrastructure/MockAttendeeRepository';
 import { getAllEvents } from '@/modules/events/application/get-all/getAllEvents';
 import { Event } from '@/modules/events/domain/Event';
 import { createEventRepository } from '@/modules/events/infrastructure/EventRepository';
@@ -46,11 +43,6 @@ export interface SearchData {
 interface TabData {
   currentTab: number;
 }
-interface AttendanceData {
-  data: EventAttendance;
-  hasError: boolean;
-  isLoading: boolean;
-}
 
 interface EventsData {
   data: Event[];
@@ -63,7 +55,6 @@ interface StoreContextType {
   partners: PartnersData;
   search: SearchData;
   tab: TabData;
-  attendance: AttendanceData;
   query: string;
   events: EventsData;
   setQueryKey: (key: string) => void;
@@ -74,7 +65,6 @@ interface StoreContextType {
   getEvents: () => void;
   setSearchData: (item: Partial<SearchData>) => void;
   setCurrentTab: (currentTab: number) => void;
-  getAttendance: (id: string) => void;
 }
 
 export function getInitialStoreContext() {
@@ -100,14 +90,6 @@ export function getInitialStoreContext() {
       hasError: false,
       noResults: false,
     },
-    attendance: {
-      data: {
-        totalGuests: 0,
-        attendees: [],
-      },
-      hasError: false,
-      isLoading: false,
-    },
 
     setSearchData: () => {},
     setQueryKey: () => {},
@@ -126,7 +108,6 @@ export function getInitialStoreContext() {
     getSearchSuggestions: () => {},
     getSearchResults: () => {},
     setCurrentTab: () => {},
-    getAttendance: () => {},
   };
 }
 
@@ -152,7 +133,6 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
   const partnerRepository = createPartnerRepository();
   const searchRepository = createSearchRepository();
   const eventRepository = createEventRepository();
-  const attendeeRepository = createMockAttendeeRepository();
 
   const isMobile = useIsMobile();
 
@@ -171,14 +151,6 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
 
   const [tabData, setTabData] = useState<TabData>({
     currentTab: 0,
-  });
-  const [attendanceData, setAttendanceData] = useState<AttendanceData>({
-    data: {
-      totalGuests: 0,
-      attendees: [],
-    },
-    hasError: false,
-    isLoading: false,
   });
 
   const [eventsData, setEventsData] = useState<EventsData>({
@@ -303,30 +275,6 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     }
   };
 
-  const getAttendance = async (id: string) => {
-    setAttendanceData({ ...attendanceData, isLoading: true });
-
-    try {
-      const attendance = await getTotalAttendance(
-        attendeeRepository,
-        id,
-      );
-      setAttendanceData({
-        data: attendance,
-        hasError: false,
-        isLoading: false,
-      });
-    } catch (error) {
-      setAttendanceData({
-        data: {
-          totalGuests: 0,
-          attendees: [],
-        },
-        hasError: true,
-        isLoading: false,
-      });
-    }
-  };
 
   const setQueryKey = (key: string) => {
     setQuery(key);
@@ -354,8 +302,6 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     setSearchData,
     tab: tabData,
     setCurrentTab,
-    attendance: attendanceData,
-    getAttendance,
     query: query,
     events: eventsData,
     getEvents,

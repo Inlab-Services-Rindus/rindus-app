@@ -4,7 +4,7 @@ import { config } from '@/config/config';
 import { EventAttendance } from '@/modules/attendees/domain/Attendee';
 import { AttendeeRepository } from '@/modules/attendees/domain/AttendeeRepository';
 
-export function createMockAttendeeRepository(): AttendeeRepository {
+export function createAttendeeRepository(): AttendeeRepository {
   return {
     getAttendance,
   };
