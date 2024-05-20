@@ -33,7 +33,7 @@ function getWeekday(dateTime: string): string {
   return new Date(dateTime).toLocaleDateString('en', { weekday: 'long' });
 }
 
-function formatTime(dateTimeString) {
+function formatTime(dateTimeString: string) {
   return new Date(dateTimeString).toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
@@ -80,7 +80,7 @@ export class DetailedEventConverter
     }
 
     const startTime = formatTime(event.start.dateTime);
-    const endTime = formatTime(event?.end?.dateTime) ?? '';
+    const endTime = formatTime(event?.end?.dateTime ?? '');
     const timeRange = `${startTime} - ${endTime}`;
 
     return {
