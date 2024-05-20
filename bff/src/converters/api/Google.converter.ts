@@ -20,7 +20,6 @@ const MONTHS_COLORS = [
   '#E8505B',
 ];
 
-
 function getMonthColor(dateTime: string): string {
   return MONTHS_COLORS[new Date(dateTime).getMonth()];
 }
@@ -32,6 +31,13 @@ function getDay(dateTime: string): string {
 }
 function getWeekday(dateTime: string): string {
   return new Date(dateTime).toLocaleDateString('en', { weekday: 'long' });
+}
+
+function formatTime(dateTimeString) {
+  return new Date(dateTimeString).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
 
 export class MinimalEventConverter
@@ -73,6 +79,10 @@ export class DetailedEventConverter
       throw new Error('Invalid detailed event');
     }
 
+    const startTime = formatTime(event.start.dateTime);
+    const endTime = formatTime(event?.end?.dateTime) ?? '';
+    const timeRange = `${startTime} - ${endTime}`;
+
     return {
       id: event.id,
       summary: {
@@ -83,13 +93,7 @@ export class DetailedEventConverter
         colour: getMonthColor(event.start.dateTime),
       },
       description: event?.description || '',
-      time: `${new Date(event.start.dateTime).toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      })} - ${new Date(event.end?.dateTime ?? '').toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      })}`,
+      time: timeRange,
       location: event?.location || '',
     };
   }
