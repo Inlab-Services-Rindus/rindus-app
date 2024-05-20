@@ -34,6 +34,13 @@ function getWeekday(dateTime: string): string {
   return new Date(dateTime).toLocaleDateString('en', { weekday: 'long' });
 }
 
+function formatTime(dateTimeString) {
+  return new Date(dateTimeString).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 export class MinimalEventConverter
   implements Converter<calendar_v3.Schema$Event, ApiMinimalEvent>
 {
@@ -73,6 +80,10 @@ export class DetailedEventConverter
       throw new Error('Invalid detailed event');
     }
 
+    const startTime = formatTime(event.start.dateTime);
+    const endTime = formatTime(event?.end?.dateTime) ?? '';
+    const timeRange = `${startTime} - ${endTime}`;
+
     return {
       id: event.id,
       summary: {
@@ -83,6 +94,7 @@ export class DetailedEventConverter
         colour: getMonthColor(event.start.dateTime),
       },
       description: event?.description || '',
+      time: timeRange,
       location: event?.location || '',
     };
   }

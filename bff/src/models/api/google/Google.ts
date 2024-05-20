@@ -17,6 +17,7 @@ export interface DetailedEvent {
     colour: string;
   };
   description: string;
+  time: string;
   location: string;
 }
 
