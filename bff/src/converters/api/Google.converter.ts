@@ -83,6 +83,13 @@ export class DetailedEventConverter
         colour: getMonthColor(event.start.dateTime),
       },
       description: event?.description || '',
+      time: `${new Date(event.start.dateTime).toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      })} - ${new Date(event.end?.dateTime ?? '').toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      })}`,
       location: event?.location || '',
     };
   }
