@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Loader from '../../atoms/loader/Loader';
-import Section from '../../molecules/section/Section';
 import '@/mocks/attendees.ts';
+import Loader from '@/ui/components/atoms/loader/Loader';
 import AtendeeTile from '@/ui/components/organisms/atendee-tile/AtendeeTile';
 
 import { getAttendance } from '@/modules/attendees/application/get-attendance/getAttendance';
@@ -45,14 +44,26 @@ export default function Attendance({ id }: Props) {
     return <p>Something went wrong</p>;
   }
 
+  function guestsText() {
+    if (attendance?.totalGuest === 1) {
+      return 'guest already attending';
+    } else {
+      return 'guests already attending';
+    }
+  }
+
   function renderContent() {
+    if (attendance?.totalGuest === 0) {
+      return null;
+    }
     if (isLoading) {
       return <Loader />;
     }
     return (
       <>
         <div className="attendees__number">
-          <b>{attendance?.totalGuest}</b> guests already attending
+          <b>{attendance?.totalGuest}</b>
+          {guestsText()}
         </div>
         <div className="attendees__display__container">
           {attendance?.attendees.map((attendee, index) => (
