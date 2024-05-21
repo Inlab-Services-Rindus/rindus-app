@@ -1,21 +1,51 @@
-import { authBackend } from '../auth/auth';
-import { getPersonioData } from './scraping';
+import { logger } from '@/bootstrap/logger';
+import { Config } from '@/config/config.type';
+import { Auth } from '@/services/auth/auth';
+import { getPersonioData } from '@/services/personio/scraping';
 
-async function importPersonioData() {
-  const personioData = await getPersonioData();
+export interface Employee {
+  id: number;
+  data: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    office_id: string;
+    department_id: string;
+    position: string;
+    preferred_name: string;
+    gender: string;
+    subcompany_id: string;
+    team_id: string;
+    status: string;
+    __status: string;
+    termination_date: string;
+    dynamic_34779: string;
+    dynamic_87778: string;
+    dynamic_1298673: string;
+    dynamic_1300584: string;
+    profile_picture_url: string;
+  };
+}
 
-  console.log('Pedro ===> personioData', personioData);
+export async function importPersonioData(config: Config, auth: Auth) {
+  let personioData = [] as Employee[];
+  try {
+    personioData = await getPersonioData(config);
+  } catch (e) {
+    logger.warn('Error while trying to obtain personio data', e);
+  }
 
   if (personioData.length === 0) {
     return;
   }
 
-  const { access_token, token_type } = await authBackend();
+  const { access_token, token_type } = auth;
 
   //Loop through the personioData array and send each employee to the backend
   for (const employee of personioData) {
+    logger.debug('Sending import for employee %d', employee.id);
     const response = await fetch(
-      'http://localhost:8080/api/v1/employees/import/personio',
+      `${config.api.url}/api/v1/employees/import/personio`,
       {
         method: 'POST',
         headers: {
@@ -25,7 +55,10 @@ async function importPersonioData() {
         body: JSON.stringify(employee),
       },
     );
+    logger.debug(
+      'Received response for employee %d - %d',
+      employee.id,
+      response.status,
+    );
   }
 }
-
-importPersonioData();

@@ -129,7 +129,7 @@ export class KnexUserRepository implements UserRepository {
   }
 
   private selectLoggedInUserRecord() {
-    return this.knex('employees').select('id', 'picture_url');
+    return this.knex('employees_view').select('id', 'picture_url');
   }
 
   private toLoggedInUser(record: LoggedInUserRecord | undefined) {

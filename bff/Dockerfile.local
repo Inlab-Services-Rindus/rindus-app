@@ -1,7 +1,12 @@
-FROM node:18 as development
+FROM node:lts-slim
+
 WORKDIR /app
+
 COPY package*.json ./
+
 RUN npm install
+
 EXPOSE 3000
 EXPOSE 3443
+
 CMD ["npm", "run", "dev"]

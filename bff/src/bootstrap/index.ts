@@ -1,5 +1,6 @@
 import express from 'express';
 
+import { config } from '@/config';
 import { connectDatabase } from '@/bootstrap/database';
 import { configure } from '@/bootstrap/configure';
 import {
@@ -27,6 +28,8 @@ import { SearchController } from '@/http/controllers/search.controller';
 import { GoogleRepository } from '@/repository/google.respository';
 import { GoogleController } from '@/http/controllers/google.controller';
 import { GooglePrograms } from '@/programs/google.programs';
+import { run as createEmployees } from '@/cmd/create-employees';
+import { AdminController } from '@/http/controllers/admin.controller';
 
 const store = connectDatabase();
 const expressApp = express();
@@ -46,6 +49,8 @@ const languages = initLanguagesFuse(languageRepository);
 // Services
 const jwtValidator = new GoogleJwtValidator();
 const userSearchService = new FuseSearchService(
+  userRepository,
+  languageRepository,
   usersByName,
   usersByPosition,
   positions,
@@ -67,7 +72,11 @@ export const sessionController = new SessionController(
 export const usersController = new UsersController(userPrograms);
 export const partnersController = new PartnersController(partnerRepository);
 export const searchController = new SearchController(searchPrograms);
-
+export const adminController = new AdminController(userSearchService);
 export const googleController = new GoogleController(googlePrograms);
+
+if (config.environment === 'local') {
+  setTimeout(createEmployees, 5000);
+}
 
 export const app = configure(expressApp, store);

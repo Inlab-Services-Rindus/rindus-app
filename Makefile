@@ -6,7 +6,7 @@ create-env:
 	@ln -sf ${PWD}/.env.docker bff/.env.docker
 	@ln -sf ${PWD}/.env api/.env
 	@ln -sf ${PWD}/.env.docker api/.env.docker
-	@echo "Envs created succesfully. Please fill in SLACK_API_TOKEN in .env"
+	@echo "Envs created succesfully. Please fill in \"changeme\" values in .env"
 
 scrape-slack-info:
 	@echo "Downloading slack info"

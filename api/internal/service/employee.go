@@ -2,6 +2,7 @@ package service
 
 import (
 	"api/helper"
+	"api/importer"
 	"api/internal"
 	"api/internal/model"
 	"api/internal/repository"
@@ -88,6 +89,14 @@ func (e *EmployeeService) PersonioImport(ctx context.Context, personioEmpl model
 	}
 
 	return e.FindByUID(ctx, helper.UUIDToString(createdEmployee.Uid))
+}
+
+func (e *EmployeeService) SlackInfoImport(ctx context.Context, slackInfo importer.SlackMember) (*importer.SlackMember, error) {
+	if err := importer.NewSlackImporter(slog.Default(), e.q).ImportSlackMember(ctx, slackInfo); err != nil {
+		return nil, err
+	}
+
+	return &slackInfo, nil
 }
 
 func (e *EmployeeService) importTransacting(ctx context.Context, logger *slog.Logger, personioEmpl model.PersonioEmployee) (*repository.Employee, error) {

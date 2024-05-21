@@ -43,7 +43,7 @@ migrate/up:
 
 migrate/down:
 	@echo "Rollback of the database in progress"
-	@${MIGRATE_CLI} down
+	@${MIGRATE_CLI} down 1
 
 migration/create:
 	migrate create -ext sql -dir ${MIGRATIONS_PATH} -seq ${MIGRATION_NAME}

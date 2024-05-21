@@ -25,13 +25,16 @@ export function Router() {
 
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route
+        path="/login"
+        element={isLoggedIn ? <Navigate to="/" /> : <Login />}
+      />
       <Route element={<ProtectedRoutes isAuth={isLoggedIn} />}>
-        <Route element={<Home />} path="/" />
         <Route element={<Search />} path="/search" />
         <Route element={<Profile />} path="/profile/:id" />
         <Route element={<Partner />} path="/partner/:id" />
-        <Route element={<EventDetail />} path="/event/:id" />
+        <Route element={<EventDetail />} path="event/:id" />
+        <Route element={<Home />} path="/" />
       </Route>
       <Route
         path="*"

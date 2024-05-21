@@ -18,6 +18,11 @@ export interface ProcessVariables {
   BFF_SESSIONS_SECRET: string;
   BFF_CORS_ORIGIN: string;
   BFF_GOOGLE_AUTH_CREDENTIALS: string;
+  BFF_PERSONIO_PASSWORD: string;
+  BFF_SLACK_API_TOKEN: string;
+  BFF_API_URL: string;
+  BFF_ADMIN_USER: string;
+  BFF_ADMIN_PASS: string;
 }
 
 export interface Config {
@@ -28,6 +33,10 @@ export interface Config {
   app: App;
   cors: Cors;
   googleAuthCredentials: string;
+  personio: Personio;
+  slack: Slack;
+  api: Api;
+  admin: AdminAccount;
 }
 
 export interface Database {
@@ -51,6 +60,23 @@ export interface App {
 
 export interface Google {
   clientId: string;
+}
+
+interface Personio {
+  password: string;
+}
+
+interface Slack {
+  apiToken: string;
+}
+
+interface Api {
+  url: string;
+}
+
+interface AdminAccount {
+  user: string;
+  password: string;
 }
 
 export interface Cors {

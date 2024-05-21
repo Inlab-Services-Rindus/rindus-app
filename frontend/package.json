@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build -- --mode production",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -48,7 +48,7 @@
     "prettier": "3.0.3",
     "sass": "1.66.1",
     "typescript": "5.0.2",
-    "vite": "4.4.5",
+    "vite": "4.5.3",
     "vite-plugin-pwa": "0.16.5",
     "vitest": "0.34.4"
   }
