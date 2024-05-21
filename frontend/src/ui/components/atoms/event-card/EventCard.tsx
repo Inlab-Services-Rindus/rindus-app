@@ -13,7 +13,6 @@ interface EventCardProps {
   isButtonVisible?: boolean;
   isBoldTitle?: boolean;
 }
-
 function EventCard({
   title,
   month,
@@ -35,27 +34,26 @@ function EventCard({
           <p className="month">{month.substring(0, 3)}</p>
         </div>
         <div className="details">
-          <h2
-            className={BEMClassHelper(
-              'details',
-              'title',
-              isBoldTitle && 'bold',
-            )}
-          >
-            {title}
-          </h2>
           <div className="details__info">
-            <p className="weekday">{weekday}</p>
+            <h2
+              className={BEMClassHelper(
+                'details',
+                'title',
+                isBoldTitle && 'bold',
+              )}
+            >
+              {title}
+            </h2>
+            <p className="details__weekday">{weekday}</p>
           </div>
         </div>
+        {isButtonVisible && (
+          <div className="button__container">
+            <RightButton />
+          </div>
+        )}
       </div>
-      {isButtonVisible && (
-        <div className="eventCard__button">
-          <RightButton />
-        </div>
-      )}
     </div>
   );
 }
-
 export default EventCard;
