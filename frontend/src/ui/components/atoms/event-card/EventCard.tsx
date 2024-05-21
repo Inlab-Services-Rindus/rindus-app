@@ -12,6 +12,7 @@ interface EventCardProps {
   colour: string;
   isButtonVisible?: boolean;
   isBoldTitle?: boolean;
+  handleClick?: () => void;
 }
 
 function EventCard({
@@ -22,10 +23,11 @@ function EventCard({
   colour,
   isButtonVisible = false,
   isBoldTitle = false,
+  handleClick,
 }: EventCardProps) {
   return (
     <div className="eventCard" data-testid="event-card">
-      <div className="eventCard__dateDetails">
+      <div className="eventCard__dateDetails" onClick={handleClick}>
         <div className="date" style={{ backgroundColor: colour }}>
           <p className="day">{day}</p>
           <p className="month">{month.substring(0, 3)}</p>
