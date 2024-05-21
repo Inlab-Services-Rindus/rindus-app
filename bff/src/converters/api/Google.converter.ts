@@ -2,8 +2,9 @@ import { Converter } from '@/converters/Converter';
 import {
   MinimalEvent as ApiMinimalEvent,
   DetailedEvent as ApiDetailedEvent,
+  AttendeesEvent as ApiAttendeesEvent,
 } from '@/models/api/google/Google';
-import { calendar_v3 } from 'googleapis';
+import { calendar_v3, forms_v1 } from 'googleapis';
 
 const MONTHS_COLORS = [
   '#2C4D6E',
@@ -31,6 +32,13 @@ function getDay(dateTime: string): string {
 }
 function getWeekday(dateTime: string): string {
   return new Date(dateTime).toLocaleDateString('en', { weekday: 'long' });
+}
+
+function formatTime(dateTimeString: string) {
+  return new Date(dateTimeString).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
 
 export class MinimalEventConverter
@@ -72,6 +80,10 @@ export class DetailedEventConverter
       throw new Error('Invalid detailed event');
     }
 
+    const startTime = formatTime(event.start.dateTime);
+    const endTime = formatTime(event?.end?.dateTime ?? '');
+    const timeRange = `${startTime} - ${endTime}`;
+
     return {
       id: event.id,
       summary: {
@@ -82,6 +94,7 @@ export class DetailedEventConverter
         colour: getMonthColor(event.start.dateTime),
       },
       description: event?.description || '',
+      time: timeRange,
       location: event?.location || '',
     };
   }

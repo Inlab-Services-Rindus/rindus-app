@@ -1,6 +1,5 @@
 @use '@scss/colors' as *;
 @use '@scss/fonts' as *;
-
 .eventCard {
   @include text($font-poppins-regular);
   align-items: center;
@@ -15,7 +14,8 @@
     gap: 12px;
     height: 56px;
     padding-left: 12px;
-
+    //justify-content: space-evenly;
+    width: 100%;
     .date {
       align-items: center;
       border-radius: 8px;
@@ -23,7 +23,7 @@
       display: flex;
       flex-direction: column;
       height: 100%;
-      width: 48px;
+      min-width: 48px;
 
       .day {
         font-size: 24px;
@@ -31,7 +31,6 @@
         font-weight: 700;
         margin: 4px 0 0 0;
       }
-
       .month {
         font-size: 14px;
         line-height: 16px;
@@ -39,18 +38,17 @@
         margin: 0;
       }
     }
-
     .details {
       display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
+      justify-content: space-between;
+      width: 65%;
 
       &__title {
+        @include text-ellipsis();
         color: $rindus-dark-gray;
         font-size: 16px;
         font-weight: 400;
         margin: 0; // TODO: Revisar reset css
-
         &--bold {
           color: $rindus-dark-gray;
           font-size: 20px;
@@ -58,28 +56,29 @@
           margin: 0; // TODO: Revisar reset css
         }
       }
-
+      &__weekday {
+        margin: 0px;
+      }
       &__info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
         color: $rindus-medium-gray;
         display: flex;
         font-size: 12px;
-
-        .weekday {
-          margin: 0px; // TODO: Revisar reset css
-        }
       }
     }
-  }
+    .button__container {
+      align-items: center;
+      display: flex;
+      justify-content: space-around;
+      width: 6%;
 
-  .eventCard__button {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    padding-right: 12px; // TODO: Margen para el botón
-
-    img {
-      height: 24px;
-      width: 24px;
+      img {
+        height: 24px;
+        width: 24px;
+      }
     }
   }
 }

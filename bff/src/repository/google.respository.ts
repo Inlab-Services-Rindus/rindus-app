@@ -1,15 +1,21 @@
-import { calendar_v3, google } from 'googleapis';
+import { calendar_v3, forms_v1, google } from 'googleapis';
 import { config } from '@/config';
 import { GoogleRepository as GoogleRepositoryInterface } from '@/models/service/google/google.repository';
 import { GoogleAuth } from 'google-auth-library';
 import { JSONClient } from 'google-auth-library/build/src/auth/googleauth';
+import { convertISOToDDMMYYYY } from '@/helpers/convertISOToDDMMYYYY';
+import { UserRepository } from '@/repository/user.repository';
+import { Attendee, AttendeesEvent } from '@/models/api/google/Google';
 
 export class GoogleRepository implements GoogleRepositoryInterface {
   private auth: GoogleAuth<JSONClient> | undefined;
+  private readonly userRepository: UserRepository;
 
-  constructor() {
+  constructor(userRepository: UserRepository) {
     this.auth = undefined;
     this.setAuth();
+
+    this.userRepository = userRepository;
   }
 
   private async setAuth() {
@@ -58,5 +64,123 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     const event = response?.data;
 
     return event;
+  }
+
+  public async attendees(eventId: string): Promise<AttendeesEvent> {
+    try {
+      const event = await this.event(eventId);
+      const startDate = event?.start?.dateTime;
+
+      if (!startDate) {
+        throw new Error('Start date of the event is missing.');
+      }
+
+      const formId = await this.getFormId(startDate);
+
+      if (!formId) {
+        throw new Error('Form ID not found.');
+      }
+
+      const responses = await this.getFormResponses(formId);
+      const firstQuestionId = await this.getFirstQuestionId(formId);
+
+      if (!firstQuestionId || !responses) {
+        throw new Error('First question ID or responses not found.');
+      }
+
+      const attendees: Attendee[] = await this.extractAttendees(
+        responses,
+        firstQuestionId,
+      );
+
+      return {
+        totalGuest: attendees.length.toString(),
+        attendees,
+      };
+    } catch (error) {
+      throw `Error getting attendees: ${error}`;
+    }
+  }
+
+  private async getFormId(startDate: string): Promise<string> {
+    const forms = await google.drive('v3').files.list({
+      auth: this.auth,
+      supportsAllDrives: true,
+      includeItemsFromAllDrives: true,
+      q: `name contains '${convertISOToDDMMYYYY(
+        startDate,
+      )}' and mimeType='application/vnd.google-apps.form'`,
+    });
+
+    return forms?.data?.files?.[0]?.id ?? '';
+  }
+
+  private async getFormResponses(
+    formId: string,
+  ): Promise<forms_v1.Schema$FormResponse[]> {
+    const formResponsesList = await google.forms('v1').forms.responses.list({
+      auth: this.auth,
+      formId: formId,
+    });
+
+    return formResponsesList?.data?.responses || [];
+  }
+
+  private async getFirstQuestionId(formId: string): Promise<string> {
+    const formData = await google.forms('v1').forms.get({
+      auth: this.auth,
+      formId: formId,
+    });
+
+    return formData?.data?.items?.[0]?.questionItem?.question?.questionId ?? '';
+  }
+
+  private async extractAttendees(
+    responses: forms_v1.Schema$FormResponse[],
+    firstQuestionId: string | undefined,
+  ): Promise<Attendee[]> {
+    const usersPromises = [];
+    const attendees: Attendee[] = [];
+
+    for (const responseItem of responses) {
+      const email = responseItem?.respondentEmail;
+
+      if (email) {
+        const answers = responseItem?.answers;
+
+        if (answers && firstQuestionId) {
+          const firstAnswer =
+            answers[firstQuestionId]?.textAnswers?.answers?.[0]?.value;
+
+          const isYesResponse = firstAnswer?.toLowerCase()?.includes('yes');
+
+          const isUserAttendingEvent =
+            isYesResponse ||
+            firstAnswer?.toLowerCase()?.includes('participate');
+
+          if (isUserAttendingEvent) {
+            usersPromises.push(this.userRepository.findUserByEmail(email));
+          }
+        }
+      }
+    }
+
+    const usersData = await Promise.allSettled(usersPromises);
+
+    usersData.forEach((user) => {
+      if (user.status === 'fulfilled') {
+        const userValue = user.value;
+
+        if (userValue) {
+          attendees.push({
+            id: userValue.id.toString(),
+            profilePictureUrl: userValue.pictureUrl,
+            firstName: userValue.firstName,
+          });
+        }
+      }
+    });
+
+    return attendees;
   }
 }
