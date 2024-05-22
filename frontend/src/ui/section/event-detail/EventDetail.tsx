@@ -23,6 +23,7 @@ export function EventDetail() {
 
   const eventRepository = createEventRepository();
 
+  // Create helper for this
   const emojiConvertor = new EmojiConvertor.EmojiConvertor();
   emojiConvertor.replace_mode = 'unified';
 
@@ -66,7 +67,7 @@ export function EventDetail() {
       isLoading={isLoading}
       shouldRefresh={hasError}
     >
-      {eventDetails ? (
+      {eventDetails && (
         <>
           <EventInfo
             title={eventDetails?.summary?.name}
@@ -90,19 +91,17 @@ export function EventDetail() {
             <IconWithText
               icon={<img alt="Calendar" src={calendarClockImage} />}
             >
-              {eventDetails.time}
+              {eventDetails?.time}
             </IconWithText>
-            {eventDetails.location && (
+            {eventDetails?.location && (
               <IconWithText icon={<img alt="Location" src={locationImage} />}>
                 <div className="eventDescription__location">
-                  <a href={eventDetails.location}>{eventDetails?.location}</a>
+                  <a href={eventDetails?.location}>{eventDetails?.location}</a>
                 </div>
               </IconWithText>
             )}
           </div>
         </>
-      ) : (
-        ''
       )}
     </Section>
   );
