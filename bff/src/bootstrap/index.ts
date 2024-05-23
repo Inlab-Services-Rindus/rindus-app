@@ -76,7 +76,7 @@ export const adminController = new AdminController(userSearchService);
 export const googleController = new GoogleController(googlePrograms);
 
 if (config.environment === 'local') {
-  setTimeout(createEmployees, 5000);
+  setTimeout(createEmployees(false, userPrograms), 5000);
 }
 
 export const app = configure(expressApp, store);
