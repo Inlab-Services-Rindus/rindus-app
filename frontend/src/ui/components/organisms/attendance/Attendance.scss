@@ -34,3 +34,10 @@
 
   }
 }
+
+.hasError {
+
+
+  @include text($font-poppins-regular, 16px, 400, 22px);
+  color: var(--Gray-Dark, #303140);
+}

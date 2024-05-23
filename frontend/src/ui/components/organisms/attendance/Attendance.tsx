@@ -41,14 +41,14 @@ export default function Attendance({ id }: Props) {
   }, [id]);
 
   if (hasError) {
-    return <p>Something went wrong</p>;
+    return <p className="hasError">No attendance yet for this event</p>;
   }
 
   function guestsText() {
     if (attendance?.totalGuest === 1) {
-      return 'guest already attending';
+      return ' guest already attending';
     } else {
-      return 'guests already attending';
+      return ' guests already attending';
     }
   }
 
