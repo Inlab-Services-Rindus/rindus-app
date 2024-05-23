@@ -2,9 +2,8 @@ import { Converter } from '@/converters/Converter';
 import {
   MinimalEvent as ApiMinimalEvent,
   DetailedEvent as ApiDetailedEvent,
-  AttendeesEvent as ApiAttendeesEvent,
 } from '@/models/api/google/Google';
-import { calendar_v3, forms_v1 } from 'googleapis';
+import { calendar_v3 } from 'googleapis';
 
 const MONTHS_COLORS = [
   '#2C4D6E',
