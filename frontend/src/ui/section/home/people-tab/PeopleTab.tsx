@@ -50,6 +50,7 @@ export default function PeopleTab() {
             key={index}
             profilePictureUrl={employee.profilePictureUrl}
             firstName={employee.firstName}
+            lastName={employee.lastName}
             isBirthday={employee.isBirthday}
             isCaptain={employee.isCaptain}
           />
