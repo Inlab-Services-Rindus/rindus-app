@@ -1,5 +1,3 @@
-DROP VIEW users_view;
-
-DROP VIEW users;
+DROP VIEW employees_view;
 
 DROP EXTENSION IF EXISTS unaccent;

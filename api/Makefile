@@ -34,6 +34,8 @@ docker/stop:
 docker/clean:
 	docker compose down --remove-orphans --rmi local --volumes
 
+docker/restart: docker/stop docker/start
+
 docker/reset: docker/clean docker/start
 
 ## Database

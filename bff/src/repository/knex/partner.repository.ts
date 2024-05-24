@@ -23,10 +23,13 @@ export class KnexPartnerRepository implements PartnerRepository {
   public async members(id: number): Promise<PartnerMembers | undefined> {
     const [memberRecords, captainRecords] = await Promise.all([
       this.knex({ u: 'employees_view' }).select('*').where('u.partner_id', id),
-      this.knex({ tc: 'team_captains' })
-        .join({ u: 'employees_view' }, 'tc.employee_id', 'u.id')
-        .select('u.*')
-        .where('tc.partner_id', id),
+      this.knex({ p: 'partners' })
+        .select('tce.*')
+        .join({ e: 'employees_view' }, 'e.partner_id', 'p.id')
+        .join({ tc: 'team_captains' }, 'tc.employee_id', 'e.id')
+        .join({ tce: 'employees_view' }, 'tc.team_captain_id', 'tce.id')
+        .distinct('tce.id')
+        .where('p.id', id),
     ]);
 
     return this.partnerMembersConverter.convert([
