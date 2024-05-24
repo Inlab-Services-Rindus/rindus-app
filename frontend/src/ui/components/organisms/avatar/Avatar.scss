@@ -89,5 +89,13 @@
     &--captain {
       background: var(--Green-Main, #4dd699);
     }
+    &--captain {
+      background: var(--Green-Main, #4dd699);
+    }
+    &--ok {
+      background: var(--Green-Main, #4dd699);
+      width: 21px;
+      height: 21px;
+    }
   }
 }

@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import EventInfo from '@/ui/components/atoms/event-card/EventCard';
 import { IconWithText } from '@/ui/components/atoms/icon-with-text/IconWithText';
 import Section from '@/ui/components/molecules/section/Section';
+import Attendance from '@/ui/components/organisms/attendance/Attendance';
 import calendarClockImage from '@assets/icons/Calendar_clock_24.svg';
 import locationImage from '@assets/icons/Location_24.svg';
 import DOMPurify from 'dompurify';
@@ -103,6 +104,7 @@ export function EventDetail() {
           </div>
         </>
       )}
+      <Attendance id={id} />
     </Section>
   );
 }
