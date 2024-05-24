@@ -1,20 +1,24 @@
+import { useNavigate } from 'react-router-dom';
+
 import { Avatar } from '@/ui/components/organisms/avatar/Avatar';
+
+import { Attendee } from '@/modules/attendees/domain/Attendee';
 
 import '@/ui/components/organisms/atendee-tile/AttendeeTile.scss';
 
-interface DisplayAttendeesProps {
-  profilePictureUrl: string;
-  firstName?: string;
-  onClick?: () => void;
-}
-
 export default function AtendeeTile({
+  id,
   profilePictureUrl,
   firstName,
-  onClick,
-}: DisplayAttendeesProps): JSX.Element {
+}: Attendee): JSX.Element {
+  const navigate = useNavigate();
   return (
-    <div onClick={onClick} className="attendees-tile">
+    <div
+      onClick={() => {
+        navigate(`/profile/${id}`);
+      }}
+      className="attendees-tile"
+    >
       <div className="attendees__container">
         <Avatar
           size="medium"

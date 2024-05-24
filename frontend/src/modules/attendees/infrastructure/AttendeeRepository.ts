@@ -1,4 +1,3 @@
-// import { attendeesMock } from '@/mocks/attendees';
 import { config } from '@/config/config';
 
 import { EventAttendance } from '@/modules/attendees/domain/Attendee';
@@ -9,10 +8,6 @@ export function createAttendeeRepository(): AttendeeRepository {
     getAttendance,
   };
 }
-
-// export async function getAttendance(): Promise<EventAttendance> {
-//   return Promise.resolve(attendeesMock);
-// }
 
 export async function getAttendance(id: string) {
   try {

@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import '@/mocks/attendees.ts';
 import Loader from '@/ui/components/atoms/loader/Loader';
 import AtendeeTile from '@/ui/components/organisms/atendee-tile/AtendeeTile';
 
@@ -12,18 +10,16 @@ import { createAttendeeRepository } from '@/modules/attendees/infrastructure/Att
 import '@/ui/components/organisms/attendance/Attendance.scss';
 
 interface Props {
-  id: string;
+  id: string | undefined;
 }
 export default function Attendance({ id }: Props) {
-  const navigate = useNavigate();
-
   const [attendance, setAttendance] = useState<EventAttendance>();
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const attendeeRepository = createAttendeeRepository();
 
-  const load = async (eventId: string) => {
+  const load = async (eventId?: string) => {
     if (eventId) {
       setHasError(false);
       try {
@@ -40,6 +36,9 @@ export default function Attendance({ id }: Props) {
     load(id);
   }, [id]);
 
+  if (!id) {
+    return null;
+  }
   if (hasError) {
     return <p className="hasError">No attendance yet for this event</p>;
   }
@@ -66,14 +65,12 @@ export default function Attendance({ id }: Props) {
           {guestsText()}
         </div>
         <div className="attendees__display__container">
-          {attendance?.attendees.map((attendee, index) => (
+          {attendance?.attendees.map((attendee) => (
             <AtendeeTile
-              onClick={() => {
-                navigate(`/profile/${attendee.id}`);
-              }}
               profilePictureUrl={attendee.profilePictureUrl}
               firstName={attendee.firstName}
-              key={index}
+              id={attendee.id}
+              key={attendee.id}
             />
           ))}
         </div>
