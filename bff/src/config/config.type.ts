@@ -23,6 +23,8 @@ export interface ProcessVariables {
   BFF_API_URL: string;
   BFF_ADMIN_USER: string;
   BFF_ADMIN_PASS: string;
+  BFF_OAUTH_CLIENT_ID: string;
+  BFF_OAUTH_CLIENT_SECRET: string;
 }
 
 export interface Config {
@@ -72,6 +74,12 @@ interface Slack {
 
 interface Api {
   url: string;
+  auth: Auth;
+}
+
+interface Auth {
+  clientId: string;
+  clienSecret: string;
 }
 
 interface AdminAccount {

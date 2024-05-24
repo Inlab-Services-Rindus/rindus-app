@@ -1,4 +1,4 @@
-import { config } from '@/config';
+import { Config } from '@/config/config.type';
 export interface Auth {
   access_token: string;
   refresh_token: string;
@@ -6,21 +6,29 @@ export interface Auth {
   expires_in: number;
 }
 
-export async function authBackend() {
-  const urlencoded = new URLSearchParams();
-  urlencoded.append('grant_type', 'client_credentials');
-  urlencoded.append('client_id', 'client');
-  urlencoded.append('client_secret', 'secret');
+export class AuthService {
+  private readonly config: Config;
 
-  const response = await fetch(`${config.api.url}/auth`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: urlencoded,
-  });
+  constructor(config: Config) {
+    this.config = config;
+  }
 
-  const data: Auth = await response.json();
+  public async getToken(): Promise<Auth> {
+    const urlencoded = new URLSearchParams();
+    urlencoded.append('grant_type', 'client_credentials');
+    urlencoded.append('client_id', this.config.api.auth.clientId);
+    urlencoded.append('client_secret', this.config.api.auth.clienSecret);
 
-  return data;
+    const response = await fetch(`${this.config.api.url}/auth`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: urlencoded,
+    });
+
+    const data: Auth = await response.json();
+
+    return data;
+  }
 }

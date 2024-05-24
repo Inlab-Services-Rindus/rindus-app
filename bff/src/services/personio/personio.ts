@@ -1,6 +1,7 @@
 import { logger } from '@/bootstrap/logger';
 import { Config } from '@/config/config.type';
-import { Auth } from '@/services/auth/auth';
+import { AuthService } from '@/services/auth/auth';
+import { getPersonioData } from '@/services/personio/scraping';
 
 export interface Employee {
   id: number;
@@ -26,68 +27,93 @@ export interface Employee {
   };
 }
 
-export async function importPersonioData(
-  config: Config,
-  auth: Auth,
-  personioData: Employee[],
-) {
-  if (personioData.length === 0) {
-    return;
-  }
-
-  const { access_token, token_type } = auth;
-
-  //Loop through the personioData array and send each employee to the backend
-  for (const employee of personioData) {
-    logger.debug('Sending import for employee %d', employee.id);
-    const response = await fetch(
-      `${config.api.url}/api/v1/employees/import/personio`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${token_type} ${access_token}`,
-        },
-        body: JSON.stringify(employee),
-      },
-    );
-    logger.debug(
-      'Received response for employee %d - %d',
-      employee.id,
-      response.status,
-    );
-  }
+export interface SyncResult {
+  importResult: ProcessResult[];
+  updateResult: ProcessResult[];
 }
 
-export async function updatePersonioData(
-  config: Config,
-  auth: Auth,
-  personioData: Employee[],
-) {
-  if (personioData.length === 0) {
-    return;
+export interface ProcessResult {
+  personioId: number;
+  statusCode: number;
+}
+
+export class PersonioSyncService {
+  private readonly config: Config;
+  private readonly authService: AuthService;
+
+  constructor(config: Config, auth: AuthService) {
+    this.config = config;
+    this.authService = auth;
   }
 
-  const { access_token, token_type } = auth;
+  public importPersonioData(
+    personioData: Employee[],
+  ): Promise<ProcessResult[]> {
+    return this.processPersonioData(
+      personioData,
+      'POST',
+      '/api/v1/employees/import/personio',
+    );
+  }
 
-  //Loop through the personioData array and send each employee to the backend
-  for (const employee of personioData) {
-    logger.debug('Sending update for employee %d', employee.id);
-    const response = await fetch(
-      `${config.api.url}/api/v1/employees/update/personio`,
-      {
-        method: 'PUT',
+  public updatePersonioData(
+    personioData: Employee[],
+  ): Promise<ProcessResult[]> {
+    return this.processPersonioData(
+      personioData,
+      'PUT',
+      '/api/v1/employees/update/personio',
+    );
+  }
+
+  public async sync(personioData: Employee[]): Promise<SyncResult> {
+    const importResult = await this.importPersonioData(personioData);
+    const updateResult = await this.updatePersonioData(personioData);
+
+    return {
+      importResult,
+      updateResult,
+    };
+  }
+
+  public getPersonioData(): Promise<Employee[]> {
+    return getPersonioData(this.config);
+  }
+
+  private async processPersonioData(
+    personioData: Employee[],
+    method: string,
+    endpoint: string,
+  ): Promise<ProcessResult[]> {
+    if (personioData.length === 0) {
+      return Promise.resolve([]);
+    }
+
+    const result: ProcessResult[] = [];
+
+    const { access_token, token_type } = await this.authService.getToken();
+
+    for (const employee of personioData) {
+      logger.debug('Sending request for employee %d', employee.id);
+
+      const response = await fetch(`${this.config.api.url}${endpoint}`, {
+        method,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `${token_type} ${access_token}`,
         },
         body: JSON.stringify(employee),
-      },
-    );
-    logger.debug(
-      'Received response for employee %d - %d',
-      employee.id,
-      response.status,
-    );
+      });
+
+      result.push({ personioId: employee.id, statusCode: response.status });
+
+      logger.debug(
+        'Received response for employee %d - %d',
+        employee.id,
+        response.status,
+      );
+    }
+
+    return result;
   }
 }

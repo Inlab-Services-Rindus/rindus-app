@@ -30,6 +30,8 @@ import { GoogleController } from '@/http/controllers/google.controller';
 import { GooglePrograms } from '@/programs/google.programs';
 import { run as createEmployees } from '@/cmd/create-employees';
 import { AdminController } from '@/http/controllers/admin.controller';
+import { PersonioSyncService } from '@/services/personio/personio';
+import { AuthService } from '@/services/auth/auth';
 
 const store = connectDatabase();
 const expressApp = express();
@@ -56,6 +58,8 @@ const userSearchService = new FuseSearchService(
   positions,
   languages,
 );
+export const authService = new AuthService(config);
+export const personioSyncService = new PersonioSyncService(config, authService);
 
 // Programs
 const sessionPrograms = new SessionPrograms(jwtValidator, userRepository);
@@ -72,7 +76,10 @@ export const sessionController = new SessionController(
 export const usersController = new UsersController(userPrograms);
 export const partnersController = new PartnersController(partnerRepository);
 export const searchController = new SearchController(searchPrograms);
-export const adminController = new AdminController(userSearchService);
+export const adminController = new AdminController(
+  userSearchService,
+  personioSyncService,
+);
 export const googleController = new GoogleController(googlePrograms);
 
 if (config.environment === 'local') {
