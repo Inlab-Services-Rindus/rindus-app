@@ -1,7 +1,6 @@
 import { logger } from '@/bootstrap/logger';
 import { Config } from '@/config/config.type';
 import { Auth } from '@/services/auth/auth';
-import { getPersonioData } from '@/services/personio/scraping';
 
 export interface Employee {
   id: number;
@@ -27,14 +26,11 @@ export interface Employee {
   };
 }
 
-export async function importPersonioData(config: Config, auth: Auth) {
-  let personioData = [] as Employee[];
-  try {
-    personioData = await getPersonioData(config);
-  } catch (e) {
-    logger.warn('Error while trying to obtain personio data', e);
-  }
-
+export async function importPersonioData(
+  config: Config,
+  auth: Auth,
+  personioData: Employee[],
+) {
   if (personioData.length === 0) {
     return;
   }
@@ -48,6 +44,39 @@ export async function importPersonioData(config: Config, auth: Auth) {
       `${config.api.url}/api/v1/employees/import/personio`,
       {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token_type} ${access_token}`,
+        },
+        body: JSON.stringify(employee),
+      },
+    );
+    logger.debug(
+      'Received response for employee %d - %d',
+      employee.id,
+      response.status,
+    );
+  }
+}
+
+export async function updatePersonioData(
+  config: Config,
+  auth: Auth,
+  personioData: Employee[],
+) {
+  if (personioData.length === 0) {
+    return;
+  }
+
+  const { access_token, token_type } = auth;
+
+  //Loop through the personioData array and send each employee to the backend
+  for (const employee of personioData) {
+    logger.debug('Sending update for employee %d', employee.id);
+    const response = await fetch(
+      `${config.api.url}/api/v1/employees/update/personio`,
+      {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `${token_type} ${access_token}`,

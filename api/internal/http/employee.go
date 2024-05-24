@@ -23,6 +23,7 @@ func (h *employeeHandler) Routes(r chi.Router) {
 		})
 		r.Route("/update", func(r chi.Router) {
 			r.Put("/personio", h.updatePersonio)
+			r.Put("/slack-info", h.updateSlackInfo)
 		})
 		r.Route("/{employeeUID}", func(r chi.Router) {
 			r.Get("/", h.get)
@@ -68,6 +69,23 @@ func (h *employeeHandler) importSlackInfo(w http.ResponseWriter, r *http.Request
 	}
 
 	slackInfo, err := h.service.SlackInfoImport(r.Context(), importReq)
+
+	if err != nil {
+		Error(w, r, err)
+		return
+	}
+
+	JSONResponse(w, r, slackInfo)
+}
+
+func (h *employeeHandler) updateSlackInfo(w http.ResponseWriter, r *http.Request) {
+	var importReq importer.SlackMember
+	if err := json.NewDecoder(r.Body).Decode(&importReq); err != nil {
+		Error(w, r, internal.Errorf(internal.CodeErrNotValid, "Could not decode incoming request \"err\"=%s", err))
+		return
+	}
+
+	slackInfo, err := h.service.SlackInfoUpdate(r.Context(), importReq)
 
 	if err != nil {
 		Error(w, r, err)

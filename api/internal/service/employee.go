@@ -74,6 +74,14 @@ func (e *EmployeeService) SlackInfoImport(ctx context.Context, slackInfo importe
 	return &slackInfo, nil
 }
 
+func (e *EmployeeService) SlackInfoUpdate(ctx context.Context, slackInfo importer.SlackMember) (*importer.SlackMember, error) {
+	if err := importer.NewSlackImporter(slog.Default(), e.q).UpdateSlackMember(ctx, slackInfo); err != nil {
+		return nil, err
+	}
+
+	return &slackInfo, nil
+}
+
 func NewEmployeeService(q *repository.Queries, i importer.PersonioImporter) EmployeeService {
 	return EmployeeService{q, i}
 }
