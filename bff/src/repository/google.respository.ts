@@ -42,7 +42,6 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       ).toISOString(),
       orderBy: 'startTime',
       singleEvents: true,
-      showDeleted: true, //This param works in reverse mode, true means it will not show deleted events
     });
 
     const events = response?.data?.items ?? [];
