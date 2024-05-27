@@ -32,9 +32,15 @@ import { run as createEmployees } from '@/cmd/create-employees';
 import { AdminController } from '@/http/controllers/admin.controller';
 import { PersonioSyncService } from '@/services/personio/personio';
 import { AuthService } from '@/services/auth/auth';
+import NodeCache from 'node-cache';
 
 const store = connectDatabase();
 const expressApp = express();
+
+// Caches
+const eventsCache = new NodeCache({
+  stdTTL: 900, // 15 min
+});
 
 // Repositories
 const userRepository = new KnexUserRepository(store);
@@ -79,8 +85,12 @@ export const searchController = new SearchController(searchPrograms);
 export const adminController = new AdminController(
   userSearchService,
   personioSyncService,
+  eventsCache,
 );
-export const googleController = new GoogleController(googlePrograms);
+export const googleController = new GoogleController(
+  googlePrograms,
+  eventsCache,
+);
 
 if (config.environment === 'local') {
   setTimeout(createEmployees(false, userPrograms), 5000);

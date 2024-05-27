@@ -27,6 +27,12 @@
       }
     }
 
+    &__info {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
     &__location {
       width: 300px;
 

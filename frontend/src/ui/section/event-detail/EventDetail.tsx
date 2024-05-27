@@ -90,7 +90,7 @@ export function EventDetail() {
               }}
             ></div>
           </div>
-          <div>
+          <div className="eventDescription__info">
             <IconWithText
               icon={<img alt="Calendar" src={calendarClockImage} />}
             >
