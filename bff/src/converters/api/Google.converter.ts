@@ -33,10 +33,11 @@ function getWeekday(dateTime: string): string {
   return new Date(dateTime).toLocaleDateString('en', { weekday: 'long' });
 }
 
-function formatTime(dateTimeString: string) {
-  return new Date(dateTimeString).toLocaleTimeString([], {
+function formatTime(dateTimeString: string, timeZone: string) {
+  return new Date(dateTimeString).toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
+    timeZone,
   });
 }
 
@@ -79,8 +80,14 @@ export class DetailedEventConverter
       throw new Error('Invalid detailed event');
     }
 
-    const startTime = formatTime(event.start.dateTime);
-    const endTime = formatTime(event?.end?.dateTime ?? '');
+    const startTime = formatTime(
+      event.start.dateTime,
+      event.start.timeZone ?? '',
+    );
+    const endTime = formatTime(
+      event?.end?.dateTime ?? '',
+      event.start.timeZone ?? '',
+    );
     const timeRange = `${startTime} - ${endTime}`;
 
     return {
