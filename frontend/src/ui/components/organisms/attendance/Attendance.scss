@@ -10,7 +10,6 @@
   padding: 0px 0px 40px 0px;
   height: 250px;
 
-
   &__number {
     padding: 12px 0px 12px 0px;
     text-align: left;
@@ -28,16 +27,15 @@
     overflow-x: scroll;
     overflow-y: hidden;
     padding: 12px 0px 12px 0px;
-    border: 0px 0px 1px 0px;
     gap: 24px;
-    height: 120px;
+    height: 140px;
+    scrollbar-color: $rindus-green $rindus-off-white;
 
+    text-align: center;
   }
 }
 
 .hasError {
-
-
   @include text($font-poppins-regular, 16px, 400, 22px);
   color: var(--Gray-Dark, #303140);
 }
