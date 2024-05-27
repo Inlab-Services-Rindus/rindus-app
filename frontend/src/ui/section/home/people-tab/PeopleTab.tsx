@@ -52,6 +52,7 @@ export default function PeopleTab() {
             firstName={employee.firstName}
             isBirthday={employee.isBirthday}
             isCaptain={employee.isCaptain}
+            isInViewport={index < 24}
           />
         ))}
       </InfiniteScroll>

@@ -11,6 +11,7 @@ interface AvatarProps {
   isCaptain?: boolean;
   size?: AvatarSize;
   isAttendee?: boolean;
+  isInViewport?: boolean;
 }
 
 export function Avatar({
@@ -19,6 +20,7 @@ export function Avatar({
   profilePictureUrl,
   size = 'medium',
   isAttendee = false,
+  isInViewport = false,
 }: AvatarProps): JSX.Element {
   function renderBadge() {
     if (isBirthday) {
@@ -55,7 +57,7 @@ export function Avatar({
     <div className="avatar">
       <div className={`avatar__picture avatar__picture--${size}`}>
         <img
-          loading="lazy"
+          loading={isInViewport ? 'eager' : 'lazy'}
           className="avatar__picture__img"
           src={profilePictureUrl}
           alt={'Profile picture'}

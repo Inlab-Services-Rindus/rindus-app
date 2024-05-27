@@ -79,7 +79,6 @@ export default function Header() {
             className="profile__button"
           >
             <img
-              loading="lazy"
               src={userProfileData && `${userProfileData.profilePictureUrl}`}
             />
           </button>

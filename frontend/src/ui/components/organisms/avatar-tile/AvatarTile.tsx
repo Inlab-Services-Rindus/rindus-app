@@ -7,6 +7,7 @@ interface AvatarTileProps {
   isBirthday?: boolean;
   isCaptain?: boolean;
   profilePictureUrl: string;
+  isInViewport?: boolean;
   onClick?: () => void;
 }
 
@@ -16,6 +17,7 @@ export default function AvatarTile({
   isCaptain,
   profilePictureUrl,
   onClick,
+  isInViewport = false,
 }: AvatarTileProps): JSX.Element {
   return (
     <div onClick={onClick} className="avatar-tile">
@@ -25,6 +27,7 @@ export default function AvatarTile({
           profilePictureUrl={profilePictureUrl}
           isBirthday={isBirthday}
           isCaptain={isCaptain}
+          isInViewport={isInViewport}
         />
       </div>
       {firstName && (
