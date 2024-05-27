@@ -30,12 +30,29 @@
     &__location {
       width: 300px;
 
-      a {
-        display: inline-block;
-        max-width: 100%;
+      .eventDescription__link {
+        @include text($font-poppins-regular);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .eventDescription__title {
+          color: $rindus-dark-gray;
+          margin: 0;
+          font-size: 14px;
+          line-height: 16px;
+        }
+
+        .eventDescription__subtitle {
+          color: $rindus-medium-gray;
+          margin: 0;
+          font-size: 12px;
+          line-height: 16px;
+        }
       }
     }
   }
