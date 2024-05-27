@@ -6,7 +6,11 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
+
+  &__icon {
+    width: 24px;
+    height: 24px;
+  }
 
   &__title {
     color: $rindus-dark-gray;

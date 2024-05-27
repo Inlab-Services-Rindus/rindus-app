@@ -25,8 +25,8 @@ function EventCard({
   handleClick,
 }: EventCardProps) {
   return (
-    <div className="eventCard" data-testid="event-card">
-      <div className="eventCard__dateDetails" onClick={handleClick}>
+    <div className="eventCard" data-testid="event-card" onClick={handleClick}>
+      <div className="eventCard__dateDetails">
         <div
           className="date"
           style={{ backgroundColor: colour }}
@@ -49,12 +49,12 @@ function EventCard({
             <p className="details__weekday">{weekday}</p>
           </div>
         </div>
-        {isButtonVisible && (
-          <div className="button__container">
-            <RightButton />
-          </div>
-        )}
       </div>
+      {isButtonVisible && (
+        <div className="eventCard__button">
+          <RightButton />
+        </div>
+      )}
     </div>
   );
 }
