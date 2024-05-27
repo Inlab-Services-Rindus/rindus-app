@@ -17,5 +17,17 @@ export interface DetailedEvent {
     colour: string;
   };
   description: string;
+  time: string;
   location: string;
+}
+
+export interface Attendee {
+  id: string;
+  profilePictureUrl: string;
+  firstName: string;
+}
+
+export interface AttendeesEvent {
+  totalGuest: string;
+  attendees: Attendee[];
 }

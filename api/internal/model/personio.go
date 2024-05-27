@@ -77,11 +77,14 @@ func ParseTeamCaptain(teamCaptain string) (string, error) {
 func ParseLanguages(languages string) []string {
 	result := make([]string, 0)
 	if helper.IsEmpty(languages) {
-		return make([]string, 0)
+		return result
 	}
 
 	for _, rawLang := range strings.Split(languages, ",") {
-		result = append(result, helper.SanitiseEnum(rawLang))
+		language := helper.SanitiseEnum(rawLang)
+		if !helper.IsEmpty(language) {
+			result = append(result, language)
+		}
 	}
 
 	return result

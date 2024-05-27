@@ -1,5 +1,9 @@
 import { GoogleRepository } from '@/models/service/google/google.repository';
-import { DetailedEvent, MinimalEvent } from '@/models/api/google/Google';
+import {
+  AttendeesEvent,
+  DetailedEvent,
+  MinimalEvent,
+} from '@/models/api/google/Google';
 import {
   DetailedEventConverter,
   MinimalEventConverter,
@@ -34,12 +38,20 @@ export class GooglePrograms {
   }
 
   public async event(eventId: string): Promise<DetailedEvent | null> {
-    const BusinessEvent = await this.googleRepository.event(eventId);
-
     try {
+      const BusinessEvent = await this.googleRepository.event(eventId);
+
       return this.detailEventConverter.convert(BusinessEvent);
     } catch (error) {
       return null;
     }
+  }
+
+  public async attendees(eventId: string): Promise<AttendeesEvent | null> {
+    const attendees = await this.googleRepository
+      .attendees(eventId)
+      .catch(() => null);
+
+    return attendees;
   }
 }

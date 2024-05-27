@@ -3,6 +3,15 @@ import { render, screen } from '@testing-library/react';
 
 import { StoreContext, getInitialStoreContext } from '@/ui/context/store/Store';
 
+const useNavigateSpy = vi.fn();
+vi.mock('react-router-dom', async () => {
+  const actual = (await vi.importActual('react-router-dom')) as any;
+  return {
+    ...actual,
+    useNavigate: () => useNavigateSpy,
+  };
+});
+
 describe('Events tab', () => {
   it('should render spinner when events is loading', () => {
     render(

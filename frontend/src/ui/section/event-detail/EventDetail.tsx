@@ -1,62 +1,110 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { eventMock } from '@/mocks/event';
 import EventInfo from '@/ui/components/atoms/event-card/EventCard';
-import EventDescription from '@/ui/components/atoms/event-description/EventDescription';
 import { IconWithText } from '@/ui/components/atoms/icon-with-text/IconWithText';
+import Section from '@/ui/components/molecules/section/Section';
+import Attendance from '@/ui/components/organisms/attendance/Attendance';
 import calendarClockImage from '@assets/icons/Calendar_clock_24.svg';
 import locationImage from '@assets/icons/Location_24.svg';
-import petsImage from '@assets/icons/Pets_24.svg';
+import DOMPurify from 'dompurify';
+import { EmojiConvertor } from 'emoji-js';
+
+import { getEventDetails } from '@/modules/events/application/get-details/getEventDetails';
+import { DetailedEvent } from '@/modules/events/domain/Event';
+import { createEventRepository } from '@/modules/events/infrastructure/EventRepository';
 
 import '@/ui/section/event-detail/EventDetail.scss';
 
 export function EventDetail() {
   const { id } = useParams();
-  const {
-    title,
-    month,
-    day,
-    weekday,
-    location,
-    description,
-    time,
-    petsAllowed,
-  } = eventMock;
+  const [eventDetails, setEventDetails] = useState<DetailedEvent>();
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // TODO: When backend is ready check if event exist or not and modify this condition
+  const eventRepository = createEventRepository();
+
+  // Create helper for this
+  const emojiConvertor = new EmojiConvertor.EmojiConvertor();
+  emojiConvertor.replace_mode = 'unified';
+
+  const load = async (eventId?: string) => {
+    if (eventId) {
+      setHasError(false);
+      try {
+        const event: DetailedEvent = await getEventDetails(
+          eventRepository,
+          eventId,
+        );
+        setEventDetails(event);
+      } catch (error) {
+        setHasError(true);
+      }
+      setIsLoading(false);
+    }
+  };
+
+  function sanitizeHtml(text: string) {
+    return (
+      DOMPurify.sanitize(text),
+      {
+        ALLOWED_TAGS: ['br', 'p'],
+      }
+    );
+  }
+
+  useEffect(() => {
+    eventDetails?.description ? sanitizeHtml(eventDetails?.description) : null;
+  }, [eventDetails?.description]);
+
+  useEffect(() => {
+    load(id);
+  }, [id]);
+
   return (
-    <div className="eventDetail">
-      {id ? (
-        <EventInfo
-          title={title}
-          month={month}
-          day={day}
-          isBoldTitle
-          weekday={weekday}
-          colour="#000000"
-        />
-      ) : (
-        <p>
-          The event you&apos;re looking for doesn&apos;t seems to exist. Please
-          try again.
-        </p>
+    <Section
+      className="eventDetail"
+      refresh={() => load(id)}
+      isLoading={isLoading}
+      shouldRefresh={hasError}
+    >
+      {eventDetails && (
+        <>
+          <EventInfo
+            title={eventDetails?.summary?.name}
+            month={eventDetails?.summary?.month}
+            day={eventDetails?.summary?.day}
+            isBoldTitle
+            weekday={eventDetails?.summary?.weekday}
+            colour={eventDetails?.summary?.colour}
+          />
+          <div className="eventDescription">
+            <div
+              className="eventDescription__description"
+              dangerouslySetInnerHTML={{
+                __html: emojiConvertor.replace_colons(
+                  eventDetails?.description,
+                ),
+              }}
+            ></div>
+          </div>
+          <div>
+            <IconWithText
+              icon={<img alt="Calendar" src={calendarClockImage} />}
+            >
+              {eventDetails?.time}
+            </IconWithText>
+            {eventDetails?.location && (
+              <IconWithText icon={<img alt="Location" src={locationImage} />}>
+                <div className="eventDescription__location">
+                  <a href={eventDetails?.location}>{eventDetails?.location}</a>
+                </div>
+              </IconWithText>
+            )}
+          </div>
+        </>
       )}
-      <EventDescription description={description} />
-      <IconWithText
-        title={location.name}
-        subtitle={location.address}
-        icon={<img alt="Location" src={locationImage} />}
-      />
-      <IconWithText
-        title={time}
-        icon={<img alt="Calendar" src={calendarClockImage} />}
-      />
-      {petsAllowed && (
-        <IconWithText
-          title="Pets are welcome"
-          icon={<img alt="Pets" src={petsImage} />}
-        />
-      )}
-    </div>
+      <Attendance id={id} />
+    </Section>
   );
 }

@@ -1,5 +1,7 @@
 import cake from '@/assets/icons/Cake_24.svg';
 import captain from '@/assets/icons/Capitan_24.svg';
+import ok from '@/assets/icons/Ok_24.svg';
+
 import '@/ui/components/organisms/avatar/Avatar.scss';
 
 export type AvatarSize = 'small' | 'medium' | 'large';
@@ -8,6 +10,7 @@ interface AvatarProps {
   isBirthday?: boolean;
   isCaptain?: boolean;
   size?: AvatarSize;
+  isAttendee?: boolean;
 }
 
 export function Avatar({
@@ -15,6 +18,7 @@ export function Avatar({
   isCaptain,
   profilePictureUrl,
   size = 'medium',
+  isAttendee = false,
 }: AvatarProps): JSX.Element {
   function renderBadge() {
     if (isBirthday) {
@@ -33,6 +37,15 @@ export function Avatar({
           className={`avatar__badge avatar__badge--captain avatar__badge--${size}`}
         >
           <img src={captain} alt="captain" />
+        </div>
+      );
+    }
+    if (isAttendee) {
+      return (
+        <div
+          className={`avatar__badge avatar__badge--ok avatar__badge--${size}`}
+        >
+          <img src={ok} alt="ok" />
         </div>
       );
     }
