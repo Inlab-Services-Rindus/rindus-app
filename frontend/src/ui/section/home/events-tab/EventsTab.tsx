@@ -38,8 +38,8 @@ export default function EventsTab() {
             month={event.month}
             day={event.day}
             weekday={event.weekday}
+            isButtonVisible
             colour={event.colour}
-            isButtonVisible={false}
             isBoldTitle={false}
             handleClick={() => goToEventDetails(event.id)}
           />

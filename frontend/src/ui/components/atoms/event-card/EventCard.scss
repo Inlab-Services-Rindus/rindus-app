@@ -1,5 +1,6 @@
 @use '@scss/colors' as *;
 @use '@scss/fonts' as *;
+
 .eventCard {
   @include text($font-poppins-regular);
   align-items: center;
@@ -7,15 +8,15 @@
   border-radius: 8px;
   display: flex;
   height: 80px;
-  justify-content: space-between;
+  justify-content: space-evenly;
 
   &__dateDetails {
     display: flex;
     gap: 12px;
     height: 56px;
     padding-left: 12px;
-    //justify-content: space-evenly;
     width: 100%;
+
     .date {
       align-items: center;
       border-radius: 8px;
@@ -69,15 +70,19 @@
         font-size: 12px;
       }
     }
-    .button__container {
-      align-items: center;
-      display: flex;
-      justify-content: space-around;
-      width: 6%;
+  }
 
-      img {
-        height: 24px;
-        width: 24px;
+  &__button {
+    padding-right: 20px;
+    height: 24px;
+    width: 24px;
+
+    button {
+      height: 24px;
+      width: 24px;
+      g {
+        height: 100%;
+        width: 100%;
       }
     }
   }
