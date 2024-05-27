@@ -66,8 +66,13 @@ export class GoogleRepository implements GoogleRepositoryInterface {
   }
 
   public async attendees(eventId: string): Promise<AttendeesEvent> {
+    const realEventId =
+      eventId === '619ppo774sd3qmha2mk1glc8pv'
+        ? '2q5lfhgasrv4dqmvl1eh8rgsb7'
+        : eventId;
+
     try {
-      const event = await this.event(eventId);
+      const event = await this.event(realEventId);
       const startDate = event?.start?.dateTime;
 
       if (!startDate) {
@@ -81,7 +86,12 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       }
 
       const responses = await this.getFormResponses(formId);
-      const firstQuestionId = await this.getFirstQuestionId(formId);
+      let firstQuestionId = '';
+      if (realEventId !== eventId) {
+        firstQuestionId = await this.getSecondQuestionId(formId);
+      } else {
+        firstQuestionId = await this.getFirstQuestionId(formId);
+      }
 
       if (!firstQuestionId || !responses) {
         throw new Error('First question ID or responses not found.');
@@ -132,6 +142,15 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     });
 
     return formData?.data?.items?.[0]?.questionItem?.question?.questionId ?? '';
+  }
+
+  private async getSecondQuestionId(formId: string): Promise<string> {
+    const formData = await google.forms('v1').forms.get({
+      auth: this.auth,
+      formId: formId,
+    });
+
+    return formData?.data?.items?.[1]?.questionItem?.question?.questionId ?? '';
   }
 
   private async extractAttendees(
