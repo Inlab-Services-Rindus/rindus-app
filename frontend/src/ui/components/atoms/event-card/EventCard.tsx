@@ -12,6 +12,7 @@ interface EventCardProps {
   colour: string;
   isButtonVisible?: boolean;
   isBoldTitle?: boolean;
+  handleClick?: () => void;
 }
 function EventCard({
   title,
@@ -21,14 +22,15 @@ function EventCard({
   colour,
   isButtonVisible = false,
   isBoldTitle = false,
+  handleClick,
 }: EventCardProps) {
   return (
-    <div className="eventCard" data-testid="event-card">
+    <div className="eventCard" data-testid="event-card" onClick={handleClick}>
       <div className="eventCard__dateDetails">
         <div
           className="date"
-          data-testid="event-card-date"
           style={{ backgroundColor: colour }}
+          data-testid="event-card-date"
         >
           <p className="day">{day}</p>
           <p className="month">{month.substring(0, 3)}</p>
@@ -47,12 +49,12 @@ function EventCard({
             <p className="details__weekday">{weekday}</p>
           </div>
         </div>
-        {isButtonVisible && (
-          <div className="button__container">
-            <RightButton />
-          </div>
-        )}
       </div>
+      {isButtonVisible && (
+        <div className="eventCard__button">
+          <RightButton />
+        </div>
+      )}
     </div>
   );
 }

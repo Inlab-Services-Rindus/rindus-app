@@ -47,6 +47,10 @@ export const getCommonConfig = (
   },
   api: {
     url: process.env.BFF_API_URL ?? 'http://localhost:8080',
+    auth: {
+      clientId: process.env.BFF_OAUTH_CLIENT_ID ?? 'client',
+      clienSecret: process.env.BFF_OAUTH_CLIENT_SECRET ?? 'secret',
+    },
   },
   admin: {
     user: process.env.BFF_ADMIN_USER ?? 'admin',

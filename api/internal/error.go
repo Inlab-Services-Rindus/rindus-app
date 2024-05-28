@@ -62,7 +62,7 @@ func Errorf(code string, format string, args ...any) *Error {
 	}
 }
 
-func ErrNotFound(resourceID any) *Error {
+func ErrNotFound(resourceID string) *Error {
 	return Errorf(CodeErrNotFound, "Resource %q not found", resourceID)
 }
 

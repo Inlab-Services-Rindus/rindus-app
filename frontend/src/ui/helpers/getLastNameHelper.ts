@@ -11,9 +11,9 @@ export const getMainLastNamePart = (lastNameParts: string[]): string => {
     if (isStartLa(lastNameParts[1]) && lastNameParts.length > 2) {
       return `${lastNameParts[0]} ${lastNameParts[1]} ${lastNameParts[2]}`;
     }
-    if (lastNameParts.length > 1) {
+   
       return `${lastNameParts[0]} ${lastNameParts[1]}`;
-    }
+ 
     
   }
 

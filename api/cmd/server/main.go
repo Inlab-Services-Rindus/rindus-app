@@ -3,6 +3,7 @@ package main
 import (
 	"api/config"
 	"api/database"
+	"api/importer"
 	"api/internal/app"
 	"api/internal/repository"
 	"api/internal/service"
@@ -49,7 +50,7 @@ func run() error {
 	}
 
 	// Services
-	employeeService := service.NewEmployeeService(conn, q)
+	employeeService := service.NewEmployeeService(q, importer.NewPersonioImporter(slog.Default(), q, conn))
 
 	server := app.NewServer(cfg, employeeService)
 

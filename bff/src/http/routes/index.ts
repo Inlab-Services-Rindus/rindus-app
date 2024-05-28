@@ -8,7 +8,7 @@ import { searchRouter } from '@/http/routes/search.routes';
 import { staticRouter } from '@/http/routes/static.routes';
 import { googleRouter } from '@/http/routes/google.routes';
 import { httpBasicAuthenticated } from '@/http/middleware/http-basic-authenticated';
-import { searchEngineRouter } from '@/http/routes/search-engine.routes';
+import { adminRouter } from '@/http/routes/admin.routes';
 
 const unprotectedRouter = createRouter();
 const protectedRouter = createRouter();
@@ -27,6 +27,6 @@ protectedRouter
   .use(staticRouter)
   .use('/google/v1', googleRouter);
 
-httpBasicProtectedRouter.use(httpBasicAuthenticated).use(searchEngineRouter);
+httpBasicProtectedRouter.use(httpBasicAuthenticated).use(adminRouter);
 
 export { unprotectedRouter, protectedRouter, httpBasicProtectedRouter };

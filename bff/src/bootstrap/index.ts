@@ -30,9 +30,17 @@ import { GoogleController } from '@/http/controllers/google.controller';
 import { GooglePrograms } from '@/programs/google.programs';
 import { run as createEmployees } from '@/cmd/create-employees';
 import { AdminController } from '@/http/controllers/admin.controller';
+import { PersonioSyncService } from '@/services/personio/personio';
+import { AuthService } from '@/services/auth/auth';
+import NodeCache from 'node-cache';
 
 const store = connectDatabase();
 const expressApp = express();
+
+// Caches
+const eventsCache = new NodeCache({
+  stdTTL: 900, // 15 min
+});
 
 // Repositories
 const userRepository = new KnexUserRepository(store);
@@ -56,6 +64,8 @@ const userSearchService = new FuseSearchService(
   positions,
   languages,
 );
+export const authService = new AuthService(config);
+export const personioSyncService = new PersonioSyncService(config, authService);
 
 // Programs
 const sessionPrograms = new SessionPrograms(jwtValidator, userRepository);
@@ -72,11 +82,18 @@ export const sessionController = new SessionController(
 export const usersController = new UsersController(userPrograms);
 export const partnersController = new PartnersController(partnerRepository);
 export const searchController = new SearchController(searchPrograms);
-export const adminController = new AdminController(userSearchService);
-export const googleController = new GoogleController(googlePrograms);
+export const adminController = new AdminController(
+  userSearchService,
+  personioSyncService,
+  eventsCache,
+);
+export const googleController = new GoogleController(
+  googlePrograms,
+  eventsCache,
+);
 
 if (config.environment === 'local') {
-  setTimeout(createEmployees, 5000);
+  setTimeout(createEmployees(false, userPrograms), 5000);
 }
 
 export const app = configure(expressApp, store);

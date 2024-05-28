@@ -33,11 +33,7 @@ export default function PartnersTab() {
           key={index}
           onClick={() => navigate(`/partner/${partner.id}`)}
         >
-          <img
-            className="partner-image"
-            src={partner.logoUrl}
-            loading="lazy"
-          ></img>
+          <img className="partner-image" src={partner.logoUrl}></img>
         </div>
       ))}
     </Section>

@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	defaultFilePath  = "cmd/import/resources/"
+	defaultFilePath  = "cmd/resources/"
 	PersonioFileName = "employees.json"
 	SlackFileName    = "slack.json"
 )

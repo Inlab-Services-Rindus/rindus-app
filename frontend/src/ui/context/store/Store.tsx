@@ -76,6 +76,7 @@ export function getInitialStoreContext() {
       lastPage: 0,
       totalPages: 0,
     },
+
     partners: {
       data: [],
       hasError: false,
@@ -89,6 +90,7 @@ export function getInitialStoreContext() {
       hasError: false,
       noResults: false,
     },
+
     setSearchData: () => {},
     setQueryKey: () => {},
     query: '',
@@ -272,6 +274,7 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
       }
     }
   };
+
 
   const setQueryKey = (key: string) => {
     setQuery(key);

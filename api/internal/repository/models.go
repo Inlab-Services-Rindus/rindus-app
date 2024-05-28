@@ -8,6 +8,14 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type DeprecatedTeamCaptain struct {
+	ID         int32
+	EmployeeID int32
+	PartnerID  int32
+	CreatedAt  pgtype.Timestamptz
+	UpdatedAt  pgtype.Timestamptz
+}
+
 type Employee struct {
 	ID         int32
 	Uid        pgtype.UUID
@@ -38,7 +46,6 @@ type EmployeesView struct {
 	FirstName      string
 	LastName       pgtype.Text
 	Email          string
-	PictureUrl     pgtype.Text
 	Position       string
 	Birthday       pgtype.Text
 	PartnerID      int32
@@ -46,8 +53,9 @@ type EmployeesView struct {
 	UpdatedAt      pgtype.Timestamptz
 	AsciiFirstName string
 	AsciiLastName  string
-	IsBirthday     bool
+	IsBirthday     interface{}
 	IsTeamCaptain  interface{}
+	PictureUrl     pgtype.Text
 }
 
 type Language struct {
@@ -77,9 +85,9 @@ type SlackInfo struct {
 }
 
 type TeamCaptain struct {
-	ID         int32
-	EmployeeID int32
-	PartnerID  int32
-	CreatedAt  pgtype.Timestamptz
-	UpdatedAt  pgtype.Timestamptz
+	ID            int32
+	EmployeeID    int32
+	TeamCaptainID int32
+	CreatedAt     pgtype.Timestamptz
+	UpdatedAt     pgtype.Timestamptz
 }

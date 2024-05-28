@@ -17,36 +17,115 @@ import (
 
 type PersonioImporter interface {
 	ImportEmployees(context.Context, model.PersonioEmployees) error
+	UpdateEmployees(context.Context, model.PersonioEmployees) error
 	ImportEmployee(context.Context, model.PersonioEmployee) (*pgtype.UUID, error)
+	UpdateEmployee(context.Context, model.PersonioEmployee) (*pgtype.UUID, error)
 }
 
 type personioImporter struct {
-	l    *slog.Logger
-	q    *repository.Queries
-	conn *pgxpool.Pool
+	logger *slog.Logger
+	q      *repository.Queries
+	conn   *pgxpool.Pool
 }
 
-// ImportEmployees implements PersonioImporter.
-func (i *personioImporter) ImportEmployees(ctx context.Context, employees model.PersonioEmployees) error {
-	logger := i.l
-
-	for _, empl := range employees.Data.Items {
-		i.ImportEmployee(ctx, empl)
-
-		logger.Info("Processing", "email", empl.Data.Email)
-	}
-
-	return nil
-}
-
-func (p *personioImporter) ImportEmployee(ctx context.Context, personioEmpl model.PersonioEmployee) (*pgtype.UUID, error) {
+// UpdateEmployee implements PersonioImporter.
+func (i *personioImporter) UpdateEmployee(ctx context.Context, personioEmpl model.PersonioEmployee) (*pgtype.UUID, error) {
 	if err := personioEmpl.Validate(); err != nil {
 		return nil, err
 	}
 
 	personioID := personioEmpl.ID
 	logger := slog.With("personioID", personioID)
-	_, err := p.q.GetEmployeeByPersonioID(ctx, int32(personioID))
+	employee, err := i.q.GetEmployeeByPersonioID(ctx, int32(personioID))
+	if errors.Is(err, pgx.ErrNoRows) {
+		logger.Debug("Employee not found in database")
+		return nil, internal.ErrNotFound(strconv.Itoa(personioID))
+	}
+
+	if err := i.updateBasicData(ctx, personioID, personioEmpl); err != nil {
+		logger.Warn("Error while updating basic data", "err", err)
+		return nil, err
+	}
+	if err := i.updateTeamCaptain(ctx, employee.ID, personioEmpl.Data.TeamCaptain); err != nil {
+		logger.Warn("Error while updating team captain", "err", err)
+		return nil, err
+	}
+	if err := i.updateLanguages(ctx, employee.ID, personioEmpl.Data.Languages); err != nil {
+		logger.Warn("Error while updating languages", "err", err)
+		return nil, err
+	}
+
+	return &employee.Uid, nil
+}
+
+func (i *personioImporter) updateTeamCaptain(ctx context.Context, employeeID int32, teamCaptain string) error {
+	teamCaptainID, err := processTeamCaptain(ctx, i.q, employeeID, teamCaptain)
+	if err != nil {
+		if helper.IsUniqueViolation(err, "team_captain_id") {
+			if err := i.q.UpdateTeamCaptain(ctx, repository.UpdateTeamCaptainParams{EmployeeID: employeeID, TeamCaptainID: *teamCaptainID}); err != nil {
+				return err
+			}
+			return nil
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (i *personioImporter) updateLanguages(ctx context.Context, employeeID int32, languages string) error {
+	if err := i.q.DeleteEmployeeLanguage(ctx, employeeID); err != nil {
+		i.logger.Warn("Unable to delete employee languages, skipping update", "err", err)
+		return err
+	}
+
+	return i.processLanguages(ctx, employeeID, languages)
+}
+
+func (i *personioImporter) updateBasicData(ctx context.Context, personioID int, personioEmpl model.PersonioEmployee) error {
+	if _, err := i.q.UpdateEmployee(ctx, repository.UpdateEmployeeParams{
+		PersonioID: int32(personioID),
+		FirstName:  personioEmpl.Data.FirstName,
+		LastName:   helper.ParseString(personioEmpl.Data.LastName),
+		Position:   personioEmpl.Data.Position,
+		Birthday:   helper.ParseString(personioEmpl.Data.Birthday),
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// UpdateEmployees implements PersonioImporter.
+func (i *personioImporter) UpdateEmployees(ctx context.Context, employees model.PersonioEmployees) error {
+	for _, empl := range employees.Data.Items {
+		i.UpdateEmployee(ctx, empl)
+
+		i.logger.Info("Updating", "email", empl.Data.Email)
+	}
+
+	return nil
+}
+
+// ImportEmployees implements PersonioImporter.
+func (i *personioImporter) ImportEmployees(ctx context.Context, employees model.PersonioEmployees) error {
+	for _, empl := range employees.Data.Items {
+		i.ImportEmployee(ctx, empl)
+
+		i.logger.Info("Processing", "email", empl.Data.Email)
+	}
+
+	return nil
+}
+
+func (i *personioImporter) ImportEmployee(ctx context.Context, personioEmpl model.PersonioEmployee) (*pgtype.UUID, error) {
+	if err := personioEmpl.Validate(); err != nil {
+		return nil, err
+	}
+
+	personioID := personioEmpl.ID
+	logger := slog.With("personioID", personioID)
+	_, err := i.q.GetEmployeeByPersonioID(ctx, int32(personioID))
 
 	if err == nil {
 		logger.Debug("Employee already exists. Aborting")
@@ -60,17 +139,17 @@ func (p *personioImporter) ImportEmployee(ctx context.Context, personioEmpl mode
 	}
 
 	// Partner and employee basic data (transactional)
-	createdEmployee, err := p.importTransacting(ctx, logger, personioEmpl)
+	createdEmployee, err := i.importTransacting(ctx, logger, personioEmpl)
 
 	if err != nil {
 		return nil, err
 	}
 
 	// Following processes do not abort employee creation
-	if err := processLanguages(ctx, p.q, createdEmployee.ID, personioEmpl.Data.Languages); err != nil {
+	if err := i.processLanguages(ctx, createdEmployee.ID, personioEmpl.Data.Languages); err != nil {
 		logger.Warn("Employee's languages were not processed due to", "err", err)
 	}
-	if err := processTeamCaptain(ctx, p.q, createdEmployee.PartnerID, personioEmpl.Data.TeamCaptain); err != nil {
+	if _, err := processTeamCaptain(ctx, i.q, createdEmployee.ID, personioEmpl.Data.TeamCaptain); err != nil {
 		if !helper.IsUniqueViolation(err, "team_captain") {
 			logger.Warn("Employee's team captain was not processed due to", "err", err)
 		}
@@ -79,18 +158,18 @@ func (p *personioImporter) ImportEmployee(ctx context.Context, personioEmpl mode
 	return &createdEmployee.Uid, nil
 }
 
-func (p *personioImporter) importTransacting(ctx context.Context, logger *slog.Logger, personioEmpl model.PersonioEmployee) (*repository.Employee, error) {
+func (i *personioImporter) importTransacting(ctx context.Context, logger *slog.Logger, personioEmpl model.PersonioEmployee) (*repository.Employee, error) {
 	logger.Debug("Employee not existing. Creating")
 	logger.Debug("Starting transaction")
 
-	tx, err := p.conn.Begin(ctx)
+	tx, err := i.conn.Begin(ctx)
 	if err != nil {
 		logger.Warn("Not possible to create transaction", "err", err)
 		return nil, err
 	}
 	defer tx.Rollback(ctx)
 
-	qtx := p.q.WithTx(tx)
+	qtx := i.q.WithTx(tx)
 
 	departmentID := personioEmpl.Data.DepartmentID
 	partnerID, err := processPartner(ctx, qtx, departmentID)
@@ -112,55 +191,51 @@ func (p *personioImporter) importTransacting(ctx context.Context, logger *slog.L
 	return createdEmployee, tx.Commit(ctx)
 }
 
-func processLanguages(ctx context.Context, q *repository.Queries, createdEmployeeID int32, languages string) error {
+func (i *personioImporter) processLanguages(ctx context.Context, createdEmployeeID int32, languages string) error {
 	personioLanguages := model.ParseLanguages(languages)
 
 	for _, languageEnum := range personioLanguages {
-		if err := assignOrCreate(ctx, q, createdEmployeeID, languageEnum); err != nil {
+		if err := assignOrCreate(ctx, i.q, createdEmployeeID, languageEnum); err != nil {
 			return err
 		}
+	}
+
+	if len(personioLanguages) == 0 {
+		language, err := findOrCreateLanguage(ctx, i.q, "english")
+		if err != nil {
+			return err
+		}
+
+		i.q.AssignEmployeeLanguages(ctx, repository.AssignEmployeeLanguagesParams{EmployeeID: createdEmployeeID, LanguageID: language.ID})
+
+		i.logger.Warn("No languages in personio, assigning 'english'")
 	}
 
 	return nil
 }
 
-func processTeamCaptain(ctx context.Context, q *repository.Queries, partnerID int32, teamCaptain string) error {
+func processTeamCaptain(ctx context.Context, q *repository.Queries, createdEmployeeId int32, teamCaptain string) (*int32, error) {
 	email, err := model.ParseTeamCaptain(teamCaptain)
-
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	teamCaptainID, err := q.GetTeamCaptainIDByEmail(ctx, email)
-
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	if err := q.AssignTeamCaptain(ctx, repository.AssignTeamCaptainParams{EmployeeID: teamCaptainID, PartnerID: partnerID}); err != nil {
-		return err
+	if err := q.AssignTeamCaptain(ctx, repository.AssignTeamCaptainParams{EmployeeID: createdEmployeeId, TeamCaptainID: teamCaptainID}); err != nil {
+		return &teamCaptainID, err
 	}
 
-	return nil
+	return &teamCaptainID, nil
 }
 
 func assignOrCreate(ctx context.Context, q *repository.Queries, createdEmployeeID int32, languageEnum string) error {
-	language, err := q.GetLanguageByName(ctx, languageEnum)
-
+	language, err := findOrCreateLanguage(ctx, q, languageEnum)
 	if err != nil {
-		if !errors.Is(err, pgx.ErrNoRows) {
-			return err
-		}
-
-		language, err = q.CreateLanguage(ctx, languageEnum)
-
-		if err != nil {
-			slog.Warn("Language was not created due to", "lang", languageEnum, "err", err)
-			return err
-		}
-
-		slog.Debug("Language newly created", "lang", languageEnum)
-
+		return err
 	}
 
 	slog.Debug("Language already existing. Assigning", "lang", languageEnum)
@@ -168,6 +243,29 @@ func assignOrCreate(ctx context.Context, q *repository.Queries, createdEmployeeI
 	q.AssignEmployeeLanguages(ctx, repository.AssignEmployeeLanguagesParams{EmployeeID: createdEmployeeID, LanguageID: language.ID})
 
 	return nil
+}
+
+func findOrCreateLanguage(ctx context.Context, q *repository.Queries, languageEnum string) (*repository.Language, error) {
+	language, err := q.GetLanguageByName(ctx, languageEnum)
+
+	if err != nil {
+		if !errors.Is(err, pgx.ErrNoRows) {
+			return nil, err
+		}
+
+		language, err = q.CreateLanguage(ctx, languageEnum)
+
+		if err != nil {
+			slog.Warn("Language was not created due to", "lang", languageEnum, "err", err)
+			return nil, err
+		}
+
+		slog.Debug("Language newly created", "lang", languageEnum)
+
+		return &language, nil
+	}
+
+	return &language, nil
 }
 
 func processEmployeeData(ctx context.Context, qtx *repository.Queries, personioEmployee model.PersonioEmployee, partnerID int) (*repository.Employee, error) {

@@ -31,19 +31,19 @@ func (q *Queries) AssignEmployeeLanguages(ctx context.Context, arg AssignEmploye
 
 const assignTeamCaptain = `-- name: AssignTeamCaptain :exec
 INSERT INTO team_captains (
-    employee_id, partner_id
+    employee_id, team_captain_id
 ) VALUES (
     $1, $2
 )
 `
 
 type AssignTeamCaptainParams struct {
-	EmployeeID int32
-	PartnerID  int32
+	EmployeeID    int32
+	TeamCaptainID int32
 }
 
 func (q *Queries) AssignTeamCaptain(ctx context.Context, arg AssignTeamCaptainParams) error {
-	_, err := q.db.Exec(ctx, assignTeamCaptain, arg.EmployeeID, arg.PartnerID)
+	_, err := q.db.Exec(ctx, assignTeamCaptain, arg.EmployeeID, arg.TeamCaptainID)
 	return err
 }
 
@@ -101,6 +101,15 @@ func (q *Queries) CreateEmployee(ctx context.Context, arg CreateEmployeeParams) 
 		&i.UpdatedAt,
 	)
 	return i, err
+}
+
+const deleteEmployeeLanguage = `-- name: DeleteEmployeeLanguage :exec
+DELETE FROM employees_languages WHERE employee_id = $1
+`
+
+func (q *Queries) DeleteEmployeeLanguage(ctx context.Context, employeeID int32) error {
+	_, err := q.db.Exec(ctx, deleteEmployeeLanguage, employeeID)
+	return err
 }
 
 const getEmployeeByEmail = `-- name: GetEmployeeByEmail :one
@@ -268,4 +277,65 @@ func (q *Queries) GetTeamCaptainIDByEmail(ctx context.Context, email string) (in
 	var employee_id int32
 	err := row.Scan(&employee_id)
 	return employee_id, err
+}
+
+const updateEmployee = `-- name: UpdateEmployee :one
+UPDATE employees SET 
+    first_name = $2,
+    last_name = $3,
+    position = $4,
+    birthday = $5
+WHERE personio_id = $1
+RETURNING id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at
+`
+
+type UpdateEmployeeParams struct {
+	PersonioID int32
+	FirstName  string
+	LastName   pgtype.Text
+	Position   string
+	Birthday   pgtype.Text
+}
+
+func (q *Queries) UpdateEmployee(ctx context.Context, arg UpdateEmployeeParams) (Employee, error) {
+	row := q.db.QueryRow(ctx, updateEmployee,
+		arg.PersonioID,
+		arg.FirstName,
+		arg.LastName,
+		arg.Position,
+		arg.Birthday,
+	)
+	var i Employee
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.PersonioID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Email,
+		&i.PictureUrl,
+		&i.Position,
+		&i.Birthday,
+		&i.PartnerID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const updateTeamCaptain = `-- name: UpdateTeamCaptain :exec
+UPDATE team_captains SET
+    team_captain_id = $2
+WHERE
+    employee_id = $1
+`
+
+type UpdateTeamCaptainParams struct {
+	EmployeeID    int32
+	TeamCaptainID int32
+}
+
+func (q *Queries) UpdateTeamCaptain(ctx context.Context, arg UpdateTeamCaptainParams) error {
+	_, err := q.db.Exec(ctx, updateTeamCaptain, arg.EmployeeID, arg.TeamCaptainID)
+	return err
 }

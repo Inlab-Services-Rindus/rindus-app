@@ -70,9 +70,28 @@ INSERT INTO employees_languages (
     $1, $2
 );
 
+-- name: DeleteEmployeeLanguage :exec
+DELETE FROM employees_languages WHERE employee_id = $1;
+
 -- name: AssignTeamCaptain :exec
 INSERT INTO team_captains (
-    employee_id, partner_id
+    employee_id, team_captain_id
 ) VALUES (
     $1, $2
 );
+
+-- name: UpdateEmployee :one
+UPDATE employees SET 
+    first_name = $2,
+    last_name = $3,
+    position = $4,
+    birthday = $5
+WHERE personio_id = $1
+RETURNING *;
+
+-- name: UpdateTeamCaptain :exec
+UPDATE team_captains SET
+    team_captain_id = $2
+WHERE
+    employee_id = $1
+;

@@ -1,3 +1,65 @@
+@use '@scss/colors' as *;
+@use '@scss/fonts' as *;
+
 .eventDetail {
-  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 20px 16px;
+
+  .eventDescription {
+    display: flex;
+    flex-direction: column;
+
+    &__description {
+      color: $rindus-medium-gray;
+      @include text($font-poppins-regular);
+      font-size: 16px;
+      width: 100%;
+      line-height: 22px;
+
+      p:first-child {
+        margin-top: 0;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &__info {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    &__location {
+      width: 300px;
+
+      .eventDescription__link {
+        @include text($font-poppins-regular);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .eventDescription__title {
+          color: $rindus-dark-gray;
+          margin: 0;
+          font-size: 14px;
+          line-height: 16px;
+        }
+
+        .eventDescription__subtitle {
+          color: $rindus-medium-gray;
+          margin: 0;
+          font-size: 12px;
+          line-height: 16px;
+        }
+      }
+    }
+  }
 }

@@ -1,21 +1,21 @@
 @use '@scss/colors' as *;
-@import '@/assets/scss/_fonts.scss';
+@use '@scss/fonts' as *;
 
 .iconWithText {
+  @include text($font-poppins-regular);
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: 12px;
-  margin-bottom: 12px;
 
-  &__title {
-    margin: 0;
-    font-size: 14px;
+  &__icon {
+    width: 24px;
+    height: 24px;
   }
 
-  &__subtitle {
+  &__title {
+    color: $rindus-dark-gray;
     margin: 0;
-    color: $rindus-medium-gray;
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 16px;
   }
 }

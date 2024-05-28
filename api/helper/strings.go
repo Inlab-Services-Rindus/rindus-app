@@ -2,7 +2,7 @@ package helper
 
 import "strings"
 
-// IsEmpty checks if an stirng is empty
+// IsEmpty checks if an string is empty
 func IsEmpty(s string) bool {
 	return len(TrimSpace(s)) == 0
 }
