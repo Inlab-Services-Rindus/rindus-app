@@ -8,8 +8,8 @@ describe('getLastNameHelper', () => {
   });
 
   it('should return the first last name when it consists of one part', () => {
-    const result = getLastNameHelper('García Pérez')
-    ;
+    const result = getLastNameHelper('García Pérez');
+
     expect(result).toEqual('García');
   });
 
