@@ -61,7 +61,6 @@ export function Partner() {
               <img
                 src={partner?.info?.logoUrl}
                 alt={`${partner?.info?.name} logo`}
-                loading="lazy"
               />
             </div>
             <div className="header__title">
