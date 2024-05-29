@@ -31,6 +31,24 @@
     scrollbar-color: $rindus-green $rindus-off-white;
     text-align: center;
   }
+
+  &__loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #fff;
+      border-bottom-color: $rindus-green;
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+      position: relative;
+    }
+  }
 }
 
 .hasError {
