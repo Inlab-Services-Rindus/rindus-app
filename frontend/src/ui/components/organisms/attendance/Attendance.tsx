@@ -56,7 +56,11 @@ export default function Attendance({ id }: Props) {
       return null;
     }
     if (isLoading) {
-      return <Loader />;
+      return (
+        <div className="attendees__loader">
+          <Loader />
+        </div>
+      );
     }
     return (
       <>
