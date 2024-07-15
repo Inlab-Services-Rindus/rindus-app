@@ -5,7 +5,7 @@ export interface MinimalEvent {
   day: string;
   weekday: string;
   colour: string;
-  isOnline: boolean | null;
+  isOnlineEvent: boolean;
 }
 
 export interface DetailedEvent {

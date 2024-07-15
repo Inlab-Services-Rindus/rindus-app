@@ -469,6 +469,9 @@ components:
           format: hexadecimal
           examples: ["#0000FF"] # Blue color in hexadecimal format
           description: Color represented in hexadecimal format.
+        isOnlineEvent:
+          type: boolean
+          examples: false
     DetailedEvent:
       type: object
       properties:
