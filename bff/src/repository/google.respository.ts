@@ -65,7 +65,10 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     return event;
   }
 
-  public async attendees(eventId: string): Promise<AttendeesEvent> {
+  public async attendees(
+    userId: number,
+    eventId: string,
+  ): Promise<AttendeesEvent> {
     const realEventId =
       eventId === '619ppo774sd3qmha2mk1glc8pv'
         ? '2q5lfhgasrv4dqmvl1eh8rgsb7'
@@ -97,7 +100,8 @@ export class GoogleRepository implements GoogleRepositoryInterface {
         throw new Error('First question ID or responses not found.');
       }
 
-      const attendees: Attendee[] = await this.extractAttendees(
+      const { attendees, isSurveyFilled } = await this.extractData(
+        userId,
         responses,
         firstQuestionId,
       );
@@ -105,6 +109,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       return {
         totalGuest: attendees.length.toString(),
         attendees,
+        isSurveyFilled: isSurveyFilled,
       };
     } catch (error) {
       throw `Error getting attendees: ${error}`;
@@ -153,10 +158,11 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     return formData?.data?.items?.[1]?.questionItem?.question?.questionId ?? '';
   }
 
-  private async extractAttendees(
+  private async extractData(
+    userId: number,
     responses: forms_v1.Schema$FormResponse[],
     firstQuestionId: string | undefined,
-  ): Promise<Attendee[]> {
+  ): Promise<Omit<AttendeesEvent, 'totalGuest'>> {
     const usersPromises = [];
     const attendees: Attendee[] = [];
 
@@ -185,6 +191,8 @@ export class GoogleRepository implements GoogleRepositoryInterface {
 
     const usersData = await Promise.allSettled(usersPromises);
 
+    let isSurveyFilled = false;
+
     usersData.forEach((user) => {
       if (user.status === 'fulfilled') {
         const userValue = user.value;
@@ -195,10 +203,17 @@ export class GoogleRepository implements GoogleRepositoryInterface {
             profilePictureUrl: userValue.pictureUrl,
             firstName: userValue.firstName,
           });
+
+          if (userValue.id === userId) {
+            isSurveyFilled = true;
+          }
         }
       }
     });
 
-    return attendees;
+    return {
+      attendees,
+      isSurveyFilled: isSurveyFilled,
+    };
   }
 }

@@ -311,6 +311,32 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         404:
           $ref: "#/components/responses/NotFound"
+  /attendees/{eventId}:
+    get:
+      tags:
+        - google/v1
+      summary: Return requested attendees from rindus google calendar event
+      operationId: attendees
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          description: The ID of the requested event
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: All Attendees and survey status current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Attendees"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        400:
+          $ref: "#/components/responses/BadRequest"
 components:
   schemas:
     LoggedInUser:
@@ -345,6 +371,19 @@ components:
             isBirthday:
               type: boolean
               examples: ["false"]
+    Attendee:
+      type: object
+      properties:
+        id:
+          type: string
+          examples: ["1"]
+        firstName:
+          type: string
+          examples: ["John"]
+        profilePictureUrl:
+          type: string
+          format: url
+          examples: ["https://...."]
     UsersIndexPage:
       type: object
       properties:
@@ -471,7 +510,7 @@ components:
           description: Color represented in hexadecimal format.
         isOnlineEvent:
           type: boolean
-          examples: false
+          examples: [false]
     DetailedEvent:
       type: object
       properties:
@@ -561,6 +600,20 @@ components:
             name:
               type: string
               examples: ["Scrum Master"]
+    Attendees:
+      type: object
+      properties:
+        attendees:
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/Attendee"
+        totalGuest:
+          type: number
+          examples: [50]
+        isSurveyFilled:
+          type: boolean
+          examples: [false]
   requestBodies:
     Login:
       description: Google provided user's JWT token
