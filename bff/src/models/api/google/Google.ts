@@ -31,4 +31,5 @@ export interface Attendee {
 export interface AttendeesEvent {
   totalGuest: string;
   attendees: Attendee[];
+  isSurveyFilled: boolean;
 }

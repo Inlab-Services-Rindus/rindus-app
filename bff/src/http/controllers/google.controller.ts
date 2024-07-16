@@ -38,21 +38,25 @@ export class GoogleController {
 
   public async attendees(request: Request, response: Response) {
     const eventId = request?.params?.eventId;
-    const cacheKey = this.calculateCacheKey(eventId);
+    const userId = request.session?.userId;
 
-    let attendees;
-    if (cacheKey != null) {
-      const cached = this.eventsCache.get(cacheKey);
-      attendees = cached;
+    if (eventId && userId) {
+      const cacheKey = this.calculateCacheKey(eventId);
 
-      if (!cached) {
-        attendees = await this.googlePrograms.attendees(eventId);
-        this.eventsCache.set(cacheKey, attendees);
+      let attendees;
+      if (cacheKey != null) {
+        const cached = this.eventsCache.get(cacheKey);
+        attendees = cached;
+
+        if (!cached) {
+          attendees = await this.googlePrograms.attendees(userId, eventId);
+          this.eventsCache.set(cacheKey, attendees);
+        }
       }
-    }
 
-    if (attendees) {
-      return response.send(attendees);
+      if (attendees) {
+        return response.send(attendees);
+      }
     }
 
     return response.sendStatus(404);

@@ -47,9 +47,12 @@ export class GooglePrograms {
     }
   }
 
-  public async attendees(eventId: string): Promise<AttendeesEvent | null> {
+  public async attendees(
+    userId: number,
+    eventId: string,
+  ): Promise<AttendeesEvent | null> {
     const attendees = await this.googleRepository
-      .attendees(eventId)
+      .attendees(userId, eventId)
       .catch(() => null);
 
     return attendees;
