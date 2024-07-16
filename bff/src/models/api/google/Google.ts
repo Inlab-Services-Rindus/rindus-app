@@ -16,6 +16,7 @@ export interface DetailedEvent {
     day: string;
     weekday: string;
     colour: string;
+    isOnlineEvent: boolean;
   };
   description: string;
   time: string;
