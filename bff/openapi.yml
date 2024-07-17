@@ -328,7 +328,7 @@ paths:
             type: string
       responses:
         200:
-          description: All Attendees and survey status current user
+          description: All Attendees sorted by firstName and survey status current user
           content:
             application/json:
               schema:
@@ -374,16 +374,16 @@ components:
     Attendee:
       type: object
       properties:
-        id:
-          type: string
-          examples: ["1"]
-        firstName:
-          type: string
-          examples: ["John"]
-        profilePictureUrl:
-          type: string
-          format: url
-          examples: ["https://...."]
+            id:
+              type: string
+              examples: ["1"]
+            firstName:
+              type: string
+              examples: ["John"]
+            profilePictureUrl:
+              type: string
+              format: url
+              examples: ["https://...."]
     UsersIndexPage:
       type: object
       properties:
