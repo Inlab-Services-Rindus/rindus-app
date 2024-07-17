@@ -106,9 +106,13 @@ export class GoogleRepository implements GoogleRepositoryInterface {
         firstQuestionId,
       );
 
+      const attendeesSortedByFirstName = attendees.sort((a, b) =>
+        a.firstName.localeCompare(b.firstName, 'es', { sensitivity: 'base' }),
+      );
+
       return {
         totalGuest: attendees.length.toString(),
-        attendees,
+        attendees: attendeesSortedByFirstName,
         isSurveyFilled: isSurveyFilled,
       };
     } catch (error) {
