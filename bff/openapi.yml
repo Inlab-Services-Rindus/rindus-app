@@ -537,9 +537,6 @@ components:
               format: hexadecimal
               examples: ["#00FF00"] # Green color in hexadecimal format
               description: Color represented in hexadecimal format.
-            isOnlineEvent:
-              type: boolean
-              examples: [false]
         description:
           type: string
           examples: ["Annual conference for industry professionals."]

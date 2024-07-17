@@ -33,8 +33,7 @@ function getWeekday(dateTime: string): string {
   return new Date(dateTime).toLocaleDateString('en', { weekday: 'long' });
 }
 function isOnlineEvent(location: string | null | undefined): boolean {
-  const regex = /https?:\/\/[^/]*zoom[^/]*/;
-  return regex.test(location ?? '');
+  return location ? !location.startsWith('https://www.google.com/maps') : false;
 }
 
 function formatTime(dateTimeString: string, timeZone: string) {
@@ -103,7 +102,6 @@ export class DetailedEventConverter
         day: getDay(event.start.dateTime),
         weekday: getWeekday(event.start.dateTime),
         colour: getMonthColor(event.start.dateTime),
-        isOnlineEvent: isOnlineEvent(event?.location),
       },
       description: event?.description || '',
       time: timeRange,
