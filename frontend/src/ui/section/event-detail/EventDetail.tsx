@@ -79,6 +79,7 @@ export function EventDetail() {
             isBoldTitle
             weekday={eventDetails?.summary?.weekday}
             colour={eventDetails?.summary?.colour}
+            isOnlineEvent={eventDetails?.isOnlineEvent}
           />
           <div className="eventDescription">
             <div

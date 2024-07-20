@@ -59,7 +59,10 @@
       }
       &__weekday {
         margin: 0px;
+        display: flex;
+        justify-content: flex-start;
       }
+             
       &__info {
         width: 100%;
         display: flex;

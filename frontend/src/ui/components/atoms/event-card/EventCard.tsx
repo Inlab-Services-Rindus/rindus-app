@@ -1,4 +1,5 @@
 import RightButton from '@/ui/components/atoms/buttons/right-button/RightButton';
+import EventSummary from '@/ui/components/atoms/event-summary/EventSummary';
 
 import { BEMClassHelper } from '@/ui/helpers/BEMClassHelper';
 
@@ -13,6 +14,7 @@ interface EventCardProps {
   isButtonVisible?: boolean;
   isBoldTitle?: boolean;
   handleClick?: () => void;
+  isOnlineEvent: boolean;
 }
 function EventCard({
   title,
@@ -23,6 +25,7 @@ function EventCard({
   isButtonVisible = false,
   isBoldTitle = false,
   handleClick,
+  isOnlineEvent,
 }: EventCardProps) {
   return (
     <div className="eventCard" data-testid="event-card" onClick={handleClick}>
@@ -46,7 +49,15 @@ function EventCard({
             >
               {title}
             </h2>
-            <p className="details__weekday">{weekday}</p>
+            <div className="details__weekday">
+              {' '}
+              {weekday}
+              <div>
+                {!isButtonVisible && (
+                  <EventSummary isOnlineEvent={isOnlineEvent} />
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

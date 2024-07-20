@@ -20,6 +20,7 @@ export interface DetailedEvent {
   description: string;
   time: string;
   location: string;
+  isOnlineEvent: boolean;
 }
 
 export interface Attendee {

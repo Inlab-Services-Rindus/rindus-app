@@ -42,6 +42,7 @@ export default function EventsTab() {
             colour={event.colour}
             isBoldTitle={false}
             handleClick={() => goToEventDetails(event.id)}
+            isOnlineEvent={event.isOnlineEvent}
           />
         </article>
       ))}

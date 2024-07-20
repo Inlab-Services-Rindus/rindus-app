@@ -5,6 +5,7 @@ export interface Event {
   day: string;
   weekday: string;
   colour: string;
+  isOnlineEvent: boolean;
 }
 
 export interface DetailedEvent {
@@ -19,4 +20,5 @@ export interface DetailedEvent {
   description: string;
   location: string;
   time: string;
+  isOnlineEvent: boolean;
 }

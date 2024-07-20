@@ -2,19 +2,17 @@
 
 .eventSummary {
   display: flex;
+  margin-left: 8px;
 
   &__breakIcon {
     display: flex;
-    margin: 0 7px;
+    align-items: center;
+    margin-right: 8px;
   }
 
-  &__survey {
+  &__onlineEvent {
     font-weight: 600;
-    margin: 0px; // TODO: Revisar reset css
-
-    .surveyFilled {
-      color: $rindus-green-medium;
-      display: flex;
-    }
+    display: flex;
+    color: $rindus-medium-gray;
   }
 }

@@ -5,6 +5,7 @@ import {
 } from '@/models/api/google/Google';
 import { calendar_v3 } from 'googleapis';
 
+
 const MONTHS_COLORS = [
   '#2C4D6E',
   '#74CBFB',
@@ -32,8 +33,14 @@ function getDay(dateTime: string): string {
 function getWeekday(dateTime: string): string {
   return new Date(dateTime).toLocaleDateString('en', { weekday: 'long' });
 }
+
 function isOnlineEvent(location: string | null | undefined): boolean {
-  return location ? !location.startsWith('https://www.google.com/maps') : false;
+  if (!location) return false;
+  try {
+    return !new URL(location).href.startsWith('https://www.google.com/maps');
+  } catch {
+    return false;
+  }
 }
 
 function formatTime(dateTimeString: string, timeZone: string) {
@@ -106,6 +113,7 @@ export class DetailedEventConverter
       description: event?.description || '',
       time: timeRange,
       location: event?.location || '',
+      isOnlineEvent: isOnlineEvent(event?.location)
     };
   }
 }
