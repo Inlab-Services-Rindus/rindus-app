@@ -1,6 +1,6 @@
 import { GoogleRepository } from '@/models/service/google/google.repository';
 import {
-  AttendeesEvent,
+  AttendeesEventResponse,
   DetailedEvent,
   MinimalEvent,
 } from '@/models/api/google/Google';
@@ -50,7 +50,7 @@ export class GooglePrograms {
   public async attendees(
     userId: number,
     eventId: string,
-  ): Promise<AttendeesEvent | null> {
+  ): Promise<AttendeesEventResponse | null> {
     const attendees = await this.googleRepository
       .attendees(userId, eventId)
       .catch(() => null);
