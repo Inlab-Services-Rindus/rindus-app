@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Avatar } from '@/ui/components/organisms/avatar/Avatar';
 
-import { Attendee } from '@/modules/attendees/domain/Attendee';
+import { EmployeeEventAttendee } from '@/modules/events/domain/AttendeesEvent';
 
 import '@/ui/components/organisms/atendee-tile/AttendeeTile.scss';
 
@@ -10,7 +10,7 @@ export default function AtendeeTile({
   id,
   profilePictureUrl,
   firstName,
-}: Attendee): JSX.Element {
+}: EmployeeEventAttendee): JSX.Element {
   const navigate = useNavigate();
   return (
     <div
