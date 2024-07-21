@@ -5,7 +5,10 @@ import { GoogleAuth } from 'google-auth-library';
 import { JSONClient } from 'google-auth-library/build/src/auth/googleauth';
 import { convertISOToDDMMYYYY } from '@/helpers/convertISOToDDMMYYYY';
 import { UserRepository } from '@/repository/user.repository';
-import { Attendee, AttendeesEvent } from '@/models/api/google/Google';
+import {
+  EmployeeEventAttendee,
+  AttendeesEventResponse,
+} from '@/models/api/google/Google';
 
 export class GoogleRepository implements GoogleRepositoryInterface {
   private auth: GoogleAuth<JSONClient> | undefined;
@@ -68,14 +71,9 @@ export class GoogleRepository implements GoogleRepositoryInterface {
   public async attendees(
     userId: number,
     eventId: string,
-  ): Promise<AttendeesEvent> {
-    const realEventId =
-      eventId === '619ppo774sd3qmha2mk1glc8pv'
-        ? '2q5lfhgasrv4dqmvl1eh8rgsb7'
-        : eventId;
-
+  ): Promise<AttendeesEventResponse> {
     try {
-      const event = await this.event(realEventId);
+      const event = await this.event(eventId);
       const startDate = event?.start?.dateTime;
 
       if (!startDate) {
@@ -89,31 +87,24 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       }
 
       const responses = await this.getFormResponses(formId);
-      let firstQuestionId = '';
-      if (realEventId !== eventId) {
-        firstQuestionId = await this.getSecondQuestionId(formId);
-      } else {
-        firstQuestionId = await this.getFirstQuestionId(formId);
-      }
+      const firstQuestionId = await this.getFirstQuestionId(formId);
 
       if (!firstQuestionId || !responses) {
         throw new Error('First question ID or responses not found.');
       }
 
-      const { attendees, isSurveyFilled } = await this.extractData(
-        userId,
-        responses,
-        firstQuestionId,
-      );
+      const { employees, totalAttendees, totalNewRindes, isSurveyFilled } =
+        await this.extractData(userId, responses, firstQuestionId);
 
-      const attendeesSortedByFirstName = attendees.sort((a, b) =>
+      const attendeesSortedByFirstName = employees.sort((a, b) =>
         a.firstName.localeCompare(b.firstName, 'es', { sensitivity: 'base' }),
       );
 
       return {
-        totalGuest: attendees.length.toString(),
-        attendees: attendeesSortedByFirstName,
-        isSurveyFilled: isSurveyFilled,
+        employees: attendeesSortedByFirstName,
+        totalAttendees,
+        totalNewRindes,
+        isSurveyFilled,
       };
     } catch (error) {
       throw `Error getting attendees: ${error}`;
@@ -153,22 +144,14 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     return formData?.data?.items?.[0]?.questionItem?.question?.questionId ?? '';
   }
 
-  private async getSecondQuestionId(formId: string): Promise<string> {
-    const formData = await google.forms('v1').forms.get({
-      auth: this.auth,
-      formId: formId,
-    });
-
-    return formData?.data?.items?.[1]?.questionItem?.question?.questionId ?? '';
-  }
-
   private async extractData(
     userId: number,
     responses: forms_v1.Schema$FormResponse[],
     firstQuestionId: string | undefined,
-  ): Promise<Omit<AttendeesEvent, 'totalGuest'>> {
+  ): Promise<AttendeesEventResponse> {
     const usersPromises = [];
-    const attendees: Attendee[] = [];
+    const employees: EmployeeEventAttendee[] = [];
+    let totalNewRinders = 0;
 
     for (const responseItem of responses) {
       const email = responseItem?.respondentEmail;
@@ -187,7 +170,13 @@ export class GoogleRepository implements GoogleRepositoryInterface {
             firstAnswer?.toLowerCase()?.includes('participate');
 
           if (isUserAttendingEvent) {
-            usersPromises.push(this.userRepository.findUserByEmail(email));
+            const user = await this.userRepository.findUserByEmail(email);
+
+            if (user) {
+              usersPromises.push(user);
+            } else {
+              totalNewRinders++;
+            }
           }
         }
       }
@@ -202,7 +191,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
         const userValue = user.value;
 
         if (userValue) {
-          attendees.push({
+          employees.push({
             id: userValue.id.toString(),
             profilePictureUrl: userValue.pictureUrl,
             firstName: userValue.firstName,
@@ -216,7 +205,9 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     });
 
     return {
-      attendees,
+      employees,
+      totalAttendees: employees.length + totalNewRinders,
+      totalNewRindes: totalNewRinders,
       isSurveyFilled: isSurveyFilled,
     };
   }
