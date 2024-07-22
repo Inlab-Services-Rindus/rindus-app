@@ -7,6 +7,7 @@ const defaultProps = {
   day: '01',
   weekday: 'Monday',
   colour: '#000000',
+  isOnlineEvent: false,
 };
 
 describe('EventCard', () => {
@@ -37,5 +38,20 @@ describe('EventCard', () => {
     const eventCardTitle = screen.getByText(defaultProps.title);
 
     expect(eventCardTitle).toHaveClass('details__title--bold');
+  });
+
+  it('should render EventSummary when isButtonVisible is false and isOnlineEvent is true', () => {
+    render(<EventCard {...defaultProps} isButtonVisible={false} isOnlineEvent={true} />);
+    const eventSummary = screen.getByTestId('event-summary');
+
+    expect(eventSummary).toBeInTheDocument();
+    expect(screen.getByText('Online Event')).toBeInTheDocument();
+  });
+
+  it('should not render EventSummary when isButtonVisible is true', () => {
+    render(<EventCard {...defaultProps} isButtonVisible={true} isOnlineEvent={true} />);
+    const eventSummary = screen.queryByTestId('event-summary');
+
+    expect(eventSummary).not.toBeInTheDocument();
   });
 });

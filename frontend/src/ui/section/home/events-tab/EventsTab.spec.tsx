@@ -65,6 +65,7 @@ describe('Events tab', () => {
                 day: '01',
                 weekday: 'Monday',
                 colour: '#000000',
+                isOnlineEvent: false,
               },
             ],
             isLoading: false,
@@ -96,6 +97,7 @@ describe('Events tab', () => {
                 day: '01',
                 weekday: 'Monday',
                 colour: '#000000',
+                isOnlineEvent: true,
               },
               {
                 id: '2',
@@ -104,6 +106,7 @@ describe('Events tab', () => {
                 day: '02',
                 weekday: 'Tuesday',
                 colour: '#000001',
+                isOnlineEvent: false,
               },
             ],
             isLoading: false,

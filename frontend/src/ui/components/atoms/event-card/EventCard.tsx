@@ -54,7 +54,7 @@ function EventCard({
               {weekday}
               <div>
                 {!isButtonVisible && (
-                  <EventSummary isOnlineEvent={isOnlineEvent} />
+                  <EventSummary isOnlineEvent={isOnlineEvent} data-testid="event-summary"/>
                 )}
               </div>
             </div>
