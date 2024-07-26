@@ -118,7 +118,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       includeItemsFromAllDrives: true,
       q: `name contains '${convertISOToDDMMYYYY(
         startDate,
-      )}' and mimeType='application/vnd.google-apps.form'`,
+      )}' and mimeType='application/vnd.google-apps.form' and trashed=false`,
     });
 
     return forms?.data?.files?.[0]?.id ?? '';
