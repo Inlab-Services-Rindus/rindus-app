@@ -5,6 +5,7 @@ export interface MinimalEvent {
   day: string;
   weekday: string;
   colour: string;
+  isOnlineEvent: boolean;
 }
 
 export interface DetailedEvent {
@@ -21,13 +22,15 @@ export interface DetailedEvent {
   location: string;
 }
 
-export interface Attendee {
+export interface EmployeeEventAttendee {
   id: string;
   profilePictureUrl: string;
   firstName: string;
 }
 
-export interface AttendeesEvent {
-  totalGuest: string;
-  attendees: Attendee[];
+export interface AttendeesEventResponse {
+  isSurveyFilled: boolean;
+  employees: EmployeeEventAttendee[];
+  totalAttendees: number;
+  totalNewRindes: number;
 }
