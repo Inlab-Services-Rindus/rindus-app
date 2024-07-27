@@ -93,7 +93,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
         throw new Error('First question ID or responses not found.');
       }
 
-      const { employees, totalAttendees, totalNewRindes, isSurveyFilled } =
+      const { employees, totalAttendees, totalNewRinders, isSurveyFilled } =
         await this.extractData(userId, responses, firstQuestionId);
 
       const attendeesSortedByFirstName = employees.sort((a, b) =>
@@ -103,7 +103,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       return {
         employees: attendeesSortedByFirstName,
         totalAttendees,
-        totalNewRindes,
+        totalNewRinders,
         isSurveyFilled,
       };
     } catch (error) {
@@ -207,7 +207,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     return {
       employees,
       totalAttendees: employees.length + totalNewRinders,
-      totalNewRindes: totalNewRinders,
+      totalNewRinders: totalNewRinders,
       isSurveyFilled: isSurveyFilled,
     };
   }

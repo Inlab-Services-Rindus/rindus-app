@@ -32,5 +32,5 @@ export interface AttendeesEventResponse {
   isSurveyFilled: boolean;
   employees: EmployeeEventAttendee[];
   totalAttendees: number;
-  totalNewRindes: number;
+  totalNewRinders: number;
 }
