@@ -67,6 +67,9 @@ export default function Attendance({ id }: Props) {
         </div>
       );
     }
+
+    const totalNewRinders = eventAttendanceInfo?.totalNewRinders ?? 0;
+
     return (
       <>
         <div className="attendees__number">
@@ -74,13 +77,11 @@ export default function Attendance({ id }: Props) {
           {guestsText()}
         </div>
         <div className="attendees__display__container">
-          {eventAttendanceInfo?.totalNewRinders && (
+          {Boolean(totalNewRinders) && (
             <AtendeeTile
               profilePictureUrl={userIcon}
-              firstName={`New Rinder${
-                eventAttendanceInfo?.totalNewRinders > 1 ? 's' : ''
-              }`}
-              badgeNumber={eventAttendanceInfo?.totalNewRinders}
+              firstName={`New Rinder${totalNewRinders > 1 ? 's' : ''}`}
+              badgeNumber={totalNewRinders}
             />
           )}
           {eventAttendanceInfo?.employees.map((employee) => (
