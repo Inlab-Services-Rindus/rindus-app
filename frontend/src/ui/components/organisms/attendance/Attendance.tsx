@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import userIcon from '@/assets/icons/User_24.svg';
 import Loader from '@/ui/components/atoms/loader/Loader';
 import AtendeeTile from '@/ui/components/organisms/atendee-tile/AtendeeTile';
 
@@ -73,6 +74,15 @@ export default function Attendance({ id }: Props) {
           {guestsText()}
         </div>
         <div className="attendees__display__container">
+          {eventAttendanceInfo?.totalNewRinders && (
+            <AtendeeTile
+              profilePictureUrl={userIcon}
+              firstName={`New Rinder${
+                eventAttendanceInfo?.totalNewRinders > 1 ? 's' : ''
+              }`}
+              badgeNumber={eventAttendanceInfo?.totalNewRinders}
+            />
+          )}
           {eventAttendanceInfo?.employees.map((employee) => (
             <AtendeeTile
               profilePictureUrl={employee.profilePictureUrl}
