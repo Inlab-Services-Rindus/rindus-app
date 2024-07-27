@@ -75,12 +75,13 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     try {
       const event = await this.event(eventId);
       const startDate = event?.start?.dateTime;
+      const name = event?.summary;
 
-      if (!startDate) {
+      if (!startDate || !name) {
         throw new Error('Start date of the event is missing.');
       }
 
-      const formId = await this.getFormId(startDate);
+      const formId = await this.getFormId(startDate, name);
 
       if (!formId) {
         throw new Error('Form ID not found.');
@@ -111,7 +112,9 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     }
   }
 
-  private async getFormId(startDate: string): Promise<string> {
+  private async getFormId(startDate: string, name: string): Promise<string> {
+    const firstPartOfName = name.split(' ')[0];
+
     const forms = await google.drive('v3').files.list({
       auth: this.auth,
       supportsAllDrives: true,
@@ -121,7 +124,17 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       )}' and mimeType='application/vnd.google-apps.form' and trashed=false`,
     });
 
-    return forms?.data?.files?.[0]?.id ?? '';
+    console.log('Pedro ===> forms', forms);
+    console.log('Pedro ===> firstPartOfName', firstPartOfName);
+
+    //Cant put inside ihe call to google because not works always filtering by name and date
+    const form = forms?.data?.files?.find(
+      (form) => form.name?.includes(firstPartOfName),
+    );
+
+    console.log('Pedro ===> form', form);
+
+    return form?.id ?? '';
   }
 
   private async getFormResponses(
