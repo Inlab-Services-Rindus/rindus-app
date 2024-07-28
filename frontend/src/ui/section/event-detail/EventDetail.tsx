@@ -14,8 +14,6 @@ import { getEventDetails } from '@/modules/events/application/get-details/getEve
 import { DetailedEvent } from '@/modules/events/domain/Event';
 import { createEventRepository } from '@/modules/events/infrastructure/EventRepository';
 
-import { getGoogleMapsUrl } from '@/ui/helpers/getGoogleMapsUrl';
-
 import '@/ui/section/event-detail/EventDetail.scss';
 
 export function EventDetail() {
@@ -53,6 +51,16 @@ export function EventDetail() {
         ALLOWED_TAGS: ['br', 'p'],
       }
     );
+  }
+
+  function getLocationWords(locationUrl: string) {
+    const urlParams = new URLSearchParams(locationUrl);
+    const queryParam = urlParams.get('query');
+    const decodedQueryParam = decodeURIComponent(queryParam ?? '');
+    const words = decodedQueryParam
+      .split('+')
+      .map((word) => word.replace(/,/g, ''));
+    return words;
   }
 
   useEffect(() => {
@@ -96,18 +104,20 @@ export function EventDetail() {
             >
               {eventDetails?.time}
             </IconWithText>
-            {eventDetails?.location && (
+            {eventDetails?.locationUrl && (
               <IconWithText icon={<img alt="Location" src={locationImage} />}>
                 <div className="eventDescription__location">
                   <a
-                    href={getGoogleMapsUrl(eventDetails?.location)}
+                    href={eventDetails?.locationUrl}
                     className="eventDescription__link"
                   >
                     <span className="eventDescription__title">
-                      {eventDetails?.location.split(',')[0]}
+                      {`${getLocationWords(eventDetails?.locationUrl)[0]} ${
+                        getLocationWords(eventDetails?.locationUrl)[1]
+                      }`}
                     </span>
                     <span className="eventDescription__subtitle">
-                      {eventDetails?.location.split(',')[1]}
+                      {eventDetails?.locationUrl.split(',')[1]}
                     </span>
                   </a>
                 </div>

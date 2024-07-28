@@ -32,9 +32,46 @@ function getDay(dateTime: string): string {
 function getWeekday(dateTime: string): string {
   return new Date(dateTime).toLocaleDateString('en', { weekday: 'long' });
 }
-function isOnlineEvent(location: string | null | undefined): boolean {
-  const regex = /https?:\/\/[^/]*zoom[^/]*/;
-  return regex.test(location ?? '');
+function getConferenceUri(
+  conferenceData?: calendar_v3.Schema$ConferenceData,
+): string {
+  if (!conferenceData) {
+    return '';
+  }
+
+  const videoEntryPoint = conferenceData.entryPoints?.find(
+    (conference) => conference.entryPointType === 'video',
+  );
+
+  return videoEntryPoint?.uri ?? '';
+}
+function isOnlineEvent(
+  conferenceData?: calendar_v3.Schema$ConferenceData,
+): boolean {
+  if (!conferenceData?.entryPoints) {
+    return false;
+  }
+
+  const videoEntryPoint = conferenceData.entryPoints.find(
+    (conference) => conference.entryPointType === 'video',
+  );
+
+  if (videoEntryPoint) {
+    return Boolean(videoEntryPoint.uri);
+  }
+
+  return false;
+}
+function getGoogleMapsUrl(address?: string | null): string {
+  if (!address) {
+    return '';
+  }
+
+  let formattedAddress = address.replace(/, /g, ',+').replace(/ /g, '+');
+
+  formattedAddress = encodeURIComponent(formattedAddress);
+
+  return `https://www.google.com/maps/search/?api=1&query=${formattedAddress}`;
 }
 
 function formatTime(dateTimeString: string, timeZone: string) {
@@ -66,7 +103,7 @@ export class MinimalEventConverter
       day: getDay(event.start.dateTime),
       weekday: getWeekday(event.start.dateTime),
       colour: getMonthColor(event.start.dateTime),
-      isOnlineEvent: isOnlineEvent(event?.location),
+      isOnlineEvent: isOnlineEvent(event.conferenceData),
     };
   }
 }
@@ -103,11 +140,12 @@ export class DetailedEventConverter
         day: getDay(event.start.dateTime),
         weekday: getWeekday(event.start.dateTime),
         colour: getMonthColor(event.start.dateTime),
-        isOnlineEvent: isOnlineEvent(event?.location),
       },
-      description: event?.description || '',
+      isOnlineEvent: isOnlineEvent(event.conferenceData),
+      description: event?.description ?? '',
       time: timeRange,
-      location: event?.location || '',
+      locationUrl: getGoogleMapsUrl(event?.location),
+      conferenceUri: getConferenceUri(event.conferenceData),
     };
   }
 }

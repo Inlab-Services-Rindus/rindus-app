@@ -16,11 +16,12 @@ export interface DetailedEvent {
     day: string;
     weekday: string;
     colour: string;
-    isOnlineEvent: boolean;
   };
+  isOnlineEvent: boolean;
   description: string;
   time: string;
-  location: string;
+  locationUrl: string;
+  conferenceUri: string;
 }
 
 export interface Attendee {
