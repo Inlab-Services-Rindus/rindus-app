@@ -1,9 +1,9 @@
 import { config } from '@/config/config';
 
-import { EventAttendance } from '@/modules/attendees/domain/Attendee';
-import { AttendeeRepository } from '@/modules/attendees/domain/AttendeeRepository';
+import { EventAttendanceInfo } from '@/modules/events//domain/AttendeesEvent';
+import { AttendeesEventRepository } from '@/modules/events/domain/AttendeesEventRepository';
 
-export function createAttendeeRepository(): AttendeeRepository {
+export function createEventAttendeesRepository(): AttendeesEventRepository {
   return {
     getAttendance,
   };
@@ -22,7 +22,7 @@ export async function getAttendance(id: string) {
       throw new Error('Error fetching attendees');
     }
 
-    const attendance = response.json() as Promise<EventAttendance>;
+    const attendance = response.json() as Promise<EventAttendanceInfo>;
     return attendance;
   } catch (error) {
     throw new Error('Error fetching attendees');

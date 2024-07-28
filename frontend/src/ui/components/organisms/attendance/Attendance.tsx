@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 
+import userIcon from '@/assets/icons/User_24.svg';
 import Loader from '@/ui/components/atoms/loader/Loader';
 import AtendeeTile from '@/ui/components/organisms/atendee-tile/AtendeeTile';
 
-import { getAttendance } from '@/modules/attendees/application/get-attendance/getAttendance';
-import { EventAttendance } from '@/modules/attendees/domain/Attendee';
-import { createAttendeeRepository } from '@/modules/attendees/infrastructure/AttendeeRepository';
+import { getAttendance } from '@/modules/events/application/get-attendance/getAttendance';
+import { EventAttendanceInfo } from '@/modules/events/domain/AttendeesEvent';
+import { createEventAttendeesRepository } from '@/modules/events/infrastructure/AttendeesEventRepository';
 
 import '@/ui/components/organisms/attendance/Attendance.scss';
 
@@ -13,18 +14,22 @@ interface Props {
   id: string | undefined;
 }
 export default function Attendance({ id }: Props) {
-  const [attendance, setAttendance] = useState<EventAttendance>();
+  const [eventAttendanceInfo, setEventAttendanceInfo] =
+    useState<EventAttendanceInfo>();
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const attendeeRepository = createAttendeeRepository();
+  const attendeeRepository = createEventAttendeesRepository();
 
   const load = async (eventId?: string) => {
     if (eventId) {
       setHasError(false);
       try {
-        const attendance = await getAttendance(attendeeRepository, eventId);
-        setAttendance(attendance);
+        const eventAttendanceInfoResponse = await getAttendance(
+          attendeeRepository,
+          eventId,
+        );
+        setEventAttendanceInfo(eventAttendanceInfoResponse);
       } catch (error) {
         setHasError(true);
       }
@@ -44,7 +49,7 @@ export default function Attendance({ id }: Props) {
   }
 
   function guestsText() {
-    if (attendance?.totalGuest === 1) {
+    if (eventAttendanceInfo?.totalAttendees === 1) {
       return ' guest already attending';
     } else {
       return ' guests already attending';
@@ -52,7 +57,7 @@ export default function Attendance({ id }: Props) {
   }
 
   function renderContent() {
-    if (attendance?.totalGuest === 0) {
+    if (eventAttendanceInfo?.totalAttendees === 0) {
       return null;
     }
     if (isLoading) {
@@ -62,19 +67,29 @@ export default function Attendance({ id }: Props) {
         </div>
       );
     }
+
+    const totalNewRinders = eventAttendanceInfo?.totalNewRinders ?? 0;
+
     return (
       <>
         <div className="attendees__number">
-          <b>{attendance?.totalGuest}</b>
+          <b>{eventAttendanceInfo?.totalAttendees}</b>
           {guestsText()}
         </div>
         <div className="attendees__display__container">
-          {attendance?.attendees.map((attendee) => (
+          {Boolean(totalNewRinders) && (
             <AtendeeTile
-              profilePictureUrl={attendee.profilePictureUrl}
-              firstName={attendee.firstName}
-              id={attendee.id}
-              key={attendee.id}
+              profilePictureUrl={userIcon}
+              firstName={`New Rinder${totalNewRinders > 1 ? 's' : ''}`}
+              badgeNumber={totalNewRinders}
+            />
+          )}
+          {eventAttendanceInfo?.employees.map((employee) => (
+            <AtendeeTile
+              profilePictureUrl={employee.profilePictureUrl}
+              firstName={employee.firstName}
+              id={employee.id}
+              key={employee.id}
             />
           ))}
         </div>

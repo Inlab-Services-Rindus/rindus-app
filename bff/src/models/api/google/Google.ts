@@ -24,14 +24,15 @@ export interface DetailedEvent {
   conferenceUri: string;
 }
 
-export interface Attendee {
+export interface EmployeeEventAttendee {
   id: string;
   profilePictureUrl: string;
   firstName: string;
 }
 
-export interface AttendeesEvent {
-  totalGuest: string;
-  attendees: Attendee[];
+export interface AttendeesEventResponse {
   isSurveyFilled: boolean;
+  employees: EmployeeEventAttendee[];
+  totalAttendees: number;
+  totalNewRinders: number;
 }

@@ -328,7 +328,7 @@ paths:
             type: string
       responses:
         200:
-          description: All Attendees and survey status current user
+          description: All attendees sorted by name, total number of attendees and the survey status from the current user
           content:
             application/json:
               schema:
