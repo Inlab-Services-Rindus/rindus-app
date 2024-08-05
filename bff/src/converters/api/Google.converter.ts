@@ -20,9 +20,7 @@ const MONTHS_COLORS = [
   '#E8505B',
 ];
 
-function getVideoEntryPoint(
-  conferenceData?: calendar_v3.Schema$ConferenceData,
-) {
+function getVideoEntryPoint(conferenceData: calendar_v3.Schema$ConferenceData) {
   return conferenceData?.entryPoints?.find(
     (conference) => conference.entryPointType === 'video',
   );
@@ -40,7 +38,7 @@ function getWeekday(dateTime: string): string {
   return new Date(dateTime).toLocaleDateString('en', { weekday: 'long' });
 }
 function getConferenceUrl(
-  conferenceData?: calendar_v3.Schema$ConferenceData,
+  conferenceData: calendar_v3.Schema$ConferenceData | undefined,
 ): string {
   if (!conferenceData) {
     return '';
@@ -51,7 +49,7 @@ function getConferenceUrl(
   return videoEntryPoint?.uri ?? '';
 }
 function isOnlineEvent(
-  conferenceData?: calendar_v3.Schema$ConferenceData,
+  conferenceData: calendar_v3.Schema$ConferenceData | undefined,
 ): boolean {
   if (!conferenceData?.entryPoints) {
     return false;
@@ -65,7 +63,7 @@ function isOnlineEvent(
 
   return false;
 }
-function getGoogleMapsUrl(address?: string | null): string {
+function getGoogleMapsUrl(address: string | null | undefined): string {
   if (!address) {
     return '';
   }
@@ -87,7 +85,7 @@ function getFormattedAddress(event: calendar_v3.Schema$Event): string {
   if (!event?.location) {
     return '';
   }
-  const [, address, number] = event.location.split(',');
+  const [_name, address, number] = event.location.split(',');
   return `${address}, ${number}`;
 }
 
@@ -154,9 +152,9 @@ export class DetailedEventConverter
       description: event?.description ?? '',
       time: timeRange,
       location: {
-        url: getGoogleMapsUrl(event?.location),
+        url: getGoogleMapsUrl(event.location),
         placeName: event?.location?.split(',')[0] ?? '',
-        placeAddress: getFormattedAddress(event) ?? '',
+        placeAddress: getFormattedAddress(event),
       },
       conferenceUrl: getConferenceUrl(event.conferenceData),
     };
