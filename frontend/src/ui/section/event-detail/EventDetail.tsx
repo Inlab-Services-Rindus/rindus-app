@@ -104,20 +104,18 @@ export function EventDetail() {
             >
               {eventDetails?.time}
             </IconWithText>
-            {eventDetails?.locationUrl && (
+            {eventDetails?.location.url && (
               <IconWithText icon={<img alt="Location" src={locationImage} />}>
                 <div className="eventDescription__location">
                   <a
-                    href={eventDetails?.locationUrl}
+                    href={eventDetails?.location.url}
                     className="eventDescription__link"
                   >
                     <span className="eventDescription__title">
-                      {`${getLocationWords(eventDetails?.locationUrl)[0]} ${
-                        getLocationWords(eventDetails?.locationUrl)[1]
-                      }`}
+                      {eventDetails?.location.placeName}
                     </span>
                     <span className="eventDescription__subtitle">
-                      {eventDetails?.locationUrl.split(',')[1]}
+                      {eventDetails?.location.placeAddress}
                     </span>
                   </a>
                 </div>

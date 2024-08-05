@@ -543,10 +543,22 @@ components:
         description:
           type: string
           examples: ["Annual conference for industry professionals."]
-        locationUrl:
-          type: string
-          examples: ["Convention Center"]
-        conferenceUri:
+        location:
+          type: object
+          properties:
+            url:
+              type: string
+              examples:
+                [
+                  "https://www.google.com/maps/search/?api=1&query=rindus%2BTechnology%2BS.L.%2C%2BC.%2BSevero%2BOchoa%2C%2B29%2C%2BCampanillas%2C%2B29590%2BM%C3%A1laga%2C%2BSpain",
+                ]
+            placeName:
+              type: string
+              examples: ["La Rosaleda"]
+            placeAddress:
+              type: string
+              examples: ["Calle Victoria"]
+        conferenceUrl:
           type: string
           examples:
             [

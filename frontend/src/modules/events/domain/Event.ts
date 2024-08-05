@@ -7,6 +7,12 @@ export interface Event {
   colour: string;
 }
 
+interface EventLocation {
+  url: string;
+  placeName: string;
+  placeAddress: string;
+}
+
 export interface DetailedEvent {
   id: string;
   summary: {
@@ -17,6 +23,6 @@ export interface DetailedEvent {
     colour: string;
   };
   description: string;
-  locationUrl: string;
+  location: EventLocation;
   time: string;
 }

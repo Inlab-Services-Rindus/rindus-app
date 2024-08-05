@@ -8,6 +8,12 @@ export interface MinimalEvent {
   isOnlineEvent: boolean;
 }
 
+interface EventLocation {
+  url: string;
+  placeName: string;
+  placeAddress: string;
+}
+
 export interface DetailedEvent {
   id: string;
   summary: {
@@ -20,8 +26,8 @@ export interface DetailedEvent {
   isOnlineEvent: boolean;
   description: string;
   time: string;
-  locationUrl: string;
-  conferenceUri: string;
+  location: EventLocation;
+  conferenceUrl: string;
 }
 
 export interface EmployeeEventAttendee {
