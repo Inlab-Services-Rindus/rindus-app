@@ -14,8 +14,6 @@ import { getEventDetails } from '@/modules/events/application/get-details/getEve
 import { DetailedEvent } from '@/modules/events/domain/Event';
 import { createEventRepository } from '@/modules/events/infrastructure/EventRepository';
 
-import { getGoogleMapsUrl } from '@/ui/helpers/getGoogleMapsUrl';
-
 import '@/ui/section/event-detail/EventDetail.scss';
 
 export function EventDetail() {
@@ -96,18 +94,18 @@ export function EventDetail() {
             >
               {eventDetails?.time}
             </IconWithText>
-            {eventDetails?.location && (
+            {eventDetails?.location.url && (
               <IconWithText icon={<img alt="Location" src={locationImage} />}>
                 <div className="eventDescription__location">
                   <a
-                    href={getGoogleMapsUrl(eventDetails?.location)}
+                    href={eventDetails?.location.url}
                     className="eventDescription__link"
                   >
                     <span className="eventDescription__title">
-                      {eventDetails?.location.split(',')[0]}
+                      {eventDetails?.location.placeName}
                     </span>
                     <span className="eventDescription__subtitle">
-                      {eventDetails?.location.split(',')[1]}
+                      {eventDetails?.location.placeAddress}
                     </span>
                   </a>
                 </div>

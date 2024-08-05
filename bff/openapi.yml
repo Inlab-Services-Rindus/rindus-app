@@ -537,12 +537,33 @@ components:
               format: hexadecimal
               examples: ["#00FF00"] # Green color in hexadecimal format
               description: Color represented in hexadecimal format.
+        isOnlineEvent:
+          type: boolean
+          examples: [false]
         description:
           type: string
           examples: ["Annual conference for industry professionals."]
         location:
+          type: object
+          properties:
+            url:
+              type: string
+              examples:
+                [
+                  "https://www.google.com/maps/search/?api=1&query=rindus%2BTechnology%2BS.L.%2C%2BC.%2BSevero%2BOchoa%2C%2B29%2C%2BCampanillas%2C%2B29590%2BM%C3%A1laga%2C%2BSpain",
+                ]
+            placeName:
+              type: string
+              examples: ["La Rosaleda"]
+            placeAddress:
+              type: string
+              examples: ["Calle Victoria"]
+        conferenceUrl:
           type: string
-          examples: ["Convention Center"]
+          examples:
+            [
+              "https://us05web.zoom.us/j/83112859204?pwd=MJbmEE0qJmCCQ4tddJm9u8GPSCAlis.1",
+            ]
     SearchResult:
       type: array
       items:
