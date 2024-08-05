@@ -53,16 +53,6 @@ export function EventDetail() {
     );
   }
 
-  function getLocationWords(locationUrl: string) {
-    const urlParams = new URLSearchParams(locationUrl);
-    const queryParam = urlParams.get('query');
-    const decodedQueryParam = decodeURIComponent(queryParam ?? '');
-    const words = decodedQueryParam
-      .split('+')
-      .map((word) => word.replace(/,/g, ''));
-    return words;
-  }
-
   useEffect(() => {
     eventDetails?.description ? sanitizeHtml(eventDetails?.description) : null;
   }, [eventDetails?.description]);
