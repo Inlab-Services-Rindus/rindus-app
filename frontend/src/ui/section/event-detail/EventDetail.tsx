@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import EventInfo from '@/ui/components/atoms/event-card/EventCard';
+import EventCard from '@/ui/components/atoms/event-card/EventCard';
 import { IconWithText } from '@/ui/components/atoms/icon-with-text/IconWithText';
 import Section from '@/ui/components/molecules/section/Section';
 import Attendance from '@/ui/components/organisms/attendance/Attendance';
@@ -21,6 +21,7 @@ export function EventDetail() {
   const [eventDetails, setEventDetails] = useState<DetailedEvent>();
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSurveyFilled, setIsSurveyFilled] = useState(false);
 
   const eventRepository = createEventRepository();
 
@@ -53,6 +54,10 @@ export function EventDetail() {
     );
   }
 
+  function updateEventCard(isSurveyFilled: boolean) {
+    setIsSurveyFilled(isSurveyFilled);
+  }
+
   useEffect(() => {
     eventDetails?.description ? sanitizeHtml(eventDetails?.description) : null;
   }, [eventDetails?.description]);
@@ -70,13 +75,15 @@ export function EventDetail() {
     >
       {eventDetails && (
         <>
-          <EventInfo
+          <EventCard
             title={eventDetails?.summary?.name}
             month={eventDetails?.summary?.month}
             day={eventDetails?.summary?.day}
             isBoldTitle
             weekday={eventDetails?.summary?.weekday}
             colour={eventDetails?.summary?.colour}
+            isOnlineEvent={eventDetails?.isOnlineEvent}
+            isSurveyFilled={isSurveyFilled}
           />
           <div className="eventDescription">
             <div
@@ -114,7 +121,7 @@ export function EventDetail() {
           </div>
         </>
       )}
-      <Attendance id={id} />
+      <Attendance id={id} updateEventCard={updateEventCard} />
     </Section>
   );
 }

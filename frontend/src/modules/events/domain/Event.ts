@@ -22,6 +22,7 @@ export interface DetailedEvent {
     weekday: string;
     colour: string;
   };
+  isOnlineEvent: boolean;
   description: string;
   location: EventLocation;
   time: string;
