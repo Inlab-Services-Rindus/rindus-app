@@ -12,8 +12,9 @@ import '@/ui/components/organisms/attendance/Attendance.scss';
 
 interface Props {
   id: string | undefined;
+  updateEventCard: (isSurveyFilled: boolean) => void;
 }
-export default function Attendance({ id }: Props) {
+export default function Attendance({ id, updateEventCard }: Props) {
   const [eventAttendanceInfo, setEventAttendanceInfo] =
     useState<EventAttendanceInfo>();
   const [hasError, setHasError] = useState(false);
@@ -30,6 +31,7 @@ export default function Attendance({ id }: Props) {
           eventId,
         );
         setEventAttendanceInfo(eventAttendanceInfoResponse);
+        updateEventCard(eventAttendanceInfoResponse.isSurveyFilled);
       } catch (error) {
         setHasError(true);
       }

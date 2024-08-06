@@ -5,7 +5,13 @@
 
   &__breakIcon {
     display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0 7px;
+    img {
+      width: 4px;
+      height: 4px;
+    }
   }
 
   &__survey {
