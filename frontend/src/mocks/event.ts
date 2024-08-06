@@ -16,5 +16,6 @@ export const eventMock: DetailedEvent = {
     placeName: 'La Rosaleda',
     placeAddress: 'Calle Victoria',
   },
+  isOnlineEvent: false,
   time: '13:00 - 15:00',
 };
