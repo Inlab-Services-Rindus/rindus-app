@@ -61,5 +61,42 @@
         }
       }
     }
+
+    &__button-container {
+      position: fixed;
+      bottom: 0px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      width: 233px;
+    }
+
+    &__button {
+      background-color: $rindus-green;
+      height: 40px;
+      padding: 8px 16px 8px 16px;
+      border-radius: 32px;
+
+      display: flex;
+      text-decoration: none;
+
+      .iconWithText {
+        gap: 9px;
+      }
+
+      .iconWithText__title {
+        @include text($font-poppins-regular);
+
+        font-size: 16px;
+        line-height: 22px;
+        font-weight: 700;
+
+        color: $rindus-off-white;
+
+        p {
+          margin: 0;
+        }
+      }
+    }
   }
 }
