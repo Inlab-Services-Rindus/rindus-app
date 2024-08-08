@@ -94,8 +94,10 @@ export class GoogleRepository implements GoogleRepositoryInterface {
         throw new Error('First question ID or responses not found.');
       }
 
+      const surveyUrl = `https://docs.google.com/forms/d/${formId}/viewform`;
+
       const { employees, totalAttendees, totalNewRinders, isSurveyFilled } =
-        await this.extractData(userId, responses, firstQuestionId, formId);
+        await this.extractData(userId, responses, firstQuestionId);
 
       const attendeesSortedByFirstName = employees.sort((a, b) =>
         a.firstName.localeCompare(b.firstName, 'es', { sensitivity: 'base' }),
@@ -106,6 +108,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
         totalAttendees,
         totalNewRinders,
         isSurveyFilled,
+        surveyUrl,
       };
     } catch (error) {
       throw `Error getting attendees: ${error}`;
@@ -161,7 +164,6 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     userId: number,
     responses: forms_v1.Schema$FormResponse[],
     firstQuestionId: string | undefined,
-    formId: string,
   ): Promise<AttendeesEventResponse> {
     const usersPromises = [];
     const employees: EmployeeEventAttendee[] = [];
@@ -209,7 +211,6 @@ export class GoogleRepository implements GoogleRepositoryInterface {
             id: userValue.id.toString(),
             profilePictureUrl: userValue.pictureUrl,
             firstName: userValue.firstName,
-            surveyUrl: `https://docs.google.com/forms/d/${formId}/viewform`,
           });
 
           if (userValue.id === userId) {
