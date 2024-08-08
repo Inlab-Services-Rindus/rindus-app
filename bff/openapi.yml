@@ -629,12 +629,21 @@ components:
           items:
             allOf:
               - $ref: "#/components/schemas/Attendee"
-        totalGuest:
+        totalAttendees:
           type: number
           examples: [50]
+        totalNewRinders:
+          type: number
+          examples: [9]
         isSurveyFilled:
           type: boolean
           examples: [false]
+        surveyUrl:
+          type: string
+          examples:
+            [
+              "https://docs.google.com/forms/d/1o8XRe0vavHVkXw93cySHmkH0IMjOAmS891npTnjTxhQ/viewform",
+            ]
   requestBodies:
     Login:
       description: Google provided user's JWT token

@@ -94,6 +94,8 @@ export class GoogleRepository implements GoogleRepositoryInterface {
         throw new Error('First question ID or responses not found.');
       }
 
+      const surveyUrl = `https://docs.google.com/forms/d/${formId}/viewform`;
+
       const { employees, totalAttendees, totalNewRinders, isSurveyFilled } =
         await this.extractData(userId, responses, firstQuestionId);
 
@@ -106,6 +108,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
         totalAttendees,
         totalNewRinders,
         isSurveyFilled,
+        surveyUrl,
       };
     } catch (error) {
       throw `Error getting attendees: ${error}`;

@@ -41,4 +41,5 @@ export interface AttendeesEventResponse {
   employees: EmployeeEventAttendee[];
   totalAttendees: number;
   totalNewRinders: number;
+  surveyUrl?: string;
 }
