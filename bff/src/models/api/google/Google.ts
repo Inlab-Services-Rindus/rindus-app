@@ -34,6 +34,7 @@ export interface EmployeeEventAttendee {
   id: string;
   profilePictureUrl: string;
   firstName: string;
+  surveyUrl: string;
 }
 
 export interface AttendeesEventResponse {
