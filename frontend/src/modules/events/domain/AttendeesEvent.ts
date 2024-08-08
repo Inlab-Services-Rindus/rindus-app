@@ -3,6 +3,7 @@ export interface EventAttendanceInfo {
   employees: EmployeeEventAttendee[];
   totalAttendees: number;
   totalNewRinders: number;
+  surveyUrl: string;
 }
 
 export interface EmployeeEventAttendee {

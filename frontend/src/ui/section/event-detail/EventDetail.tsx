@@ -7,6 +7,7 @@ import Section from '@/ui/components/molecules/section/Section';
 import Attendance from '@/ui/components/organisms/attendance/Attendance';
 import calendarClockImage from '@assets/icons/Calendar_clock_24.svg';
 import locationImage from '@assets/icons/Location_24.svg';
+import surveyOptions from '@assets/icons/Survey_Options_24.svg';
 import DOMPurify from 'dompurify';
 import { EmojiConvertor } from 'emoji-js';
 
@@ -22,6 +23,7 @@ export function EventDetail() {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSurveyFilled, setIsSurveyFilled] = useState(false);
+  const [surveyUrl, setSurveyUrl] = useState('');
 
   const eventRepository = createEventRepository();
 
@@ -56,6 +58,10 @@ export function EventDetail() {
 
   function updateEventCard(isSurveyFilled: boolean) {
     setIsSurveyFilled(isSurveyFilled);
+  }
+
+  function updateSurveyUrl(surveyUrl: string) {
+    setSurveyUrl(surveyUrl);
   }
 
   useEffect(() => {
@@ -121,7 +127,23 @@ export function EventDetail() {
           </div>
         </>
       )}
-      <Attendance id={id} updateEventCard={updateEventCard} />
+      <Attendance
+        id={id}
+        updateEventCard={updateEventCard}
+        updateSurveyUrl={updateSurveyUrl}
+      />
+
+      {!isSurveyFilled && surveyUrl && (
+        <div className="eventDescription__button-container">
+          <a className="eventDescription__button" href={surveyUrl}>
+            <IconWithText
+              icon={<img alt="Survey Options" src={surveyOptions} />}
+            >
+              <p>Confirm attendance</p>
+            </IconWithText>
+          </a>
+        </div>
+      )}
     </Section>
   );
 }
