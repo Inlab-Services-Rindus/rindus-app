@@ -6,6 +6,7 @@ import { IconWithText } from '@/ui/components/atoms/icon-with-text/IconWithText'
 import Section from '@/ui/components/molecules/section/Section';
 import Attendance from '@/ui/components/organisms/attendance/Attendance';
 import calendarClockImage from '@assets/icons/Calendar_clock_24.svg';
+import conferenceImage from '@assets/icons/Conference_24.svg';
 import locationImage from '@assets/icons/Location_24.svg';
 import surveyOptions from '@assets/icons/Survey_Options_24.svg';
 import DOMPurify from 'dompurify';
@@ -107,7 +108,22 @@ export function EventDetail() {
             >
               {eventDetails?.time}
             </IconWithText>
-            {eventDetails?.location.url && (
+            {eventDetails?.conferenceUrl ? (
+              <IconWithText
+                icon={<img alt="Conference" src={conferenceImage} />}
+              >
+                <div className="eventDescription__location">
+                  <a
+                    href={eventDetails?.conferenceUrl}
+                    className="eventDescription__link"
+                  >
+                    <span className="eventDescription__title">
+                      {eventDetails?.conferenceUrl}
+                    </span>
+                  </a>
+                </div>
+              </IconWithText>
+            ) : (
               <IconWithText icon={<img alt="Location" src={locationImage} />}>
                 <div className="eventDescription__location">
                   <a

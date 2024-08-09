@@ -26,4 +26,5 @@ export interface DetailedEvent {
   description: string;
   location: EventLocation;
   time: string;
+  conferenceUrl: string;
 }

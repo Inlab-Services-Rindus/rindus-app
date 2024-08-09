@@ -18,4 +18,5 @@ export const eventMock: DetailedEvent = {
   },
   isOnlineEvent: false,
   time: '13:00 - 15:00',
+  conferenceUrl: '',
 };
