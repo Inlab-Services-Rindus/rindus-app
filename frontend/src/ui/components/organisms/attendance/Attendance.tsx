@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import userIcon from '@/assets/icons/User_24.svg';
 import Loader from '@/ui/components/atoms/loader/Loader';
 import AtendeeTile from '@/ui/components/organisms/atendee-tile/AtendeeTile';
 
@@ -11,8 +12,14 @@ import '@/ui/components/organisms/attendance/Attendance.scss';
 
 interface Props {
   id: string | undefined;
+  updateEventCard: (isSurveyFilled: boolean) => void;
+  updateSurveyUrl: (surveyUrl: string) => void;
 }
-export default function Attendance({ id }: Props) {
+export default function Attendance({
+  id,
+  updateEventCard,
+  updateSurveyUrl,
+}: Props) {
   const [eventAttendanceInfo, setEventAttendanceInfo] =
     useState<EventAttendanceInfo>();
   const [hasError, setHasError] = useState(false);
@@ -29,6 +36,8 @@ export default function Attendance({ id }: Props) {
           eventId,
         );
         setEventAttendanceInfo(eventAttendanceInfoResponse);
+        updateEventCard(eventAttendanceInfoResponse.isSurveyFilled);
+        updateSurveyUrl(eventAttendanceInfoResponse.surveyUrl);
       } catch (error) {
         setHasError(true);
       }
@@ -66,6 +75,9 @@ export default function Attendance({ id }: Props) {
         </div>
       );
     }
+
+    const totalNewRinders = eventAttendanceInfo?.totalNewRinders ?? 0;
+
     return (
       <>
         <div className="attendees__number">
@@ -73,6 +85,13 @@ export default function Attendance({ id }: Props) {
           {guestsText()}
         </div>
         <div className="attendees__display__container">
+          {Boolean(totalNewRinders) && (
+            <AtendeeTile
+              profilePictureUrl={userIcon}
+              firstName={`New Rinder${totalNewRinders > 1 ? 's' : ''}`}
+              badgeNumber={totalNewRinders}
+            />
+          )}
           {eventAttendanceInfo?.employees.map((employee) => (
             <AtendeeTile
               profilePictureUrl={employee.profilePictureUrl}

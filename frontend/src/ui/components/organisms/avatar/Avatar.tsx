@@ -2,6 +2,8 @@ import cake from '@/assets/icons/Cake_24.svg';
 import captain from '@/assets/icons/Capitan_24.svg';
 import ok from '@/assets/icons/Ok_24.svg';
 
+import { BEMClassHelper } from '@/ui/helpers/BEMClassHelper';
+
 import '@/ui/components/organisms/avatar/Avatar.scss';
 
 export type AvatarSize = 'small' | 'medium' | 'large';
@@ -12,6 +14,7 @@ interface AvatarProps {
   size?: AvatarSize;
   isAttendee?: boolean;
   isInViewport?: boolean;
+  badgeNumber?: number;
 }
 
 export function Avatar({
@@ -21,6 +24,7 @@ export function Avatar({
   size = 'medium',
   isAttendee = false,
   isInViewport = false,
+  badgeNumber,
 }: AvatarProps): JSX.Element {
   function renderBadge() {
     if (isBirthday) {
@@ -47,7 +51,11 @@ export function Avatar({
         <div
           className={`avatar__badge avatar__badge--ok avatar__badge--${size}`}
         >
-          <img src={ok} alt="ok" />
+          {badgeNumber ? (
+            <span className="avatar__badge-number">{badgeNumber}</span>
+          ) : (
+            <img src={ok} alt="ok" />
+          )}
         </div>
       );
     }
@@ -58,7 +66,11 @@ export function Avatar({
       <div className={`avatar__picture avatar__picture--${size}`}>
         <img
           loading={isInViewport ? 'eager' : 'lazy'}
-          className="avatar__picture__img"
+          className={BEMClassHelper(
+            'avatar__picture',
+            'img',
+            Boolean(badgeNumber) && 'customIcon',
+          )}
           src={profilePictureUrl}
           alt={'Profile picture'}
         />

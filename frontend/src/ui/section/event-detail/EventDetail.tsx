@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import EventInfo from '@/ui/components/atoms/event-card/EventCard';
+import EventCard from '@/ui/components/atoms/event-card/EventCard';
 import { IconWithText } from '@/ui/components/atoms/icon-with-text/IconWithText';
 import Section from '@/ui/components/molecules/section/Section';
 import Attendance from '@/ui/components/organisms/attendance/Attendance';
 import calendarClockImage from '@assets/icons/Calendar_clock_24.svg';
+import conferenceImage from '@assets/icons/Conference_24.svg';
 import locationImage from '@assets/icons/Location_24.svg';
+import surveyOptions from '@assets/icons/Survey_Options_24.svg';
 import DOMPurify from 'dompurify';
 import { EmojiConvertor } from 'emoji-js';
 
 import { getEventDetails } from '@/modules/events/application/get-details/getEventDetails';
 import { DetailedEvent } from '@/modules/events/domain/Event';
 import { createEventRepository } from '@/modules/events/infrastructure/EventRepository';
-
-import { getGoogleMapsUrl } from '@/ui/helpers/getGoogleMapsUrl';
 
 import '@/ui/section/event-detail/EventDetail.scss';
 
@@ -23,6 +23,8 @@ export function EventDetail() {
   const [eventDetails, setEventDetails] = useState<DetailedEvent>();
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSurveyFilled, setIsSurveyFilled] = useState(false);
+  const [surveyUrl, setSurveyUrl] = useState('');
 
   const eventRepository = createEventRepository();
 
@@ -55,6 +57,14 @@ export function EventDetail() {
     );
   }
 
+  function updateEventCard(isSurveyFilled: boolean) {
+    setIsSurveyFilled(isSurveyFilled);
+  }
+
+  function updateSurveyUrl(surveyUrl: string) {
+    setSurveyUrl(surveyUrl);
+  }
+
   useEffect(() => {
     eventDetails?.description ? sanitizeHtml(eventDetails?.description) : null;
   }, [eventDetails?.description]);
@@ -72,13 +82,15 @@ export function EventDetail() {
     >
       {eventDetails && (
         <>
-          <EventInfo
+          <EventCard
             title={eventDetails?.summary?.name}
             month={eventDetails?.summary?.month}
             day={eventDetails?.summary?.day}
             isBoldTitle
             weekday={eventDetails?.summary?.weekday}
             colour={eventDetails?.summary?.colour}
+            isOnlineEvent={eventDetails?.isOnlineEvent}
+            isSurveyFilled={isSurveyFilled}
           />
           <div className="eventDescription">
             <div
@@ -96,18 +108,33 @@ export function EventDetail() {
             >
               {eventDetails?.time}
             </IconWithText>
-            {eventDetails?.location && (
-              <IconWithText icon={<img alt="Location" src={locationImage} />}>
+            {eventDetails?.conferenceUrl ? (
+              <IconWithText
+                icon={<img alt="Conference" src={conferenceImage} />}
+              >
                 <div className="eventDescription__location">
                   <a
-                    href={getGoogleMapsUrl(eventDetails?.location)}
+                    href={eventDetails?.conferenceUrl}
                     className="eventDescription__link"
                   >
                     <span className="eventDescription__title">
-                      {eventDetails?.location.split(',')[0]}
+                      {eventDetails?.conferenceUrl}
+                    </span>
+                  </a>
+                </div>
+              </IconWithText>
+            ) : (
+              <IconWithText icon={<img alt="Location" src={locationImage} />}>
+                <div className="eventDescription__location">
+                  <a
+                    href={eventDetails?.location.url}
+                    className="eventDescription__link"
+                  >
+                    <span className="eventDescription__title">
+                      {eventDetails?.location.placeName}
                     </span>
                     <span className="eventDescription__subtitle">
-                      {eventDetails?.location.split(',')[1]}
+                      {eventDetails?.location.placeAddress}
                     </span>
                   </a>
                 </div>
@@ -116,7 +143,23 @@ export function EventDetail() {
           </div>
         </>
       )}
-      <Attendance id={id} />
+      <Attendance
+        id={id}
+        updateEventCard={updateEventCard}
+        updateSurveyUrl={updateSurveyUrl}
+      />
+
+      {!isSurveyFilled && surveyUrl && (
+        <div className="eventDescription__button-container">
+          <a className="eventDescription__button" href={surveyUrl}>
+            <IconWithText
+              icon={<img alt="Survey Options" src={surveyOptions} />}
+            >
+              <p>Confirm attendance</p>
+            </IconWithText>
+          </a>
+        </div>
+      )}
     </Section>
   );
 }

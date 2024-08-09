@@ -1,27 +1,36 @@
 import breakIcon from '@/assets/icons/Break_icon_4.svg';
+
 import '@/ui/components/atoms/event-summary/EventSummary.scss';
 
 interface EventSummaryProps {
-  isSurveyFilled: boolean;
+  children: React.ReactNode;
 }
 
-function EventSummary({ isSurveyFilled }: EventSummaryProps) {
-  const renderContent = () => {
-    if (isSurveyFilled) {
-      return <div className="surveyFilled">Survey Filled</div>;
-    } else {
-      return <div className="onlineEvent">Online Event</div>;
-    }
-  };
-
+function EventSummary({ children }: EventSummaryProps) {
   return (
     <div className="eventSummary">
       <div className="eventSummary__breakIcon">
         <img alt="SVG Break" src={breakIcon} />
       </div>
-      <p className="eventSummary__survey">{renderContent()}</p>
+      <p className="eventSummary__survey">{children}</p>
     </div>
   );
 }
 
-export default EventSummary;
+function OnlineEventTag() {
+  return (
+    <EventSummary>
+      <div className="onlineEvent">Online Event</div>
+    </EventSummary>
+  );
+}
+
+function SurveyFilledTag() {
+  return (
+    <EventSummary>
+      <div className="surveyFilled">Survey Filled</div>
+    </EventSummary>
+  );
+}
+
+export { OnlineEventTag, SurveyFilledTag };

@@ -57,9 +57,21 @@
           margin: 0; // TODO: Revisar reset css
         }
       }
+
+      &__subtitle {
+        display: flex;
+        gap: 8px;
+      }
+
       &__weekday {
         margin: 0px;
       }
+
+      &__online-tag {
+        margin: 0px;
+        font-weight: 600;
+      }
+
       &__info {
         width: 100%;
         display: flex;

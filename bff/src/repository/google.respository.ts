@@ -75,12 +75,13 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     try {
       const event = await this.event(eventId);
       const startDate = event?.start?.dateTime;
+      const name = event?.summary;
 
-      if (!startDate) {
+      if (!startDate || !name) {
         throw new Error('Start date of the event is missing.');
       }
 
-      const formId = await this.getFormId(startDate);
+      const formId = await this.getFormId(startDate, name);
 
       if (!formId) {
         throw new Error('Form ID not found.');
@@ -93,7 +94,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
         throw new Error('First question ID or responses not found.');
       }
 
-      const { employees, totalAttendees, totalNewRindes, isSurveyFilled } =
+      const { employees, totalAttendees, totalNewRinders, isSurveyFilled } =
         await this.extractData(userId, responses, firstQuestionId);
 
       const attendeesSortedByFirstName = employees.sort((a, b) =>
@@ -103,15 +104,18 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       return {
         employees: attendeesSortedByFirstName,
         totalAttendees,
-        totalNewRindes,
+        totalNewRinders,
         isSurveyFilled,
+        surveyUrl: `https://docs.google.com/forms/d/${formId}/viewform`,
       };
     } catch (error) {
       throw `Error getting attendees: ${error}`;
     }
   }
 
-  private async getFormId(startDate: string): Promise<string> {
+  private async getFormId(startDate: string, name: string): Promise<string> {
+    const firstPartOfName = name.split(' ')[0];
+
     const forms = await google.drive('v3').files.list({
       auth: this.auth,
       supportsAllDrives: true,
@@ -121,7 +125,12 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       )}' and mimeType='application/vnd.google-apps.form' and trashed=false`,
     });
 
-    return forms?.data?.files?.[0]?.id ?? '';
+    //Cant put inside ihe call to google because not works always filtering by name and date
+    const form = forms?.data?.files?.find(
+      (form) => form.name?.includes(firstPartOfName),
+    );
+
+    return form?.id ?? '';
   }
 
   private async getFormResponses(
@@ -148,7 +157,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     userId: number,
     responses: forms_v1.Schema$FormResponse[],
     firstQuestionId: string | undefined,
-  ): Promise<AttendeesEventResponse> {
+  ): Promise<Omit<AttendeesEventResponse, 'surveyUrl'>> {
     const usersPromises = [];
     const employees: EmployeeEventAttendee[] = [];
     let totalNewRinders = 0;
@@ -207,7 +216,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     return {
       employees,
       totalAttendees: employees.length + totalNewRinders,
-      totalNewRindes: totalNewRinders,
+      totalNewRinders: totalNewRinders,
       isSurveyFilled: isSurveyFilled,
     };
   }

@@ -1,14 +1,29 @@
+@use '@scss/colors' as *;
+
 .avatar {
   position: relative;
 
   &__picture {
     margin: 0;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:has(> &__img--customIcon) {
+      border: 1px solid $rindus-green;
+    }
 
     &__img {
       box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
       width: 100%;
       height: 100%;
+
+      &--customIcon {
+        box-shadow: none;
+        width: 40px;
+        height: 40px;
+      }
     }
 
     &--small {
@@ -43,6 +58,10 @@
     position: absolute;
     right: 0px;
     bottom: 0px;
+
+    &-number {
+      color: $rindus-off-white;
+    }
 
     &--small {
       width: 24px;

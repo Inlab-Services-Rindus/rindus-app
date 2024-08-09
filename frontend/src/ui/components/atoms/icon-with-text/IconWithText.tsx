@@ -8,8 +8,8 @@ interface IconWithTextProps {
 }
 
 export const IconWithText = ({ icon, children }: IconWithTextProps) => (
-  <section className="iconWithText">
+  <div className="iconWithText">
     <div className="iconWithText__icon">{icon}</div>
     <div className="iconWithText__title">{children}</div>
-  </section>
+  </div>
 );
