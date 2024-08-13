@@ -162,11 +162,14 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     const employees: EmployeeEventAttendee[] = [];
     let totalNewRinders = 0;
 
+    const emails = [];
+
     for (const responseItem of responses) {
       const email = responseItem?.respondentEmail;
 
       if (email) {
         const answers = responseItem?.answers;
+        emails.push(email);
 
         if (answers && firstQuestionId) {
           const firstAnswer =
@@ -174,11 +177,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
 
           const isYesResponse = firstAnswer?.toLowerCase()?.includes('yes');
 
-          const isUserAttendingEvent =
-            isYesResponse ||
-            firstAnswer?.toLowerCase()?.includes('participate');
-
-          if (isUserAttendingEvent) {
+          if (isYesResponse) {
             const user = await this.userRepository.findUserByEmail(email);
 
             if (user) {
@@ -193,8 +192,6 @@ export class GoogleRepository implements GoogleRepositoryInterface {
 
     const usersData = await Promise.allSettled(usersPromises);
 
-    let isSurveyFilled = false;
-
     usersData.forEach((user) => {
       if (user.status === 'fulfilled') {
         const userValue = user.value;
@@ -205,19 +202,27 @@ export class GoogleRepository implements GoogleRepositoryInterface {
             profilePictureUrl: userValue.pictureUrl,
             firstName: userValue.firstName,
           });
-
-          if (userValue.id === userId) {
-            isSurveyFilled = true;
-          }
         }
       }
     });
+
+    const isSurveyFilled = await this.isCurrentUserSurveyFilled(userId, emails);
 
     return {
       employees,
       totalAttendees: employees.length + totalNewRinders,
       totalNewRinders: totalNewRinders,
-      isSurveyFilled: isSurveyFilled,
+      isSurveyFilled,
     };
+  }
+
+  private async isCurrentUserSurveyFilled(userId: number, emails: string[]) {
+    const userLogged = await this.userRepository.findUserWithInfo(userId);
+
+    if (!userLogged) {
+      return false;
+    }
+
+    return emails.includes(userLogged.email);
   }
 }
