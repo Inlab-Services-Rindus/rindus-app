@@ -78,6 +78,7 @@ const googlePrograms = new GooglePrograms(googleRepository);
 export const sessionController = new SessionController(
   sessionPrograms,
   userRepository,
+  eventsCache,
 );
 export const usersController = new UsersController(userPrograms);
 export const partnersController = new PartnersController(partnerRepository);

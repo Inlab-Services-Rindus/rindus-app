@@ -5,6 +5,7 @@ import { LoggedInUserConverter } from '@/converters/api/Session.converter';
 import { SessionPrograms } from '@/programs/session.programs';
 import { UserRepository } from '@/repository/user.repository';
 import { CookieOptions, Request, Response } from 'express';
+import NodeCache from 'node-cache';
 
 export class SessionController {
   private readonly sessionProgram: SessionPrograms;
@@ -13,13 +14,17 @@ export class SessionController {
 
   private readonly loggedInUserConverter: LoggedInUserConverter;
 
+  private readonly eventsCache: NodeCache;
+
   constructor(
     sessionPrograms: SessionPrograms,
     userRepository: UserRepository,
+    eventsCache: NodeCache,
   ) {
     this.sessionProgram = sessionPrograms;
     this.userRepository = userRepository;
     this.loggedInUserConverter = new LoggedInUserConverter();
+    this.eventsCache = eventsCache;
   }
 
   public async login(request: Request, response: Response) {
@@ -52,6 +57,8 @@ export class SessionController {
       const maybeUser = await this.userRepository.findUserById(maybeUserId);
 
       if (maybeUser) {
+        this.eventsCache.flushAll();
+
         return response.send(this.loggedInUserConverter.convert(maybeUser));
       }
 
