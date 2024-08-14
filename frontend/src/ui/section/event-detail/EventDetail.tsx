@@ -18,6 +18,9 @@ import { createEventRepository } from '@/modules/events/infrastructure/EventRepo
 
 import '@/ui/section/event-detail/EventDetail.scss';
 
+const SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY =
+  'confirmAttendanceButtonClicked';
+
 export function EventDetail() {
   const { id } = useParams();
   const [eventDetails, setEventDetails] = useState<DetailedEvent>();
@@ -72,6 +75,33 @@ export function EventDetail() {
   useEffect(() => {
     load(id);
   }, [id]);
+
+  function onBlurFunction() {
+    if (
+      sessionStorage.getItem(SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY) ===
+      'true'
+    ) {
+      sessionStorage.removeItem(SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY);
+
+      window.location.reload();
+    }
+  }
+
+  function handleClick() {
+    sessionStorage.setItem(
+      SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY,
+      'true',
+    );
+  }
+
+  useEffect(() => {
+    window.addEventListener('blur', onBlurFunction);
+
+    return () => {
+      onBlurFunction();
+      window.removeEventListener('blur', onBlurFunction);
+    };
+  }, []);
 
   return (
     <Section
@@ -151,7 +181,11 @@ export function EventDetail() {
 
       {!isSurveyFilled && surveyUrl && (
         <div className="eventDescription__button-container">
-          <a className="eventDescription__button" href={surveyUrl}>
+          <a
+            className="eventDescription__button"
+            href={surveyUrl}
+            onClick={handleClick}
+          >
             <IconWithText
               icon={<img alt="Survey Options" src={surveyOptions} />}
             >
