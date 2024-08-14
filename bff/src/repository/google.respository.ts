@@ -39,14 +39,16 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     const response = await google.calendar('v3').events.list({
       auth: this.auth,
       calendarId: 'info@rindus.de',
-      timeMin: new Date().toISOString(),
+      //Set date less one day to get the events of the current day
+      timeMin: new Date(
+        new Date().setDate(new Date().getDate() - 1),
+      ).toISOString(),
       timeMax: new Date(
         new Date().setFullYear(new Date().getFullYear() + 1),
       ).toISOString(),
       orderBy: 'startTime',
       singleEvents: true,
     });
-
     const events = response?.data?.items ?? [];
 
     const eventsWithoutWeekly = events.filter(
