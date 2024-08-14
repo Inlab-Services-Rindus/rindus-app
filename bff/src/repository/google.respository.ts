@@ -39,14 +39,16 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     const response = await google.calendar('v3').events.list({
       auth: this.auth,
       calendarId: 'info@rindus.de',
-      timeMin: new Date().toISOString(),
+      //Set date less one day to get the events of the current day
+      timeMin: new Date(
+        new Date().setDate(new Date().getDate() - 1),
+      ).toISOString(),
       timeMax: new Date(
         new Date().setFullYear(new Date().getFullYear() + 1),
       ).toISOString(),
       orderBy: 'startTime',
       singleEvents: true,
     });
-
     const events = response?.data?.items ?? [];
 
     const eventsWithoutWeekly = events.filter(
@@ -75,12 +77,13 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     try {
       const event = await this.event(eventId);
       const startDate = event?.start?.dateTime;
+      const name = event?.summary;
 
-      if (!startDate) {
+      if (!startDate || !name) {
         throw new Error('Start date of the event is missing.');
       }
 
-      const formId = await this.getFormId(startDate);
+      const formId = await this.getFormId(startDate, name);
 
       if (!formId) {
         throw new Error('Form ID not found.');
@@ -93,7 +96,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
         throw new Error('First question ID or responses not found.');
       }
 
-      const { employees, totalAttendees, totalNewRindes, isSurveyFilled } =
+      const { employees, totalAttendees, totalNewRinders, isSurveyFilled } =
         await this.extractData(userId, responses, firstQuestionId);
 
       const attendeesSortedByFirstName = employees.sort((a, b) =>
@@ -103,15 +106,18 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       return {
         employees: attendeesSortedByFirstName,
         totalAttendees,
-        totalNewRindes,
+        totalNewRinders,
         isSurveyFilled,
+        surveyUrl: `https://docs.google.com/forms/d/${formId}/viewform`,
       };
     } catch (error) {
       throw `Error getting attendees: ${error}`;
     }
   }
 
-  private async getFormId(startDate: string): Promise<string> {
+  private async getFormId(startDate: string, name: string): Promise<string> {
+    const firstPartOfName = name.split(' ')[0];
+
     const forms = await google.drive('v3').files.list({
       auth: this.auth,
       supportsAllDrives: true,
@@ -121,7 +127,12 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       )}' and mimeType='application/vnd.google-apps.form' and trashed=false`,
     });
 
-    return forms?.data?.files?.[0]?.id ?? '';
+    //Cant put inside ihe call to google because not works always filtering by name and date
+    const form = forms?.data?.files?.find(
+      (form) => form.name?.includes(firstPartOfName),
+    );
+
+    return form?.id ?? '';
   }
 
   private async getFormResponses(
@@ -148,16 +159,19 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     userId: number,
     responses: forms_v1.Schema$FormResponse[],
     firstQuestionId: string | undefined,
-  ): Promise<AttendeesEventResponse> {
+  ): Promise<Omit<AttendeesEventResponse, 'surveyUrl'>> {
     const usersPromises = [];
     const employees: EmployeeEventAttendee[] = [];
     let totalNewRinders = 0;
+
+    const emails = [];
 
     for (const responseItem of responses) {
       const email = responseItem?.respondentEmail;
 
       if (email) {
         const answers = responseItem?.answers;
+        emails.push(email);
 
         if (answers && firstQuestionId) {
           const firstAnswer =
@@ -165,11 +179,7 @@ export class GoogleRepository implements GoogleRepositoryInterface {
 
           const isYesResponse = firstAnswer?.toLowerCase()?.includes('yes');
 
-          const isUserAttendingEvent =
-            isYesResponse ||
-            firstAnswer?.toLowerCase()?.includes('participate');
-
-          if (isUserAttendingEvent) {
+          if (isYesResponse) {
             const user = await this.userRepository.findUserByEmail(email);
 
             if (user) {
@@ -184,8 +194,6 @@ export class GoogleRepository implements GoogleRepositoryInterface {
 
     const usersData = await Promise.allSettled(usersPromises);
 
-    let isSurveyFilled = false;
-
     usersData.forEach((user) => {
       if (user.status === 'fulfilled') {
         const userValue = user.value;
@@ -196,19 +204,27 @@ export class GoogleRepository implements GoogleRepositoryInterface {
             profilePictureUrl: userValue.pictureUrl,
             firstName: userValue.firstName,
           });
-
-          if (userValue.id === userId) {
-            isSurveyFilled = true;
-          }
         }
       }
     });
 
+    const isSurveyFilled = await this.isCurrentUserSurveyFilled(userId, emails);
+
     return {
       employees,
       totalAttendees: employees.length + totalNewRinders,
-      totalNewRindes: totalNewRinders,
-      isSurveyFilled: isSurveyFilled,
+      totalNewRinders: totalNewRinders,
+      isSurveyFilled,
     };
+  }
+
+  private async isCurrentUserSurveyFilled(userId: number, emails: string[]) {
+    const userLogged = await this.userRepository.findUserWithInfo(userId);
+
+    if (!userLogged) {
+      return false;
+    }
+
+    return emails.includes(userLogged.email);
   }
 }

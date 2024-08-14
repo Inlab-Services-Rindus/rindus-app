@@ -8,6 +8,12 @@ export interface MinimalEvent {
   isOnlineEvent: boolean;
 }
 
+interface EventLocation {
+  url: string;
+  placeName: string;
+  placeAddress: string;
+}
+
 export interface DetailedEvent {
   id: string;
   summary: {
@@ -17,9 +23,11 @@ export interface DetailedEvent {
     weekday: string;
     colour: string;
   };
+  isOnlineEvent: boolean;
   description: string;
   time: string;
-  location: string;
+  location: EventLocation;
+  conferenceUrl: string;
 }
 
 export interface EmployeeEventAttendee {
@@ -32,5 +40,6 @@ export interface AttendeesEventResponse {
   isSurveyFilled: boolean;
   employees: EmployeeEventAttendee[];
   totalAttendees: number;
-  totalNewRindes: number;
+  totalNewRinders: number;
+  surveyUrl: string;
 }

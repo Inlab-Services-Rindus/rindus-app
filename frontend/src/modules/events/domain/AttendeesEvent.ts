@@ -2,7 +2,8 @@ export interface EventAttendanceInfo {
   isSurveyFilled: boolean;
   employees: EmployeeEventAttendee[];
   totalAttendees: number;
-  totalNewRindes: number;
+  totalNewRinders: number;
+  surveyUrl: string;
 }
 
 export interface EmployeeEventAttendee {

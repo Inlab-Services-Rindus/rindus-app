@@ -7,6 +7,12 @@ export interface Event {
   colour: string;
 }
 
+interface EventLocation {
+  url: string;
+  placeName: string;
+  placeAddress: string;
+}
+
 export interface DetailedEvent {
   id: string;
   summary: {
@@ -16,7 +22,9 @@ export interface DetailedEvent {
     weekday: string;
     colour: string;
   };
+  isOnlineEvent: boolean;
   description: string;
-  location: string;
+  location: EventLocation;
   time: string;
+  conferenceUrl: string;
 }
