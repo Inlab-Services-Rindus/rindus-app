@@ -39,6 +39,7 @@ export class GoogleController {
   public async attendees(request: Request, response: Response) {
     const eventId = request?.params?.eventId;
     const userId = request.session?.userId;
+    const refreshCache = request?.query?.refresh === 'true';
 
     if (eventId && userId) {
       const cacheKey = this.calculateCacheKey(eventId);
@@ -48,7 +49,7 @@ export class GoogleController {
         const cached = this.eventsCache.get(cacheKey);
         attendees = cached;
 
-        if (!cached) {
+        if (!cached || refreshCache) {
           attendees = await this.googlePrograms.attendees(userId, eventId);
           this.eventsCache.set(cacheKey, attendees);
         }

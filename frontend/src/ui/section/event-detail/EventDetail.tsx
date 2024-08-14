@@ -20,11 +20,14 @@ import '@/ui/section/event-detail/EventDetail.scss';
 
 export function EventDetail() {
   const { id } = useParams();
+  const eventId = id ?? '';
   const [eventDetails, setEventDetails] = useState<DetailedEvent>();
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSurveyFilled, setIsSurveyFilled] = useState(false);
   const [surveyUrl, setSurveyUrl] = useState('');
+  const [isConfirmAttendanceClicked, setIsConfirmAttendanceClicked] =
+    useState(false);
 
   const eventRepository = createEventRepository();
 
@@ -57,12 +60,16 @@ export function EventDetail() {
     );
   }
 
-  function updateEventCard(isSurveyFilled: boolean) {
+  function updateEventInfo(isSurveyFilled: boolean, surveyUrl: string) {
     setIsSurveyFilled(isSurveyFilled);
+    setSurveyUrl(surveyUrl);
+
+    sessionStorage.removeItem('confirmButtonClicked');
+    setIsConfirmAttendanceClicked(false);
   }
 
-  function updateSurveyUrl(surveyUrl: string) {
-    setSurveyUrl(surveyUrl);
+  function handleClick() {
+    sessionStorage.setItem('confirmButtonClicked', 'true');
   }
 
   useEffect(() => {
@@ -70,13 +77,16 @@ export function EventDetail() {
   }, [eventDetails?.description]);
 
   useEffect(() => {
-    load(id);
-  }, [id]);
+    if (sessionStorage.getItem('confirmButtonClicked')) {
+      setIsConfirmAttendanceClicked(true);
+    }
+    load(eventId);
+  }, [eventId]);
 
   return (
     <Section
       className="eventDetail"
-      refresh={() => load(id)}
+      refresh={() => load(eventId)}
       isLoading={isLoading}
       shouldRefresh={hasError}
     >
@@ -144,14 +154,18 @@ export function EventDetail() {
         </>
       )}
       <Attendance
-        id={id}
-        updateEventCard={updateEventCard}
-        updateSurveyUrl={updateSurveyUrl}
+        id={eventId}
+        refreshCache={isConfirmAttendanceClicked}
+        updateEventInfo={updateEventInfo}
       />
 
       {!isSurveyFilled && surveyUrl && (
         <div className="eventDescription__button-container">
-          <a className="eventDescription__button" href={surveyUrl}>
+          <a
+            className="eventDescription__button"
+            href={surveyUrl}
+            onClick={handleClick}
+          >
             <IconWithText
               icon={<img alt="Survey Options" src={surveyOptions} />}
             >

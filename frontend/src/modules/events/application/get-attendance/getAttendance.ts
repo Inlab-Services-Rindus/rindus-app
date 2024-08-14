@@ -4,6 +4,7 @@ import { AttendeesEventRepository } from '@/modules/events/domain/AttendeesEvent
 export async function getAttendance(
   attendeesEventRepository: AttendeesEventRepository,
   eventID: string,
+  refreshCache: boolean,
 ): Promise<EventAttendanceInfo> {
-  return attendeesEventRepository.getAttendance(eventID);
+  return attendeesEventRepository.getAttendance(eventID, refreshCache);
 }

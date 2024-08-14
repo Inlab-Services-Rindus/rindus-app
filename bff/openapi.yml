@@ -10,7 +10,7 @@ tags:
   - name: sessions
     description: Session management
   - name: users
-    description: Opertations about users
+    description: Operations about users
   - name: partners
     description: Operations about partners
   - name: searches
@@ -41,7 +41,7 @@ paths:
         $ref: "#/components/requestBodies/Login"
       responses:
         200:
-          description: User was succesfully logged in
+          description: User was successfully logged in
           $ref: "#/components/responses/LoggedInUser"
         401:
           description: Incorrect JWT was provided
@@ -270,7 +270,7 @@ paths:
     get:
       tags:
         - google/v1
-      summary: Return all events from rindus google calendar
+      summary: Return all events from Rindus Google Calendar
       operationId: events
       security:
         - cookieAuth: []
@@ -289,7 +289,7 @@ paths:
     get:
       tags:
         - google/v1
-      summary: Return requested event from rindus google calendar
+      summary: Return requested event from Rindus Google Calendar
       operationId: event
       security:
         - cookieAuth: []
@@ -302,7 +302,7 @@ paths:
             type: string
       responses:
         200:
-          description: All events
+          description: Requested event
           content:
             application/json:
               schema:
@@ -315,7 +315,7 @@ paths:
     get:
       tags:
         - google/v1
-      summary: Return requested attendees from rindus google calendar event
+      summary: Return requested attendees from Rindus Google Calendar event
       operationId: attendees
       security:
         - cookieAuth: []
@@ -326,6 +326,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: refresh
+          in: query
+          description: Set to `true` to clear the cache and fetch fresh data
+          required: false
+          schema:
+            type: boolean
       responses:
         200:
           description: All attendees sorted by name, total number of attendees and the survey status from the current user

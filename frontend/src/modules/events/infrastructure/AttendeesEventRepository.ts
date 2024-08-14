@@ -9,14 +9,19 @@ export function createEventAttendeesRepository(): AttendeesEventRepository {
   };
 }
 
-export async function getAttendance(id: string) {
+async function getAttendance(id: string, refreshCache: boolean) {
   try {
-    const response = await fetch(
+    const url = new URL(
       `${config.backendUrl}/google/v1/events/${id}/attendees`,
-      {
-        credentials: 'include',
-      },
     );
+
+    if (refreshCache) {
+      url.searchParams.append('refresh', 'true');
+    }
+
+    const response = await fetch(url.toString(), {
+      credentials: 'include',
+    });
 
     if (!response.ok) {
       throw new Error('Error fetching attendees');

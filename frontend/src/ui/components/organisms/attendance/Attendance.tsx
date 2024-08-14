@@ -11,14 +11,14 @@ import { createEventAttendeesRepository } from '@/modules/events/infrastructure/
 import '@/ui/components/organisms/attendance/Attendance.scss';
 
 interface Props {
-  id: string | undefined;
-  updateEventCard: (isSurveyFilled: boolean) => void;
-  updateSurveyUrl: (surveyUrl: string) => void;
+  id: string;
+  refreshCache: boolean;
+  updateEventInfo: (isSurveyFilled: boolean, surveyUrl: string) => void;
 }
 export default function Attendance({
   id,
-  updateEventCard,
-  updateSurveyUrl,
+  refreshCache,
+  updateEventInfo,
 }: Props) {
   const [eventAttendanceInfo, setEventAttendanceInfo] =
     useState<EventAttendanceInfo>();
@@ -27,17 +27,20 @@ export default function Attendance({
 
   const attendeeRepository = createEventAttendeesRepository();
 
-  const load = async (eventId?: string) => {
+  const load = async (eventId: string, refreshCache: boolean) => {
     if (eventId) {
       setHasError(false);
       try {
         const eventAttendanceInfoResponse = await getAttendance(
           attendeeRepository,
           eventId,
+          refreshCache,
         );
         setEventAttendanceInfo(eventAttendanceInfoResponse);
-        updateEventCard(eventAttendanceInfoResponse.isSurveyFilled);
-        updateSurveyUrl(eventAttendanceInfoResponse.surveyUrl);
+        updateEventInfo(
+          eventAttendanceInfoResponse.isSurveyFilled,
+          eventAttendanceInfoResponse.surveyUrl,
+        );
       } catch (error) {
         setHasError(true);
       }
@@ -46,7 +49,7 @@ export default function Attendance({
   };
 
   useEffect(() => {
-    load(id);
+    load(id, refreshCache);
   }, [id]);
 
   if (!id) {
