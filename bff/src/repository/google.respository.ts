@@ -129,7 +129,9 @@ export class GoogleRepository implements GoogleRepositoryInterface {
 
     //Cant put inside ihe call to google because not works always filtering by name and date
     const form = forms?.data?.files?.find(
-      (form) => form.name?.includes(firstPartOfName),
+      (form) =>
+        form.name?.includes(firstPartOfName) &&
+        !form.name?.toLowerCase().includes('copy'),
     );
 
     return form?.id ?? '';
