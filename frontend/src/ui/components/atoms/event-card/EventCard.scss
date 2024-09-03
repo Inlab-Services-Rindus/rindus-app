@@ -9,12 +9,12 @@
   display: flex;
   height: 80px;
   justify-content: space-evenly;
+  padding-left: 12px;
 
   &__dateDetails {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding-left: 12px;
     width: 100%;
 
     .date {
@@ -43,7 +43,7 @@
     .details {
       display: flex;
       justify-content: space-between;
-      width: 65%;
+      width: 100%;
 
       &__title {
         @include text-ellipsis();
@@ -51,8 +51,10 @@
         font-size: 16px;
         font-weight: 400;
         margin: 0;
+        width: calc(100% - 70px);
 
         &--bold {
+          width: 100%;
           overflow: auto;
           white-space: wrap;
           text-overflow: initial;
@@ -83,7 +85,6 @@
         flex-direction: column;
         justify-content: space-evenly;
         color: $rindus-medium-gray;
-        display: flex;
         font-size: 12px;
       }
     }
