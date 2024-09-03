@@ -76,7 +76,7 @@ export function EventDetail() {
     load(id);
   }, [id]);
 
-  function onBlurFunction() {
+  function onEventFired() {
     if (
       localStorage.getItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY) ===
       'true'
@@ -94,14 +94,14 @@ export function EventDetail() {
   }
 
   useEffect(() => {
-    window.addEventListener('blur', onBlurFunction);
-    window.addEventListener('resize', onBlurFunction);
+    window.addEventListener('blur', onEventFired);
+    window.addEventListener('touchstart', onEventFired);
 
     return () => {
       localStorage.removeItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY);
 
-      window.removeEventListener('blur', onBlurFunction);
-      window.removeEventListener('resize', onBlurFunction);
+      window.removeEventListener('blur', onEventFired);
+      window.removeEventListener('touchstart', onEventFired);
     };
   }, []);
 
