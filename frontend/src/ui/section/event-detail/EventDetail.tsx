@@ -18,7 +18,7 @@ import { createEventRepository } from '@/modules/events/infrastructure/EventRepo
 
 import '@/ui/section/event-detail/EventDetail.scss';
 
-const SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY =
+const LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY =
   'confirmAttendanceButtonClicked';
 
 export function EventDetail() {
@@ -78,28 +78,28 @@ export function EventDetail() {
 
   function onBlurFunction() {
     if (
-      sessionStorage.getItem(SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY) ===
+      localStorage.getItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY) ===
       'true'
     ) {
-      sessionStorage.removeItem(SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY);
+      localStorage.removeItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY);
 
       window.location.reload();
     }
   }
 
   function handleClick() {
-    sessionStorage.setItem(
-      SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY,
-      'true',
-    );
+    localStorage.setItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY, 'true');
   }
 
   useEffect(() => {
     window.addEventListener('blur', onBlurFunction);
+    window.addEventListener('resize', onBlurFunction);
 
     return () => {
-      onBlurFunction();
+      localStorage.removeItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY);
+
       window.removeEventListener('blur', onBlurFunction);
+      window.removeEventListener('resize', onBlurFunction);
     };
   }, []);
 
