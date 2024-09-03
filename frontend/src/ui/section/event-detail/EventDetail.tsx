@@ -90,7 +90,7 @@ export function EventDetail() {
   function handleClick() {
     setTimeout(() => {
       localStorage.setItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY, 'true');
-    }, 5000);
+    }, 300);
   }
 
   useEffect(() => {
