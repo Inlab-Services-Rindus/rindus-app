@@ -18,9 +18,6 @@ import { createEventRepository } from '@/modules/events/infrastructure/EventRepo
 
 import '@/ui/section/event-detail/EventDetail.scss';
 
-const SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY =
-  'confirmAttendanceButtonClicked';
-
 export function EventDetail() {
   const { id } = useParams();
   const [eventDetails, setEventDetails] = useState<DetailedEvent>();
@@ -28,6 +25,7 @@ export function EventDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSurveyFilled, setIsSurveyFilled] = useState(false);
   const [surveyUrl, setSurveyUrl] = useState('');
+  const [reset, setReset] = useState(true);
 
   const eventRepository = createEventRepository();
 
@@ -68,6 +66,18 @@ export function EventDetail() {
     setSurveyUrl(surveyUrl);
   }
 
+  function onBlurFunction() {
+    if (reset) {
+      setReset(false);
+
+      window.location.reload();
+    }
+  }
+
+  function handleClick() {
+    setReset(true);
+  }
+
   useEffect(() => {
     eventDetails?.description ? sanitizeHtml(eventDetails?.description) : null;
   }, [eventDetails?.description]);
@@ -76,30 +86,13 @@ export function EventDetail() {
     load(id);
   }, [id]);
 
-  function onBlurFunction() {
-    if (
-      sessionStorage.getItem(SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY) ===
-      'true'
-    ) {
-      sessionStorage.removeItem(SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY);
-
-      window.location.reload();
-    }
-  }
-
-  function handleClick() {
-    sessionStorage.setItem(
-      SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY,
-      'true',
-    );
-  }
-
   useEffect(() => {
-    window.addEventListener('blur', onBlurFunction);
+    window.addEventListener('scroll', onBlurFunction);
+    window.addEventListener('resize', onBlurFunction);
 
     return () => {
-      onBlurFunction();
-      window.removeEventListener('blur', onBlurFunction);
+      window.removeEventListener('scroll', onBlurFunction);
+      window.removeEventListener('resize', onBlurFunction);
     };
   }, []);
 
