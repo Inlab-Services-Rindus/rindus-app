@@ -75,7 +75,9 @@ export function EventDetail() {
   }
 
   function handleClick() {
-    setReset(true);
+    setTimeout(() => {
+      setReset(true);
+    }, 1000);
   }
 
   useEffect(() => {
