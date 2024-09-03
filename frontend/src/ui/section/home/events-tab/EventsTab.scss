@@ -1,9 +1,8 @@
 .events-tab {
   &__container {
-    margin-top: 20px;
-
-    .eventCard {
-      margin: 0px 20px 20px 20px;
-    }
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 }

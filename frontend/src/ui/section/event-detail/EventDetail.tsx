@@ -103,6 +103,47 @@ export function EventDetail() {
     };
   }, []);
 
+  function renderConferenceInfo() {
+    if (eventDetails?.conferenceUrl) {
+      return (
+        <IconWithText icon={<img alt="Conference" src={conferenceImage} />}>
+          <div className="eventDescription__location">
+            <a
+              href={eventDetails?.conferenceUrl}
+              className="eventDescription__link"
+            >
+              <span className="eventDescription__title">
+                {eventDetails?.conferenceUrl}
+              </span>
+            </a>
+          </div>
+        </IconWithText>
+      );
+    }
+  }
+
+  function renderLocationInfo() {
+    if (eventDetails?.location.url) {
+      return (
+        <IconWithText icon={<img alt="Location" src={locationImage} />}>
+          <div className="eventDescription__location">
+            <a
+              href={eventDetails?.location.url}
+              className="eventDescription__link"
+            >
+              <span className="eventDescription__title">
+                {eventDetails?.location.placeName}
+              </span>
+              <span className="eventDescription__subtitle">
+                {eventDetails?.location.placeAddress}
+              </span>
+            </a>
+          </div>
+        </IconWithText>
+      );
+    }
+  }
+
   return (
     <Section
       className="eventDetail"
@@ -138,38 +179,8 @@ export function EventDetail() {
             >
               {eventDetails?.time}
             </IconWithText>
-            {eventDetails?.conferenceUrl ? (
-              <IconWithText
-                icon={<img alt="Conference" src={conferenceImage} />}
-              >
-                <div className="eventDescription__location">
-                  <a
-                    href={eventDetails?.conferenceUrl}
-                    className="eventDescription__link"
-                  >
-                    <span className="eventDescription__title">
-                      {eventDetails?.conferenceUrl}
-                    </span>
-                  </a>
-                </div>
-              </IconWithText>
-            ) : (
-              <IconWithText icon={<img alt="Location" src={locationImage} />}>
-                <div className="eventDescription__location">
-                  <a
-                    href={eventDetails?.location.url}
-                    className="eventDescription__link"
-                  >
-                    <span className="eventDescription__title">
-                      {eventDetails?.location.placeName}
-                    </span>
-                    <span className="eventDescription__subtitle">
-                      {eventDetails?.location.placeAddress}
-                    </span>
-                  </a>
-                </div>
-              </IconWithText>
-            )}
+            {renderConferenceInfo()}
+            {renderLocationInfo()}
           </div>
         </>
       )}

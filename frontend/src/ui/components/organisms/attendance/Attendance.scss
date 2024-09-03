@@ -38,7 +38,12 @@
     align-items: center;
     height: 100%;
     .spinner {
+      &-container {
+        align-items: start;
+      }
+
       position: relative;
+      top: 15%;
     }
   }
 }

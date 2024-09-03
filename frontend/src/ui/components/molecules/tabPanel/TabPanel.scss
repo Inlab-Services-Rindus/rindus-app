@@ -8,10 +8,10 @@
 
   &__button-container {
     display: flex;
-    gap: 24px;
-    padding: 20px 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid $rindus-light-gray;
+    justify-content: space-evenly;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid #dddde2;
   }
 
   &__button {
