@@ -88,7 +88,9 @@ export function EventDetail() {
   }
 
   function handleClick() {
-    localStorage.setItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY, 'true');
+    setTimeout(() => {
+      localStorage.setItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY, 'true');
+    }, 5000);
   }
 
   useEffect(() => {
