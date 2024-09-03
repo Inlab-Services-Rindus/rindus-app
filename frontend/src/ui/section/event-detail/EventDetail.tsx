@@ -86,6 +86,7 @@ export function EventDetail() {
 
   useEffect(() => {
     load(id);
+    setReset(false);
   }, [id]);
 
   useEffect(() => {
