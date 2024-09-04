@@ -18,7 +18,7 @@ import { createEventRepository } from '@/modules/events/infrastructure/EventRepo
 
 import '@/ui/section/event-detail/EventDetail.scss';
 
-const SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY =
+const LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY =
   'confirmAttendanceButtonClicked';
 
 export function EventDetail() {
@@ -76,30 +76,32 @@ export function EventDetail() {
     load(id);
   }, [id]);
 
-  function onBlurFunction() {
+  function onEventFired() {
     if (
-      sessionStorage.getItem(SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY) ===
+      localStorage.getItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY) ===
       'true'
     ) {
-      sessionStorage.removeItem(SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY);
+      localStorage.removeItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY);
 
       window.location.reload();
     }
   }
 
   function handleClick() {
-    sessionStorage.setItem(
-      SESSION_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY,
-      'true',
-    );
+    setTimeout(() => {
+      localStorage.setItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY, 'true');
+    }, 300);
   }
 
   useEffect(() => {
-    window.addEventListener('blur', onBlurFunction);
+    window.addEventListener('blur', onEventFired);
+    window.addEventListener('touchstart', onEventFired);
 
     return () => {
-      onBlurFunction();
-      window.removeEventListener('blur', onBlurFunction);
+      localStorage.removeItem(LOCAL_STORAGE_CONFIRM_BUTTON_ATTENDANCE_KEY);
+
+      window.removeEventListener('blur', onEventFired);
+      window.removeEventListener('touchstart', onEventFired);
     };
   }, []);
 
