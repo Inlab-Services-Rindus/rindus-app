@@ -49,13 +49,24 @@ export class GoogleRepository implements GoogleRepositoryInterface {
       orderBy: 'startTime',
       singleEvents: true,
     });
+
     const events = response?.data?.items ?? [];
 
     const eventsWithoutWeekly = events.filter(
       (event) => !event?.summary?.includes('Weekly'),
     );
 
-    return eventsWithoutWeekly;
+    //We send in the api the timeMin with the date less for not get problems with hours for the event in the current day
+    //We need to filter the events before of the current day
+    const eventsFromTodayWithoutWeekly = eventsWithoutWeekly.filter((event) => {
+      const eventDate = new Date(event?.start?.dateTime || '');
+      return (
+        this.formatDateToYYYYMMDD(eventDate) >=
+        this.formatDateToYYYYMMDD(new Date())
+      );
+    });
+
+    return eventsFromTodayWithoutWeekly;
   }
 
   public async event(eventId: string): Promise<calendar_v3.Schema$Event> {
@@ -228,5 +239,12 @@ export class GoogleRepository implements GoogleRepositoryInterface {
     }
 
     return emails.includes(userLogged.email);
+  }
+
+  private formatDateToYYYYMMDD(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 }
