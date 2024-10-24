@@ -150,3 +150,49 @@
     }
   }
 }
+
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1000;
+  padding-top: 140px;
+}
+
+.lightbox__content {
+  position: relative;
+  max-width: 80%;
+  max-height: auto;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lightbox__image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  min-width: 300px;
+  min-height: 300px;
+}
+
+.lightbox__close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+}
