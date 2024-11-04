@@ -18,6 +18,7 @@ export function Profile() {
   const [user, setUser] = useState<UserExtended>();
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const userRepository = createUserRepository();
 
@@ -38,6 +39,9 @@ export function Profile() {
     load(id);
   }, [id]);
 
+  const openLightbox = () => setIsLightboxOpen(true);
+  const closeLightbox = () => setIsLightboxOpen(false);
+
   return (
     <Section
       dataTestId="profile"
@@ -47,18 +51,21 @@ export function Profile() {
     >
       <div className="profile-container">
         <div className="avatar">
-          <AvatarTile
-            key={user?.id}
-            profilePictureUrl={user?.profilePictureUrl ?? ''}
-            isBirthday={user?.isBirthday ?? false}
-            isCaptain={user?.isCaptain}
-          />
+          <div onClick={openLightbox}>
+            <AvatarTile
+              key={user?.id}
+              profilePictureUrl={user?.profilePictureUrl ?? ''}
+              isBirthday={user?.isBirthday ?? false}
+              isCaptain={user?.isCaptain}
+            />
+          </div>
 
           <span className="avatar__fullName">
             {user?.firstName} {user?.lastName}
           </span>
           <span className="avatar__position">{user?.position}</span>
         </div>
+
         <div className="information-container">
           <div className="partner">
             <Link
@@ -93,6 +100,7 @@ export function Profile() {
             </div>
           )}
         </div>
+
         <div className="languages">
           <div className="languages__title-container">
             <span className="languages__title">Languages:</span>
@@ -107,6 +115,24 @@ export function Profile() {
           </div>
         </div>
       </div>
+
+      {isLightboxOpen && (
+        <div className="lightbox" onClick={closeLightbox}>
+          <div
+            className="lightbox__content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={user?.profilePictureUrl}
+              alt={`${user?.firstName} ${user?.lastName}`}
+              className="lightbox__image"
+            />
+            <button className="lightbox__close" onClick={closeLightbox}>
+              &times;
+            </button>
+          </div>
+        </div>
+      )}
     </Section>
   );
 }
