@@ -100,6 +100,7 @@ export function Profile() {
             </div>
           )}
         </div>
+
         <div className="languages">
           <div className="languages__title-container">
             <span className="languages__title">Languages:</span>

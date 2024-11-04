@@ -123,15 +123,12 @@
   }
 
   .languages {
-    &__title-container {
-      display: flex;
-      color: $rindus-dark-gray;
-      padding: 12px 16px;
-      align-items: center;
-      gap: 16px;
-      border-bottom: 1px solid $rindus-light-gray;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
     &__title {
+      padding-left: 16px;
       color: $rindus-dark-gray;
       font-family: $font-poppins-regular;
       font-size: 16px;
@@ -139,13 +136,16 @@
       font-weight: 400;
       line-height: 22px;
     }
+    &__title-container {
+      width: 100%;
+      border-bottom: 1px solid $rindus-light-gray;
+      padding-bottom: 12px;
+    }
     &__tags-container {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      display: inline-flex;
       padding: 16px;
-      width: 100%;
       gap: 12px;
     }
   }
