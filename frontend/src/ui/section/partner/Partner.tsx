@@ -46,13 +46,19 @@ export function Partner() {
   useEffect(() => {
     load(id);
   }, [id]);
+  const noData = !partner?.info && !partner?.employees?.members?.length;
 
   return (
     <Section
       dataTestId="partner"
       refresh={() => load(id)}
       isLoading={isLoading}
-      shouldRefresh={hasError}
+      shouldRefresh={hasError || noData}
+      retryMessage={
+        hasError
+          ? 'Oops! Something went wrong. Please click to refresh and try again.'
+          : 'No information available for this partner.'
+      }
     >
       <div className="partner">
         <div className="partner__header">

@@ -9,6 +9,7 @@ interface SectionProps {
   dataTestId?: string;
   refresh?: () => void;
   shouldRefresh?: boolean;
+  retryMessage: string;
   children: React.ReactNode;
 }
 
@@ -19,13 +20,14 @@ const Section = ({
   children,
   refresh,
   shouldRefresh,
+  retryMessage
 }: SectionProps) => {
   if (isLoading) {
     return <Loader />;
   }
 
   if (refresh && shouldRefresh) {
-    return <Retry refresh={refresh} />;
+    return <Retry refresh={refresh} message={retryMessage} />;
   }
 
   return (

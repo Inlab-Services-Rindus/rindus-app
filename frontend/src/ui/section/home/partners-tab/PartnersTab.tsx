@@ -9,7 +9,7 @@ import '@/ui/section/home/partners-tab/PartnersTab.scss';
 
 export default function PartnersTab() {
   const {
-    partners: { data, isLoading, hasError },
+    partners: { data, isLoading, hasError},
     getPartners,
   } = useContext(StoreContext);
 
@@ -25,7 +25,12 @@ export default function PartnersTab() {
       className="partners-tab__container"
       dataTestId="partners-tab"
       refresh={getPartners}
-      shouldRefresh={hasError}
+      shouldRefresh={hasError || !data?.length} 
+      retryMessage={
+        hasError
+          ? 'Oops! Something went wrong. Please click to refresh and try again.'
+          : 'No partners are currently available.'
+      }
     >
       {data?.map((partner, index) => (
         <div

@@ -41,13 +41,19 @@ export function Profile() {
 
   const openLightbox = () => setIsLightboxOpen(true);
   const closeLightbox = () => setIsLightboxOpen(false);
+  const noData = !user;
 
   return (
     <Section
       dataTestId="profile"
       refresh={() => load(id)}
       isLoading={isLoading}
-      shouldRefresh={hasError}
+      shouldRefresh={hasError || noData}
+      retryMessage={
+        hasError
+          ? 'Oops! Something went wrong. Please click to refresh and try again.'
+          : 'User information is not available.'
+      }
     >
       <div className="profile-container">
         <div className="avatar">

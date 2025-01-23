@@ -30,6 +30,11 @@ export default function EventsTab() {
       dataTestId="events-tab"
       refresh={getEvents}
       shouldRefresh={hasError}
+      retryMessage={
+        hasError
+          ? 'Oops! Something went wrong. Please click to refresh and try again.'
+          : 'No events are currently available.'
+      }
     >
       {data?.map((event, index) => (
         <article key={index}>
