@@ -9,6 +9,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
 
     &:has(> &__img--customIcon) {
       border: 1px solid $rindus-green;
