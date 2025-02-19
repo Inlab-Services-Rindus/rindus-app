@@ -24,7 +24,6 @@ export default function PeopleTab() {
   useEffect(() => {
     actionGetEmployees(true);
   }, []);
-  const noDataMessage = 'No employees found.';
 
   return (
     <Section

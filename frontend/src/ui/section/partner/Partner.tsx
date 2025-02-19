@@ -46,7 +46,6 @@ export function Partner() {
   useEffect(() => {
     load(id);
   }, [id]);
-  const noData = !partner?.info && !partner?.employees?.members?.length;
 
   return (
     <Section

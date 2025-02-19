@@ -41,7 +41,7 @@ export function Profile() {
 
   const openLightbox = () => setIsLightboxOpen(true);
   const closeLightbox = () => setIsLightboxOpen(false);
-  const noData = !user;
+
 
   return (
     <Section
