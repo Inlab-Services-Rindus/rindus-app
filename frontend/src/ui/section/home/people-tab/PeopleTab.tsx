@@ -30,12 +30,7 @@ export default function PeopleTab() {
     <Section
       dataTestId="people-tab"
       refresh={() => actionGetEmployees(true)}
-      shouldRefresh={hasError || !data?.length}
-      retryMessage={
-        hasError
-          ? 'Oops! Something went wrong. Please click to refresh and try again.'
-          : noDataMessage
-      }
+      shouldRefresh={hasError}
     >
       <InfiniteScroll
         className="people-tab__container"

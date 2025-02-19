@@ -29,7 +29,7 @@ export default function EventsTab() {
       className="events-tab__container"
       dataTestId="events-tab"
       refresh={getEvents}
-      shouldRefresh={hasError}
+      shouldRefresh={hasError || data.length === 0}
       retryMessage={
         hasError
           ? 'Oops! Something went wrong. Please click to refresh and try again.'

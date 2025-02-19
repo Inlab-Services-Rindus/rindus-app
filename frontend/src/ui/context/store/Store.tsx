@@ -275,7 +275,6 @@ export function StoreProvider({ children }: StoreProviderProps): JSX.Element {
     }
   };
 
-
   const setQueryKey = (key: string) => {
     setQuery(key);
   };

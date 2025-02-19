@@ -48,12 +48,7 @@ export function Profile() {
       dataTestId="profile"
       refresh={() => load(id)}
       isLoading={isLoading}
-      shouldRefresh={hasError || noData}
-      retryMessage={
-        hasError
-          ? 'Oops! Something went wrong. Please click to refresh and try again.'
-          : 'User information is not available.'
-      }
+      shouldRefresh={hasError}
     >
       <div className="profile-container">
         <div className="avatar">

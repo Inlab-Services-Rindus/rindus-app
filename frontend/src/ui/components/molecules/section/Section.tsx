@@ -9,7 +9,7 @@ interface SectionProps {
   dataTestId?: string;
   refresh?: () => void;
   shouldRefresh?: boolean;
-  retryMessage: string;
+  retryMessage?: string;
   children: React.ReactNode;
 }
 

@@ -157,7 +157,7 @@ export function EventDetail() {
       retryMessage={
         displayError
           ? 'Oops! Something went wrong. Please click to refresh and try again.'
-          : 'No events are currently available'
+          : 'No events information are currently available'
       }
     >
       {eventDetails && (

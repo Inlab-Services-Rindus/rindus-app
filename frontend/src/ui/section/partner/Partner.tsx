@@ -53,12 +53,8 @@ export function Partner() {
       dataTestId="partner"
       refresh={() => load(id)}
       isLoading={isLoading}
-      shouldRefresh={hasError || noData}
-      retryMessage={
-        hasError
-          ? 'Oops! Something went wrong. Please click to refresh and try again.'
-          : 'No information available for this partner.'
-      }
+      shouldRefresh={hasError}
+      
     >
       <div className="partner">
         <div className="partner__header">
