@@ -64,7 +64,7 @@ func (s *Server) MountRoutes() chi.Router {
 	// 	handlers.NewMetricHandler().Routes(r)
 	// })
 
-	personioServer := s.createPersonioAuthServer()
+	personioServer := s.createPersonioAuthService()
 
 	router.Get("/auth/personio", personioServer.AuthPersonioHandler)
 
@@ -88,7 +88,7 @@ func (s *Server) createAuthServer() *oauth.AuthServer {
 	})
 }
 
-func (s *Server) createPersonioAuthServer() *service.PersonioService {
+func (s *Server) createPersonioAuthService() *service.PersonioService {
 	cfg := s.cfg.Personio
 	return service.NewPersonioService(cfg.APIUrl, cfg.ClientID, cfg.ClientSecret)
 }
