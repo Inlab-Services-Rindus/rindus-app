@@ -1,14 +1,18 @@
 package service
 
 import (
+	"api/helper"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
 )
+
+type PersonioTokenResponse struct {
+	AccessToken string `json:"access_token,omitempty"`
+}
 
 type PersonioService struct {
 	personioUrl  string
@@ -17,13 +21,14 @@ type PersonioService struct {
 	authToken    string
 }
 
-func NewPersonioService(personioUrl,clientID, clientSecret string) *PersonioService {
+func NewPersonioService(personioUrl, clientID, clientSecret string) *PersonioService {
 	return &PersonioService{
-		personioUrl: personioUrl,
+		personioUrl:  personioUrl,
 		clientID:     clientID,
 		clientSecret: clientSecret,
 	}
 }
+
 
 func (p *PersonioService) authenticate() error {
 	data := url.Values{}
@@ -31,9 +36,7 @@ func (p *PersonioService) authenticate() error {
 	data.Set("client_id", p.clientID)
 	data.Set("client_secret", p.clientSecret)
 
-	payload := strings.NewReader(data.Encode())
-
-	req, err := http.NewRequest("POST", p.personioUrl, payload)
+	req, err := http.NewRequest("POST", p.personioUrl, strings.NewReader(data.Encode()))
 	if err != nil {
 		slog.Error("Error creating request", "error", err)
 		return err
@@ -54,26 +57,22 @@ func (p *PersonioService) authenticate() error {
 		return fmt.Errorf("received HTTP status code %s", res.Status)
 	}
 
-	bodyBytes, err := io.ReadAll(res.Body)
-	if err != nil {
-		slog.Error("Error reading response body", "error", err)
-		return err
-	}
-
-	var response map[string]interface{}
-	if err := json.Unmarshal(bodyBytes, &response); err != nil {
+	var response PersonioTokenResponse
+	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
 		slog.Error("Error unmarshalling response", "error", err)
 		return err
 	}
 
-	if token, ok := response["access_token"].(string); ok {
+
+	token := helper.TrimSpace(response.AccessToken)
+	if len(token) > 0 {
 		p.authToken = token
 		slog.Info("Authentication token received and stored", "authToken", p.authToken)
 		return nil
-	} else {
-		slog.Error("Failed to obtain authentication token")
-		return fmt.Errorf("access token not found in response")
 	}
+
+	slog.Error("Failed to obtain authentication token")
+	return fmt.Errorf("access token not found in response")
 }
 
 func (p *PersonioService) AuthPersonioHandler(w http.ResponseWriter, r *http.Request) {
@@ -82,7 +81,7 @@ func (p *PersonioService) AuthPersonioHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 	slog.Info("Authentication successful")
-	
+
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Authentication successful"))
 }
