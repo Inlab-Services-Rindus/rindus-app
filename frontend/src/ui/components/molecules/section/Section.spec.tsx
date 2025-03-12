@@ -3,7 +3,11 @@ import { render, screen } from '@testing-library/react';
 
 describe('Section', () => {
   it('renders children', () => {
-    render(<Section isLoading={false}>Test</Section>);
+    render(
+      <Section isLoading={false} retryMessage="Retry message">
+        Test
+      </Section>
+    );
 
     const tabElement = screen.getByText(/Test/);
 
@@ -11,7 +15,7 @@ describe('Section', () => {
   });
 
   it('renders Loader when isLoading is true', () => {
-    render(<Section isLoading>Test</Section>);
+    render(<Section isLoading retryMessage="Retry message">Test</Section>);
 
     const loaderElement = screen.getByTestId('loader');
 
@@ -22,9 +26,14 @@ describe('Section', () => {
     const refreshMock = vi.fn();
 
     render(
-      <Section isLoading={false} refresh={refreshMock} shouldRefresh>
+      <Section
+        isLoading={false}
+        refresh={refreshMock}
+        shouldRefresh
+        retryMessage="Oops! Something went wrong. Please try again."
+      >
         Test
-      </Section>,
+      </Section>
     );
 
     const retryElement = screen.getByTestId('retry-component');

@@ -145,13 +145,20 @@ export function EventDetail() {
       );
     }
   }
+  const displayError = isLoading ? false : hasError; 
+  const hasEvents = !!eventDetails;
 
   return (
     <Section
       className="eventDetail"
       refresh={() => load(id)}
       isLoading={isLoading}
-      shouldRefresh={hasError}
+      shouldRefresh={!hasEvents || hasError}
+      retryMessage={
+        displayError
+          ? 'Oops! Something went wrong. Please click to refresh and try again.'
+          : 'No events information are currently available'
+      }
     >
       {eventDetails && (
         <>
