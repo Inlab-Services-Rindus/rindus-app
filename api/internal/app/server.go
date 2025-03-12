@@ -64,6 +64,10 @@ func (s *Server) MountRoutes() chi.Router {
 	// 	handlers.NewMetricHandler().Routes(r)
 	// })
 
+	personioServer := s.createPersonioAuthService()
+
+	router.Get("/auth/personio", personioServer.AuthPersonioHandler)
+
 	router.Route(API_PREFIX, func(r chi.Router) {
 		r.Use(resourceServer.Authorize)
 		handlers.NewEmployeeHandler(s.employeeService).Routes(r)
@@ -82,6 +86,11 @@ func (s *Server) createAuthServer() *oauth.AuthServer {
 			ClientSecret: cfg.ClientCredentials.ClientSecret,
 		},
 	})
+}
+
+func (s *Server) createPersonioAuthService() *service.PersonioService {
+	cfg := s.cfg.Personio
+	return service.NewPersonioService(cfg.APIUrl, cfg.ClientID, cfg.ClientSecret)
 }
 
 func (s *Server) corsHandler() func(http.Handler) http.Handler {

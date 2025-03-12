@@ -43,11 +43,11 @@ func run() error {
 	// sqlc queries
 	q := repository.New(conn)
 
-	if config.IsDevEnv(cfg.Env) {
-		if err := database.NewSeeder(slog.Default(), cfg, q, conn).Seed(ctx); err != nil {
-			slog.Warn("An error happened while seeding database. Skipping", "err", err)
-		}
-	}
+	// if config.IsDevEnv(cfg.Env) {
+	// 	if err := database.NewSeeder(slog.Default(), cfg, q, conn).Seed(ctx); err != nil {
+	// 		slog.Warn("An error happened while seeding database. Skipping", "err", err)
+	// 	}
+	// }
 
 	// Services
 	employeeService := service.NewEmployeeService(q, importer.NewPersonioImporter(slog.Default(), q, conn))

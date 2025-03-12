@@ -20,6 +20,7 @@ type Config struct {
 	LogLevel slog.Level
 	Port     int
 	DB       Database
+	Personio Personio
 	CORS     CORS
 	OAuth    OAuth
 	Metrics  Metrics
@@ -47,6 +48,7 @@ func LoadConfig() (*Config, error) {
 		LogLevel: parseLogLevel(logger, getEnv("LOG_LEVEL")),
 		Port:     parsePort(logger, getEnv("PORT")),
 		DB:       parseDB(env),
+		Personio: parsePersonioConfig(),
 		CORS:     parseCORS(),
 		OAuth:    parseOAuth(),
 		Metrics:  parseMetrics(),
