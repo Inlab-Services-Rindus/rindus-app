@@ -64,6 +64,7 @@ export class KnexUserRepository implements UserRepository {
   public async allPositions(): Promise<string[]> {
     const positionRecords = await this.knex('employees')
       .select('position')
+      .where('soft_deleted', false)
       .distinct();
 
     return positionRecords.map((record) => record.position);
@@ -85,6 +86,7 @@ export class KnexUserRepository implements UserRepository {
 
     const queryTotalRecords = this.knex('employees')
       .count<Record<string, number>>()
+      .where('soft_deleted', false)
       .first();
 
     const [userRecords, totalRecords] = await Promise.all([
