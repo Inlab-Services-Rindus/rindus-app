@@ -5,7 +5,8 @@ FROM employees;
 -- name: GetEmployeeByPersonioID :one
 SELECT *
 FROM employees
-WHERE personio_id = $1 LIMIT 1;
+WHERE personio_id = $1
+LIMIT 1;
 
 -- name: GetEmployeeByEmail :one
 SELECT *
@@ -95,3 +96,8 @@ UPDATE team_captains SET
 WHERE
     employee_id = $1
 ;
+
+-- name: UpdateEmployeeSetSoftDeleted :exec
+UPDATE employees SET 
+    soft_deleted = true
+WHERE personio_id = $1;

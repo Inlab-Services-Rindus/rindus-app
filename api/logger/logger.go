@@ -27,7 +27,7 @@ func NewLogger(cmd string, opts *slog.HandlerOptions) *slog.Logger {
 	// log to both stdout and rotating logger
 	teeWritter := io.MultiWriter(os.Stdout, rotatingWritter)
 
-	logger := slog.New(slog.NewTextHandler(teeWritter, opts))
+	logger := slog.New(slog.NewJSONHandler(teeWritter, opts))
 	return logger
 }
 
