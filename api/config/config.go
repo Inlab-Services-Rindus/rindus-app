@@ -24,6 +24,7 @@ type Config struct {
 	CORS     CORS
 	OAuth    OAuth
 	Metrics  Metrics
+	Slack    Slack
 }
 
 func LoadConfig() (*Config, error) {
@@ -52,6 +53,7 @@ func LoadConfig() (*Config, error) {
 		CORS:     parseCORS(),
 		OAuth:    parseOAuth(),
 		Metrics:  parseMetrics(),
+		Slack:    parseSlack(),
 	}, nil
 }
 
