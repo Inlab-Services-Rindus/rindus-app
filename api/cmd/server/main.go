@@ -61,7 +61,7 @@ func run() error {
 	server := app.NewServer(cfg, employeeService)
 	server.Setup()
 
-	setupCrons(slackSeeder, personioApiSeeder, ctx)
+	setupCrons(cfg.Cronjob, slackSeeder, personioApiSeeder, ctx)
 	err = server.Run()
 	if err != nil {
 		return err
@@ -78,10 +78,10 @@ func setLogLevel(logLevel slog.Level) {
 	slog.SetLogLoggerLevel(logLevel)
 }
 
-func setupCrons(slackSeeder *importer.SlackSeeder, personioApiSeeder personioapi.Seeder, ctx context.Context) {
+func setupCrons(cronjob string, slackSeeder *importer.SlackSeeder, personioApiSeeder personioapi.Seeder, ctx context.Context) {
 	c := cron.New()
 	slog.Info("Setting up cron jobs")
-	_, err := c.AddFunc("19 11 * * *", func() {
+	_, err := c.AddFunc(cronjob, func() {
 		if err := apiImporter(slackSeeder, personioApiSeeder, ctx); err != nil {
 			slog.Error("Error while executing cronjob", "err", err.Error())
 		}
