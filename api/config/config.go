@@ -24,6 +24,8 @@ type Config struct {
 	CORS     CORS
 	OAuth    OAuth
 	Metrics  Metrics
+	Slack    Slack
+	Cronjob  string
 }
 
 func LoadConfig() (*Config, error) {
@@ -52,6 +54,8 @@ func LoadConfig() (*Config, error) {
 		CORS:     parseCORS(),
 		OAuth:    parseOAuth(),
 		Metrics:  parseMetrics(),
+		Slack:    parseSlack(),
+		Cronjob:  getEnv("CRONJOB"),
 	}, nil
 }
 
