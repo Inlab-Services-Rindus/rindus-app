@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strings"
 )
 
 type SlackImporter interface {
@@ -32,8 +33,9 @@ func (s *slackImporter) UpdateSlackMember(ctx context.Context, member SlackMembe
 	email := member.Profile.Email
 	s.l.Info("Updating slack member", "email", email)
 
-	employee, err := s.q.GetEmployeeByEmail(ctx, *email)
-
+	indexOfDomain := strings.LastIndex(*email, ".")
+	emailPattern := fmt.Sprintf("%s.%s", (*email)[:indexOfDomain], "%")
+	employee, err := s.q.GetEmployeeByEmail(ctx, emailPattern)
 	if err != nil {
 		return internal.ErrNotFound(*email)
 	}
@@ -146,12 +148,12 @@ func NewSlackService(logger *slog.Logger, slackUrl, token string) *slackService 
 	return &slackService{logger, slackUrl, token}
 }
 
-type slackSeeder struct {
+type SlackSeeder struct {
 	slackService *slackService
 	importer     SlackImporter
 }
 
-func (s *slackSeeder) Seed(ctx context.Context) error {
+func (s *SlackSeeder) Seed(ctx context.Context) error {
 	slackMemebers, err := s.slackService.UsersList()
 	if err != nil {
 		return err
@@ -168,6 +170,6 @@ func (s *slackSeeder) Seed(ctx context.Context) error {
 	return nil
 }
 
-func NewSlackSeeder(slackService *slackService, importer SlackImporter) *slackSeeder {
-	return &slackSeeder{slackService, importer}
+func NewSlackSeeder(slackService *slackService, importer SlackImporter) *SlackSeeder {
+	return &SlackSeeder{slackService, importer}
 }

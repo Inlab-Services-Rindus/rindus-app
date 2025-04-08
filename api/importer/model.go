@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	rindusDomain = "rindus.de"
+	rindusDomain = "rindus."
 )
 
 type SlackMembers struct {

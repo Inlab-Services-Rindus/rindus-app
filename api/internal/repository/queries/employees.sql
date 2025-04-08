@@ -1,17 +1,21 @@
 -- name: GetEmployeeCount :one
 SELECT count(*)
-FROM employees;
+FROM employees
+WHERE soft_deleted = false;
 
 -- name: GetEmployeeByPersonioID :one
 SELECT *
 FROM employees
 WHERE personio_id = $1
+AND soft_deleted = false
 LIMIT 1;
 
 -- name: GetEmployeeByEmail :one
 SELECT *
 FROM employees
-WHERE email = $1 LIMIT 1;
+WHERE email LIKE $1 
+AND soft_deleted = false
+LIMIT 1;
 
 -- name: CreateEmployee :one
 INSERT INTO employees (
@@ -46,7 +50,9 @@ s.slack_id as s_id
 FROM employees e
 JOIN partners p on e.partner_id = p.id  
 LEFT JOIN slack_info s on e.id = s.employee_id
-WHERE uid = $1 LIMIT 1;
+WHERE uid = $1
+AND soft_deleted = false
+LIMIT 1;
 
 -- name: GetTeamCaptainIDByEmail :one
 SELECT 
@@ -55,6 +61,7 @@ FROM employees e
 JOIN partners p on e.partner_id = p.id  
 WHERE e.email = $1
 AND p.name = 'rindus'
+AND soft_deleted = false
 LIMIT 1;
 
 -- name: GetEmployeeLanguages :many

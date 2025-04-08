@@ -116,7 +116,9 @@ func (q *Queries) DeleteEmployeeLanguage(ctx context.Context, employeeID int32) 
 const getEmployeeByEmail = `-- name: GetEmployeeByEmail :one
 SELECT id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at, soft_deleted
 FROM employees
-WHERE email = $1 LIMIT 1
+WHERE email LIKE $1 
+AND soft_deleted = false
+LIMIT 1
 `
 
 func (q *Queries) GetEmployeeByEmail(ctx context.Context, email string) (Employee, error) {
@@ -144,6 +146,7 @@ const getEmployeeByPersonioID = `-- name: GetEmployeeByPersonioID :one
 SELECT id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at, soft_deleted
 FROM employees
 WHERE personio_id = $1
+AND soft_deleted = false
 LIMIT 1
 `
 
@@ -186,7 +189,9 @@ s.slack_id as s_id
 FROM employees e
 JOIN partners p on e.partner_id = p.id  
 LEFT JOIN slack_info s on e.id = s.employee_id
-WHERE uid = $1 LIMIT 1
+WHERE uid = $1
+AND soft_deleted = false
+LIMIT 1
 `
 
 type GetEmployeeByUIDRow struct {
@@ -229,6 +234,7 @@ func (q *Queries) GetEmployeeByUID(ctx context.Context, uid pgtype.UUID) (GetEmp
 const getEmployeeCount = `-- name: GetEmployeeCount :one
 SELECT count(*)
 FROM employees
+WHERE soft_deleted = false
 `
 
 func (q *Queries) GetEmployeeCount(ctx context.Context) (int64, error) {
@@ -273,6 +279,7 @@ FROM employees e
 JOIN partners p on e.partner_id = p.id  
 WHERE e.email = $1
 AND p.name = 'rindus'
+AND soft_deleted = false
 LIMIT 1
 `
 
