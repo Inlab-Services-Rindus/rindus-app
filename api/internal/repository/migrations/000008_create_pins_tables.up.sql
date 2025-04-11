@@ -20,12 +20,12 @@ CREATE TABLE IF NOT EXISTS pins (
     CONSTRAINT pins_category_id_foreign FOREIGN KEY (category_id) REFERENCES pins_category(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS people_pins (
+CREATE TABLE IF NOT EXISTS employee_pins (
     employee_id INTEGER NOT NULL,
     pin_id INTEGER NOT NULL,
     assignment_date DATE NOT NULL,
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (employee_id, pin_id),
-    CONSTRAINT people_pins_pin_id_foreign FOREIGN KEY (pin_id) REFERENCES pins(id) ON DELETE CASCADE
+    CONSTRAINT employee_pins_pin_id_foreign FOREIGN KEY (pin_id) REFERENCES pins(id) ON DELETE CASCADE
 );
