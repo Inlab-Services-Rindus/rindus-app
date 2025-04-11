@@ -60,7 +60,7 @@ INSERT INTO employees (
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8
 )
-RETURNING id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at
+RETURNING id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at, soft_deleted
 `
 
 type CreateEmployeeParams struct {
@@ -99,6 +99,7 @@ func (q *Queries) CreateEmployee(ctx context.Context, arg CreateEmployeeParams) 
 		&i.PartnerID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.SoftDeleted,
 	)
 	return i, err
 }
@@ -113,9 +114,11 @@ func (q *Queries) DeleteEmployeeLanguage(ctx context.Context, employeeID int32) 
 }
 
 const getEmployeeByEmail = `-- name: GetEmployeeByEmail :one
-SELECT id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at
+SELECT id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at, soft_deleted
 FROM employees
-WHERE email = $1 LIMIT 1
+WHERE email LIKE $1 
+AND soft_deleted = false
+LIMIT 1
 `
 
 func (q *Queries) GetEmployeeByEmail(ctx context.Context, email string) (Employee, error) {
@@ -134,14 +137,17 @@ func (q *Queries) GetEmployeeByEmail(ctx context.Context, email string) (Employe
 		&i.PartnerID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.SoftDeleted,
 	)
 	return i, err
 }
 
 const getEmployeeByPersonioID = `-- name: GetEmployeeByPersonioID :one
-SELECT id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at
+SELECT id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at, soft_deleted
 FROM employees
-WHERE personio_id = $1 LIMIT 1
+WHERE personio_id = $1
+AND soft_deleted = false
+LIMIT 1
 `
 
 func (q *Queries) GetEmployeeByPersonioID(ctx context.Context, personioID int32) (Employee, error) {
@@ -160,6 +166,7 @@ func (q *Queries) GetEmployeeByPersonioID(ctx context.Context, personioID int32)
 		&i.PartnerID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.SoftDeleted,
 	)
 	return i, err
 }
@@ -182,7 +189,9 @@ s.slack_id as s_id
 FROM employees e
 JOIN partners p on e.partner_id = p.id  
 LEFT JOIN slack_info s on e.id = s.employee_id
-WHERE uid = $1 LIMIT 1
+WHERE uid = $1
+AND soft_deleted = false
+LIMIT 1
 `
 
 type GetEmployeeByUIDRow struct {
@@ -225,6 +234,7 @@ func (q *Queries) GetEmployeeByUID(ctx context.Context, uid pgtype.UUID) (GetEmp
 const getEmployeeCount = `-- name: GetEmployeeCount :one
 SELECT count(*)
 FROM employees
+WHERE soft_deleted = false
 `
 
 func (q *Queries) GetEmployeeCount(ctx context.Context) (int64, error) {
@@ -269,6 +279,7 @@ FROM employees e
 JOIN partners p on e.partner_id = p.id  
 WHERE e.email = $1
 AND p.name = 'rindus'
+AND soft_deleted = false
 LIMIT 1
 `
 
@@ -286,7 +297,7 @@ UPDATE employees SET
     position = $4,
     birthday = $5
 WHERE personio_id = $1
-RETURNING id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at
+RETURNING id, uid, personio_id, first_name, last_name, email, picture_url, position, birthday, partner_id, created_at, updated_at, soft_deleted
 `
 
 type UpdateEmployeeParams struct {
@@ -319,8 +330,20 @@ func (q *Queries) UpdateEmployee(ctx context.Context, arg UpdateEmployeeParams) 
 		&i.PartnerID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.SoftDeleted,
 	)
 	return i, err
+}
+
+const updateEmployeeSetSoftDeleted = `-- name: UpdateEmployeeSetSoftDeleted :exec
+UPDATE employees SET 
+    soft_deleted = true
+WHERE personio_id = $1
+`
+
+func (q *Queries) UpdateEmployeeSetSoftDeleted(ctx context.Context, personioID int32) error {
+	_, err := q.db.Exec(ctx, updateEmployeeSetSoftDeleted, personioID)
+	return err
 }
 
 const updateTeamCaptain = `-- name: UpdateTeamCaptain :exec
