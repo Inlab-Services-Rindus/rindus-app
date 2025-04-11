@@ -23,7 +23,6 @@ CREATE TABLE IF NOT EXISTS pins (
 CREATE TABLE IF NOT EXISTS employee_pins (
     employee_id INTEGER NOT NULL,
     pin_id INTEGER NOT NULL,
-    assignment_date DATE NOT NULL,
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (employee_id, pin_id),
