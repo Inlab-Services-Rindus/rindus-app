@@ -33,3 +33,32 @@ func (q *Queries) CreatePinCategory(ctx context.Context, name string) (PinsCateg
 	)
 	return i, err
 }
+
+const getPinCategories = `-- name: GetPinCategories :many
+SELECT id, name, created_at, updated_at FROM pins_category ORDER BY id
+`
+
+func (q *Queries) GetPinCategories(ctx context.Context) ([]PinsCategory, error) {
+	rows, err := q.db.Query(ctx, getPinCategories)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []PinsCategory
+	for rows.Next() {
+		var i PinsCategory
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

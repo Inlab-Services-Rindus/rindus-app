@@ -10,6 +10,7 @@ import (
 
 type PinsService interface {
 	CreatePinCategory(ctx context.Context, req model.CreatePinCategoryRequest) (*model.PinCategory, error)
+	GetPinCategories(ctx context.Context) ([]model.PinCategory, error)
 }
 
 type pinsService struct {
@@ -38,4 +39,23 @@ func (s *pinsService) CreatePinCategory(ctx context.Context, req model.CreatePin
 		CreatedAt: category.CreatedAt.Time,
 		UpdatedAt: category.UpdatedAt.Time,
 	}, nil
+}
+
+func (s *pinsService) GetPinCategories(ctx context.Context) ([]model.PinCategory, error) {
+	categories, err := s.queries.GetPinCategories(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var pinCategories []model.PinCategory
+	for _, category := range categories {
+		pinCategories = append(pinCategories, model.PinCategory{
+			ID:        category.ID,
+			Name:      category.Name,
+			CreatedAt: category.CreatedAt.Time,
+			UpdatedAt: category.UpdatedAt.Time,
+		})
+	}
+
+	return pinCategories, nil
 }

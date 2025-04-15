@@ -21,8 +21,9 @@ func NewPinsHandler(service service.PinsService) *PinsHandler {
 }
 
 func (h *PinsHandler) Routes(r chi.Router) {
-	r.Route("/pin-categories", func(r chi.Router) {
-		r.Post("/", h.CreatePinCategory)
+	r.Route("/pins", func(r chi.Router) {
+		r.Get("/categories", h.GetPinCategories)
+		r.Post("/categories", h.CreatePinCategory)
 	})
 }
 
@@ -55,4 +56,18 @@ func (h *PinsHandler) CreatePinCategory(w http.ResponseWriter, r *http.Request) 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response)
+}
+
+func (h *PinsHandler) GetPinCategories(w http.ResponseWriter, r *http.Request) {
+	categories, err := h.service.GetPinCategories(r.Context())
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(model.PinErrorResponse{Error: "Internal server error"})
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(categories)
 }

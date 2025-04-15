@@ -9,3 +9,6 @@ INSERT INTO pins_category (
     CURRENT_TIMESTAMP
 )
 RETURNING *;
+
+-- name: GetPinCategories :many
+SELECT * FROM pins_category ORDER BY id;
