@@ -35,6 +35,8 @@ type Employee struct {
 type EmployeePin struct {
 	EmployeeID int32
 	PinID      int32
+	CategoryID int32
+	DeletedAt  pgtype.Timestamptz
 	CreatedAt  pgtype.Timestamptz
 	UpdatedAt  pgtype.Timestamptz
 }
@@ -91,6 +93,7 @@ type Pin struct {
 	PinDescription string
 	AutoAssigned   pgtype.Bool
 	CategoryID     int32
+	DeletedAt      pgtype.Timestamptz
 	CreatedAt      pgtype.Timestamptz
 	UpdatedAt      pgtype.Timestamptz
 }
@@ -98,6 +101,7 @@ type Pin struct {
 type PinsCategory struct {
 	ID        int32
 	Name      string
+	DeletedAt pgtype.Timestamptz
 	CreatedAt pgtype.Timestamptz
 	UpdatedAt pgtype.Timestamptz
 }

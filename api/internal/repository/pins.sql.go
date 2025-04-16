@@ -19,7 +19,7 @@ INSERT INTO pins_category (
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP
 )
-RETURNING id, name, created_at, updated_at
+RETURNING id, name, deleted_at, created_at, updated_at
 `
 
 func (q *Queries) CreatePinCategory(ctx context.Context, name string) (PinsCategory, error) {
@@ -28,6 +28,7 @@ func (q *Queries) CreatePinCategory(ctx context.Context, name string) (PinsCateg
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
+		&i.DeletedAt,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -35,7 +36,7 @@ func (q *Queries) CreatePinCategory(ctx context.Context, name string) (PinsCateg
 }
 
 const getPinCategories = `-- name: GetPinCategories :many
-SELECT id, name, created_at, updated_at FROM pins_category ORDER BY id
+SELECT id, name, deleted_at, created_at, updated_at FROM pins_category WHERE deleted_at IS NULL ORDER BY id
 `
 
 func (q *Queries) GetPinCategories(ctx context.Context) ([]PinsCategory, error) {
@@ -50,6 +51,7 @@ func (q *Queries) GetPinCategories(ctx context.Context) ([]PinsCategory, error) 
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
+			&i.DeletedAt,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -61,4 +63,40 @@ func (q *Queries) GetPinCategories(ctx context.Context) ([]PinsCategory, error) 
 		return nil, err
 	}
 	return items, nil
+}
+
+const softDeleteEmployeePin = `-- name: SoftDeleteEmployeePin :exec
+UPDATE employee_pins SET
+    deleted_at = CURRENT_TIMESTAMP,
+    updated_at = CURRENT_TIMESTAMP
+WHERE category_id = $1
+`
+
+func (q *Queries) SoftDeleteEmployeePin(ctx context.Context, categoryID int32) error {
+	_, err := q.db.Exec(ctx, softDeleteEmployeePin, categoryID)
+	return err
+}
+
+const softDeletePin = `-- name: SoftDeletePin :exec
+UPDATE pins SET
+    deleted_at = CURRENT_TIMESTAMP,
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = $1
+`
+
+func (q *Queries) SoftDeletePin(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, softDeletePin, id)
+	return err
+}
+
+const softDeletePinCategory = `-- name: SoftDeletePinCategory :exec
+UPDATE pins_category SET
+    deleted_at = CURRENT_TIMESTAMP,
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = $1
+`
+
+func (q *Queries) SoftDeletePinCategory(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, softDeletePinCategory, id)
+	return err
 }

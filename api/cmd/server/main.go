@@ -51,7 +51,7 @@ func run() error {
 	// Services
 	personioImporter := importer.NewPersonioImporter(logger, q, conn)
 	employeeService := service.NewEmployeeService(q, personioImporter)
-	pinsService := service.NewPinsService(q)
+	pinsService := service.NewPinsService(q, conn)
 	apiImporter := personioapi.NewImporter(logger, personioImporter, q)
 	service := personioapi.NewPersonioService(logger, cfg.Personio.APIUrl, cfg.Personio.ClientID, cfg.Personio.ClientSecret)
 	personioApiSeeder := personioapi.NewSeeder(service, apiImporter)

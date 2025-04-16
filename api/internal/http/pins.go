@@ -4,7 +4,9 @@ import (
 	"api/internal/model"
 	"api/internal/service"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/go-chi/chi/v5"
@@ -22,8 +24,11 @@ func NewPinsHandler(service service.PinsService) *PinsHandler {
 
 func (h *PinsHandler) Routes(r chi.Router) {
 	r.Route("/pins", func(r chi.Router) {
-		r.Get("/categories", h.GetPinCategories)
-		r.Post("/categories", h.CreatePinCategory)
+		r.Route("/categories", func(r chi.Router) {
+			r.Get("/", h.GetPinCategories)         
+			r.Post("/", h.CreatePinCategory)        
+			r.Delete("/{id}", h.SoftDeletePinCategory) 
+		})
 	})
 }
 
@@ -70,4 +75,28 @@ func (h *PinsHandler) GetPinCategories(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(categories)
+}
+
+func (h *PinsHandler) SoftDeletePinCategory(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+	
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(model.PinErrorResponse{Error: "Invalid ID format"})
+		return
+	}
+
+	err = h.service.SoftDeletePinCategory(r.Context(), int32(id))
+	if err != nil {
+		fmt.Println(err)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(model.PinErrorResponse{Error: "Internal server error"})
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
