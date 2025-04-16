@@ -21,16 +21,19 @@ type Server struct {
 	router          chi.Router
 	cfg             *config.Config
 	employeeService service.EmployeeService
+	pinsService service.PinsService
 }
 
 func NewServer(
 	cfg *config.Config,
 	employeeService service.EmployeeService,
+	pinsService service.PinsService,
 ) *Server {
 	return &Server{
 		chi.NewRouter(),
 		cfg,
 		employeeService,
+		pinsService,
 	}
 }
 
@@ -67,6 +70,7 @@ func (s *Server) MountRoutes() chi.Router {
 	router.Route(API_PREFIX, func(r chi.Router) {
 		r.Use(resourceServer.Authorize)
 		handlers.NewEmployeeHandler(s.employeeService).Routes(r)
+		handlers.NewPinsHandler(s.pinsService).Routes(r)
 	})
 
 	return router
