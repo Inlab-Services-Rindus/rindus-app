@@ -13,6 +13,8 @@ import (
 type PinsService interface {
 	CreatePinCategory(ctx context.Context, req model.CreatePinCategoryRequest) (*model.PinCategory, error)
 	GetPinCategories(ctx context.Context) ([]model.PinCategory, error)
+	GetPinCategory(ctx context.Context, id int32) (*model.PinCategory, error)
+	UpdatePinCategory(ctx context.Context, id int32, req model.UpdatePinCategoryRequest) (*model.PinCategory, error)
 	SoftDeletePinCategory(ctx context.Context, id int32) error
 }
 
@@ -52,7 +54,7 @@ func (s *pinsService) GetPinCategories(ctx context.Context) ([]model.PinCategory
 		return nil, err
 	}
 
-	var pinCategories []model.PinCategory
+	pinCategories := make([]model.PinCategory, 0, len(categories))
 	for _, category := range categories {
 		pinCategories = append(pinCategories, model.PinCategory{
 			ID:        category.ID,
@@ -63,6 +65,41 @@ func (s *pinsService) GetPinCategories(ctx context.Context) ([]model.PinCategory
 	}
 
 	return pinCategories, nil
+}
+
+func (s *pinsService) GetPinCategory(ctx context.Context, id int32) (*model.PinCategory, error) {
+	category, err := s.queries.GetPinCategory(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.PinCategory{
+		ID:        category.ID,
+		Name:      category.Name,
+		CreatedAt: category.CreatedAt.Time,
+		UpdatedAt: category.UpdatedAt.Time,
+	}, nil
+}
+
+func (s *pinsService) UpdatePinCategory(ctx context.Context, id int32, req model.UpdatePinCategoryRequest) (*model.PinCategory, error) {
+	if req.Name == "" || len(strings.TrimSpace(req.Name)) == 0 {
+		return nil, fmt.Errorf("name cannot be empty")
+	}
+	
+	category, err := s.queries.UpdatePinCategory(ctx, repository.UpdatePinCategoryParams{
+		ID:   id,
+		Name: req.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.PinCategory{
+		ID:        category.ID,
+		Name:      category.Name,
+		CreatedAt: category.CreatedAt.Time,
+		UpdatedAt: category.UpdatedAt.Time,
+	}, nil
 }
 
 func (s *pinsService) SoftDeletePinCategory(ctx context.Context, id int32) error {
