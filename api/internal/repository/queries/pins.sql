@@ -10,8 +10,19 @@ INSERT INTO pins_category (
 )
 RETURNING *;
 
+-- name: GetPinCategory :one
+SELECT * FROM pins_category WHERE id = $1 AND deleted_at IS NULL;
+
 -- name: GetPinCategories :many
 SELECT * FROM pins_category WHERE deleted_at IS NULL ORDER BY id;
+
+-- name: UpdatePinCategory :one
+UPDATE pins_category
+SET
+    name = $2,
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = $1 AND deleted_at IS NULL
+RETURNING *;
 
 -- name: SoftDeletePinCategory :exec
 UPDATE pins_category SET

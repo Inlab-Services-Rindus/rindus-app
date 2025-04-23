@@ -139,6 +139,7 @@ func (q *Queries) GetPinCategories(ctx context.Context) ([]PinsCategory, error) 
 	return items, nil
 }
 
+
 const getPins = `-- name: GetPins :many
 SELECT id, event_date, image_pin, pin_title, pin_description, auto_assigned, category_id, deleted_at, created_at, updated_at FROM pins WHERE deleted_at IS NULL ORDER BY id
 `
@@ -172,6 +173,22 @@ func (q *Queries) GetPins(ctx context.Context) ([]Pin, error) {
 		return nil, err
 	}
 	return items, nil
+
+const getPinCategory = `-- name: GetPinCategory :one
+SELECT id, name, deleted_at, created_at, updated_at FROM pins_category WHERE id = $1 AND deleted_at IS NULL
+`
+
+func (q *Queries) GetPinCategory(ctx context.Context, id int32) (PinsCategory, error) {
+	row := q.db.QueryRow(ctx, getPinCategory, id)
+	var i PinsCategory
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.DeletedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }
 
 const softDeleteEmployeePin = `-- name: SoftDeleteEmployeePin :exec
@@ -224,6 +241,7 @@ func (q *Queries) SoftDeletePinCategory(ctx context.Context, id int32) error {
 	return err
 }
 
+
 const updatePin = `-- name: UpdatePin :one
 UPDATE pins
 SET
@@ -267,6 +285,27 @@ func (q *Queries) UpdatePin(ctx context.Context, arg UpdatePinParams) (Pin, erro
 		&i.PinDescription,
 		&i.AutoAssigned,
 		&i.CategoryID,
+
+const updatePinCategory = `-- name: UpdatePinCategory :one
+UPDATE pins_category
+SET
+    name = $2,
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = $1 AND deleted_at IS NULL
+RETURNING id, name, deleted_at, created_at, updated_at
+`
+
+type UpdatePinCategoryParams struct {
+	ID   int32
+	Name string
+}
+
+func (q *Queries) UpdatePinCategory(ctx context.Context, arg UpdatePinCategoryParams) (PinsCategory, error) {
+	row := q.db.QueryRow(ctx, updatePinCategory, arg.ID, arg.Name)
+	var i PinsCategory
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
 		&i.DeletedAt,
 		&i.CreatedAt,
 		&i.UpdatedAt,

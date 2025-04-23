@@ -49,6 +49,10 @@ type CreatePinCategoryRequest struct {
 	Name string `json:"name" validate:"required"`
 }
 
+type UpdatePinCategoryRequest struct {
+	Name string `json:"name"`
+}
+
 type CreatePinCategoryResponse struct {
 	Category PinCategory `json:"category"`
 }
