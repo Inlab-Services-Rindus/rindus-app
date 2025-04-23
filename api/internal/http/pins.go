@@ -205,10 +205,16 @@ func (h *PinsHandler) UpdatePin(w http.ResponseWriter, r *http.Request) {
 		if strings.Contains(err.Error(), "required") || strings.Contains(err.Error(), "invalid") {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(model.PinErrorResponse{Error: err.Error()})
-		} else {
-			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(model.PinErrorResponse{Error: "Internal server error"})
+			return
+		} 
+		if errors.Is(err, pgx.ErrNoRows) {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(model.PinErrorResponse{Error: "Pin not found"})
+			return
 		}
+
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(model.PinErrorResponse{Error: "Internal server error"})
 		return
 	}
 
