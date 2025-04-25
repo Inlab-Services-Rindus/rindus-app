@@ -13,7 +13,6 @@ import (
 )
 
 type PinsService interface {
-
 	CreatePinCategory(ctx context.Context, req model.CreatePinCategoryRequest) (*model.PinCategory, error)
 	GetPinCategories(ctx context.Context) ([]model.PinCategory, error)
 	GetPinCategory(ctx context.Context, id int32) (*model.PinCategory, error)
@@ -26,7 +25,13 @@ type PinsService interface {
 	UpdatePin(ctx context.Context, id int32, req model.UpdatePinRequest) (*model.Pin, error)
 	SoftDeletePin(ctx context.Context, id int32) error
 
+	GetAllEmployeePins(ctx context.Context) ([]model.EmployeePin, error)
+	GetEmployeePinsByPinID(ctx context.Context, pinID int32) ([]model.EmployeePin, error)
+	GetEmployeePinsByEmployeeID(ctx context.Context, employeeID int32) ([]model.EmployeePin, error)
+	CreateEmployeePin(ctx context.Context, req model.CreateEmployeePinRequest) (*model.EmployeePin, error)
+	SoftDeleteEmployeePin(ctx context.Context, employeeID, pinID int32) error
 }
+
 
 type pinsService struct {
 	queries *repository.Queries
@@ -123,7 +128,7 @@ func (s *pinsService) SoftDeletePinCategory(ctx context.Context, id int32) error
 
 	qtx := s.queries.WithTx(tx)
 
-	if err := qtx.SoftDeleteEmployeePin(ctx, id); err != nil {
+	if err := qtx.SoftDeleteEmployeePinByCategoryID(ctx, id); err != nil {
 		return fmt.Errorf("failed to soft delete employee pins: %w", err)
 	}
 
@@ -321,6 +326,111 @@ func (s *pinsService) UpdatePin(ctx context.Context, id int32, req model.UpdateP
 func (s *pinsService) SoftDeletePin(ctx context.Context, id int32) error {
 	_, err := s.queries.SoftDeletePin(ctx, id)
 	
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *pinsService) GetAllEmployeePins(ctx context.Context) ([]model.EmployeePin, error) {
+	records, err := s.queries.GetAllEmployeePins(ctx)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]model.EmployeePin, 0, len(records))
+	for _, rec := range records {
+		result = append(result, model.EmployeePin{
+			EmployeeID: rec.EmployeeID,
+			PinID:      rec.PinID,
+			CategoryID: rec.CategoryID,
+			CreatedAt:  rec.CreatedAt.Time,
+			UpdatedAt:  rec.UpdatedAt.Time,
+		})
+	}
+	return result, nil
+}
+
+func (s *pinsService) GetEmployeePinsByPinID(ctx context.Context, pinID int32) ([]model.EmployeePin, error) {
+	records, err := s.queries.GetEmployeePinsByPinID(ctx, pinID)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]model.EmployeePin, 0, len(records))
+	for _, rec := range records {
+		result = append(result, model.EmployeePin{
+			EmployeeID: rec.EmployeeID,
+			PinID:      rec.PinID,
+			CategoryID: rec.CategoryID,
+			CreatedAt:  rec.CreatedAt.Time,
+			UpdatedAt:  rec.UpdatedAt.Time,
+		})
+	}
+	return result, nil
+}
+
+func (s *pinsService) GetEmployeePinsByEmployeeID(ctx context.Context, employeeID int32) ([]model.EmployeePin, error) {
+	records, err := s.queries.GetEmployeePinsByEmployeeID(ctx, employeeID)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]model.EmployeePin, 0, len(records))
+	for _, rec := range records {
+		result = append(result, model.EmployeePin{
+			EmployeeID: rec.EmployeeID,
+			PinID:      rec.PinID,
+			CategoryID: rec.CategoryID,
+			CreatedAt:  rec.CreatedAt.Time,
+			UpdatedAt:  rec.UpdatedAt.Time,
+		})
+	}
+	return result, nil
+}
+
+func validateCreateEmployeePinRequest(req model.CreateEmployeePinRequest) error {
+	fmt.Println("validateCreateEmployeePinRequest", req)
+	if req.EmployeeID <= 0 {
+		return fmt.Errorf("employee_id is required")
+	}
+	if req.PinID <= 0 {
+		return fmt.Errorf("pin_id is required")
+	}
+	return nil
+}
+
+func (s *pinsService) CreateEmployeePin(ctx context.Context, req model.CreateEmployeePinRequest) (*model.EmployeePin, error) {
+	if err := validateCreateEmployeePinRequest(req); err != nil {
+		return nil, err
+	}
+
+	pin, err := s.queries.GetPinByID(ctx, req.PinID)
+	if err != nil {
+		return nil, err
+	}
+	
+	rec, err := s.queries.InsertEmployeePin(ctx, repository.InsertEmployeePinParams{
+		EmployeeID: req.EmployeeID,
+		CategoryID: pin.CategoryID,
+		PinID:      req.PinID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return &model.EmployeePin{
+		EmployeeID: rec.EmployeeID,
+		PinID:      rec.PinID,
+		CategoryID: rec.CategoryID,
+		CreatedAt:  rec.CreatedAt.Time,
+		UpdatedAt:  rec.UpdatedAt.Time,
+	}, nil
+}
+
+func (s *pinsService) SoftDeleteEmployeePin(ctx context.Context, employeeID, pinID int32) error {
+	_, err := s.queries.SoftDeleteEmployeePin(ctx, repository.SoftDeleteEmployeePinParams{
+		EmployeeID: employeeID,
+		PinID:      pinID,
+	})
 	if err != nil {
 		return err
 	}

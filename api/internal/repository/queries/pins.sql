@@ -71,10 +71,32 @@ UPDATE pins SET
 WHERE id = $1 AND deleted_at IS NULL
 RETURNING *; 
 
--- name: SoftDeleteEmployeePin :exec
+-- name: SoftDeleteEmployeePinByCategoryID :exec
 UPDATE employee_pins SET
     deleted_at = CURRENT_TIMESTAMP,
     updated_at = CURRENT_TIMESTAMP
-WHERE category_id = $1;
+WHERE category_id = $1 AND deleted_at IS NULL;
 
+-- name: GetAllEmployeePins :many
+SELECT * FROM employee_pins WHERE deleted_at IS NULL;
+
+-- name: GetEmployeePinsByPinID :many
+SELECT * FROM employee_pins WHERE pin_id = $1 AND deleted_at IS NULL;
+
+-- name: GetEmployeePinsByEmployeeID :many
+SELECT * FROM employee_pins WHERE employee_id = $1 AND deleted_at IS NULL;
+
+-- name: InsertEmployeePin :one
+INSERT INTO employee_pins (
+    employee_id, pin_id, category_id, deleted_at, created_at, updated_at
+) VALUES (
+    $1, $2, $3, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+) RETURNING *;
+
+-- name: SoftDeleteEmployeePin :one
+UPDATE employee_pins SET
+    deleted_at = CURRENT_TIMESTAMP,
+    updated_at = CURRENT_TIMESTAMP
+WHERE employee_id = $1 AND pin_id = $2 AND deleted_at IS NULL
+RETURNING *;
 

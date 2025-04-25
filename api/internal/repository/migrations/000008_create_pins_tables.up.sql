@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS employee_pins (
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (employee_id, pin_id),
+    CONSTRAINT employee_pins_employee_id_foreign FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE,
     CONSTRAINT employee_pins_pin_id_foreign FOREIGN KEY (pin_id) REFERENCES pins(id) ON DELETE CASCADE,
     CONSTRAINT employee_pins_category_id_foreign FOREIGN KEY (category_id) REFERENCES pins_category(id) ON DELETE CASCADE
 );

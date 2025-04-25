@@ -56,3 +56,23 @@ type UpdatePinCategoryRequest struct {
 type CreatePinCategoryResponse struct {
 	Category PinCategory `json:"category"`
 }
+
+type EmployeePin struct {
+	EmployeeID  int32      `json:"employee_id"`
+	PinID       int32      `json:"pin_id"`
+	CategoryID  int32      `json:"category_id"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+}
+
+
+type CreateEmployeePinRequest struct {
+	EmployeeID int32 `json:"employee_id" validate:"required"`
+	PinID      int32 `json:"pin_id" validate:"required"`
+}
+
+
+type UpdateEmployeePinRequest struct {
+	EmployeeID int32 `json:"employee_id"`
+	PinID      int32 `json:"pin_id"`
+}
