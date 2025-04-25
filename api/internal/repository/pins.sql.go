@@ -7,7 +7,59 @@ package repository
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
+
+const createPin = `-- name: CreatePin :one
+INSERT INTO pins (
+    event_date,
+    image_pin,
+    pin_title,
+    pin_description,
+    auto_assigned,
+    category_id,
+    created_at,
+    updated_at
+) VALUES (
+    $1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+)
+RETURNING id, event_date, image_pin, pin_title, pin_description, auto_assigned, category_id, deleted_at, created_at, updated_at
+`
+
+type CreatePinParams struct {
+	EventDate      pgtype.Date
+	ImagePin       string
+	PinTitle       string
+	PinDescription string
+	AutoAssigned   pgtype.Bool
+	CategoryID     int32
+}
+
+func (q *Queries) CreatePin(ctx context.Context, arg CreatePinParams) (Pin, error) {
+	row := q.db.QueryRow(ctx, createPin,
+		arg.EventDate,
+		arg.ImagePin,
+		arg.PinTitle,
+		arg.PinDescription,
+		arg.AutoAssigned,
+		arg.CategoryID,
+	)
+	var i Pin
+	err := row.Scan(
+		&i.ID,
+		&i.EventDate,
+		&i.ImagePin,
+		&i.PinTitle,
+		&i.PinDescription,
+		&i.AutoAssigned,
+		&i.CategoryID,
+		&i.DeletedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
 
 const createPinCategory = `-- name: CreatePinCategory :one
 INSERT INTO pins_category (
@@ -28,6 +80,28 @@ func (q *Queries) CreatePinCategory(ctx context.Context, name string) (PinsCateg
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
+		&i.DeletedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getPinByID = `-- name: GetPinByID :one
+SELECT id, event_date, image_pin, pin_title, pin_description, auto_assigned, category_id, deleted_at, created_at, updated_at FROM pins WHERE id = $1 AND deleted_at IS NULL
+`
+
+func (q *Queries) GetPinByID(ctx context.Context, id int32) (Pin, error) {
+	row := q.db.QueryRow(ctx, getPinByID, id)
+	var i Pin
+	err := row.Scan(
+		&i.ID,
+		&i.EventDate,
+		&i.ImagePin,
+		&i.PinTitle,
+		&i.PinDescription,
+		&i.AutoAssigned,
+		&i.CategoryID,
 		&i.DeletedAt,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -65,6 +139,41 @@ func (q *Queries) GetPinCategories(ctx context.Context) ([]PinsCategory, error) 
 	return items, nil
 }
 
+
+const getPins = `-- name: GetPins :many
+SELECT id, event_date, image_pin, pin_title, pin_description, auto_assigned, category_id, deleted_at, created_at, updated_at FROM pins WHERE deleted_at IS NULL ORDER BY id
+`
+
+func (q *Queries) GetPins(ctx context.Context) ([]Pin, error) {
+	rows, err := q.db.Query(ctx, getPins)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Pin
+	for rows.Next() {
+		var i Pin
+		if err := rows.Scan(
+			&i.ID,
+			&i.EventDate,
+			&i.ImagePin,
+			&i.PinTitle,
+			&i.PinDescription,
+			&i.AutoAssigned,
+			&i.CategoryID,
+			&i.DeletedAt,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+
 const getPinCategory = `-- name: GetPinCategory :one
 SELECT id, name, deleted_at, created_at, updated_at FROM pins_category WHERE id = $1 AND deleted_at IS NULL
 `
@@ -94,16 +203,30 @@ func (q *Queries) SoftDeleteEmployeePin(ctx context.Context, categoryID int32) e
 	return err
 }
 
-const softDeletePin = `-- name: SoftDeletePin :exec
+const softDeletePin = `-- name: SoftDeletePin :one
 UPDATE pins SET
     deleted_at = CURRENT_TIMESTAMP,
     updated_at = CURRENT_TIMESTAMP
-WHERE id = $1
+WHERE id = $1 AND deleted_at IS NULL
+RETURNING id, event_date, image_pin, pin_title, pin_description, auto_assigned, category_id, deleted_at, created_at, updated_at
 `
 
-func (q *Queries) SoftDeletePin(ctx context.Context, id int32) error {
-	_, err := q.db.Exec(ctx, softDeletePin, id)
-	return err
+func (q *Queries) SoftDeletePin(ctx context.Context, id int32) (Pin, error) {
+	row := q.db.QueryRow(ctx, softDeletePin, id)
+	var i Pin
+	err := row.Scan(
+		&i.ID,
+		&i.EventDate,
+		&i.ImagePin,
+		&i.PinTitle,
+		&i.PinDescription,
+		&i.AutoAssigned,
+		&i.CategoryID,
+		&i.DeletedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }
 
 const softDeletePinCategory = `-- name: SoftDeletePinCategory :exec
@@ -117,6 +240,51 @@ func (q *Queries) SoftDeletePinCategory(ctx context.Context, id int32) error {
 	_, err := q.db.Exec(ctx, softDeletePinCategory, id)
 	return err
 }
+
+
+const updatePin = `-- name: UpdatePin :one
+UPDATE pins
+SET
+    event_date = COALESCE($2, event_date),
+    image_pin = COALESCE($3, image_pin),
+    pin_title = COALESCE($4, pin_title),
+    pin_description = COALESCE($5, pin_description),
+    auto_assigned = COALESCE($6, auto_assigned),
+    category_id = COALESCE($7, category_id),
+    updated_at = CURRENT_TIMESTAMP
+WHERE id = $1 AND deleted_at IS NULL
+RETURNING id, event_date, image_pin, pin_title, pin_description, auto_assigned, category_id, deleted_at, created_at, updated_at
+`
+
+type UpdatePinParams struct {
+	ID             int32
+	EventDate      pgtype.Date
+	ImagePin       pgtype.Text
+	PinTitle       pgtype.Text
+	PinDescription pgtype.Text
+	AutoAssigned   pgtype.Bool
+	CategoryID     pgtype.Int4
+}
+
+func (q *Queries) UpdatePin(ctx context.Context, arg UpdatePinParams) (Pin, error) {
+	row := q.db.QueryRow(ctx, updatePin,
+		arg.ID,
+		arg.EventDate,
+		arg.ImagePin,
+		arg.PinTitle,
+		arg.PinDescription,
+		arg.AutoAssigned,
+		arg.CategoryID,
+	)
+	var i Pin
+	err := row.Scan(
+		&i.ID,
+		&i.EventDate,
+		&i.ImagePin,
+		&i.PinTitle,
+		&i.PinDescription,
+		&i.AutoAssigned,
+		&i.CategoryID,
 
 const updatePinCategory = `-- name: UpdatePinCategory :one
 UPDATE pins_category
