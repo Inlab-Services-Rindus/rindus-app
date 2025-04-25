@@ -29,11 +29,13 @@ CREATE INDEX idx_pins_deleted_at ON pins(deleted_at);
 CREATE TABLE IF NOT EXISTS employee_pins (
     employee_id INTEGER NOT NULL,
     pin_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
     deleted_at timestamptz,
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (employee_id, pin_id),
-    CONSTRAINT employee_pins_pin_id_foreign FOREIGN KEY (pin_id) REFERENCES pins(id) ON DELETE CASCADE
+    CONSTRAINT employee_pins_pin_id_foreign FOREIGN KEY (pin_id) REFERENCES pins(id) ON DELETE CASCADE,
+    CONSTRAINT employee_pins_category_id_foreign FOREIGN KEY (category_id) REFERENCES pins_category(id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_employee_pins_deleted_at ON employee_pins(deleted_at);
