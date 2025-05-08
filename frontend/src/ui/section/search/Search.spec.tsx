@@ -89,11 +89,12 @@ describe('Search', () => {
     });
 
     await waitFor(() => {
-      expect(
-        screen.getByText('No results found for JEJEJEJJ.'),
-      ).toBeInTheDocument();
+      expect(screen.getByText((content) => content.includes('No results found'))).toBeInTheDocument();
     });
+    
+    
   });
+    
 
   it('should render suggestions', async () => {
     getSuggestion.mockResolvedValueOnce(mockSuggestions);

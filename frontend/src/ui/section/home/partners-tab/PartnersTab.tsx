@@ -9,7 +9,7 @@ import '@/ui/section/home/partners-tab/PartnersTab.scss';
 
 export default function PartnersTab() {
   const {
-    partners: { data, isLoading, hasError },
+    partners: { data, isLoading, hasError},
     getPartners,
   } = useContext(StoreContext);
 
@@ -25,7 +25,8 @@ export default function PartnersTab() {
       className="partners-tab__container"
       dataTestId="partners-tab"
       refresh={getPartners}
-      shouldRefresh={hasError}
+      shouldRefresh={hasError} 
+      
     >
       {data?.map((partner, index) => (
         <div
