@@ -123,7 +123,7 @@ func (p *personioService) newCompanyEmployeesRequest(offset int) (*http.Request,
 	}
 
 	q := req.URL.Query()
-	q.Add("limit", "100")
+	q.Add("limit", "200")
 	q.Add("offset", fmt.Sprint(offset))
 	req.URL.RawQuery = q.Encode()
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", *p.authToken))
