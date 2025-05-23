@@ -51,6 +51,7 @@ func run() error {
 	// Services
 	personioImporter := importer.NewPersonioImporter(logger, q, conn)
 	employeeService := service.NewEmployeeService(q, personioImporter)
+	pinsService := service.NewPinsService(q, conn)
 	apiImporter := personioapi.NewImporter(logger, personioImporter, q)
 	service := personioapi.NewPersonioService(logger, cfg.Personio.APIUrl, cfg.Personio.ClientID, cfg.Personio.ClientSecret)
 	personioApiSeeder := personioapi.NewSeeder(service, apiImporter)
@@ -58,7 +59,7 @@ func run() error {
 	slackService := importer.NewSlackService(logger, cfg.Slack.APIUrl, cfg.Slack.AuthToken)
 	slackSeeder := importer.NewSlackSeeder(slackService, imp)
 
-	server := app.NewServer(cfg, employeeService)
+	server := app.NewServer(cfg, employeeService, pinsService)
 	server.Setup()
 
 	setupCrons(cfg.Cronjob, slackSeeder, personioApiSeeder, ctx)
