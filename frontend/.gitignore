@@ -7,11 +7,36 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Build outputs
 dist
 dist-ssr
 dev-dist
 *.local
+www/
+
+# Capacitor
+.sourcemaps/
+.tmp/
+.cache/
+.gradle/
+
+# Capacitor - iOS specific
+ios/App/App/public/
+ios/App/Pods/
+ios/DerivedData/
+ios/build/
+
+# Capacitor - Android specific
+android/app/src/main/assets/public
+android/.gradle/
+android/build/
+android/app/build/
+android/capacitor-cordova-android-plugins/build/
+android/capacitor-android/build/
+android/local.properties
 
 # Editor directories and files
 .vscode/*
@@ -23,5 +48,16 @@ dev-dist
 *.sln
 *.sw?
 
+# Environment files
 .env*
 !.env.*.example
+
+# Ionic
+.ionic/
+.sass-cache/
+.versions/
+coverage/
+
+# System Files
+.DS_Store
+Thumb.db

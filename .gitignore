@@ -1,6 +1,95 @@
+# OS generated files
 .DS_Store
-.vscode/
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment variables
 *.env*
 !.env.example
 !.env.docker
+
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+/build/
+/dist/
+/out/
+/.next/
+/storybook-static/
+
+# iOS/Xcode specific
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.xcuserstate
+*.xcworkspace
+!default.xcworkspace
+Contents.json
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Android/Gradle specific
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+out/
+.gradle/
+local.properties
+proguard/
+.navigation/
+captures/
+*.iml
+.externalNativeBuild
+.cxx/
+/storybook-static/
+
+# Testing
+/coverage/
+/.nyc_output
+
+# Misc
+.cache/
+.temp/
+.tmp/
+logs/
+*.log
+.eslintcache
+.stylelintcache
+.turbo
