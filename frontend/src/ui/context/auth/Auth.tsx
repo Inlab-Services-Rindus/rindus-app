@@ -56,9 +56,13 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     googleResponse: google.accounts.id.CredentialResponse,
   ) => {
     try {
+      console.log('Pedro ===> actionLogin', googleResponse);
+
       setIsLoading(true);
 
       const user = await login(authRepository, googleResponse.credential);
+
+      console.log('Pedro ===> user', user);
 
       setIsLoading(false);
 

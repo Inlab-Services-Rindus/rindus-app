@@ -13,6 +13,10 @@ export function createAuthRepository(): AuthRepository {
 
 export async function login(jwt: string) {
   try {
+    console.log('Pedro ===> estoy al final del login con el jwt', jwt);
+
+    console.log('Pedro ===> config.backendUrl', config);
+
     const response = await fetch(`${config.backendUrl}/login`, {
       headers: {
         'Content-Type': 'application/json',
@@ -21,6 +25,8 @@ export async function login(jwt: string) {
       body: JSON.stringify({ jwt }),
       method: 'POST',
     });
+
+    console.log('Pedro ===> response', response);
 
     if (!response.ok) {
       throw new Error('Error logging in');
