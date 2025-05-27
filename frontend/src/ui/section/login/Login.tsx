@@ -20,7 +20,6 @@ const NativeGoogleButton = lazy(
 export function Login() {
   const { login } = useContext(AuthContext);
   const isNative = Capacitor.isNativePlatform();
-  console.log('Pedro ===> isNative', isNative);
 
   return (
     <div className="login" data-testid="login-page">

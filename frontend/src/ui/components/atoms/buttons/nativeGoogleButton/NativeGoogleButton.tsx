@@ -33,12 +33,8 @@ export default function NativeGoogleButton({
       },
     });
 
-    console.log('Pedro ===> res', res);
-
     const result = res?.result as GoogleLoginResponseOnline;
     const token = result.idToken;
-
-    console.log('Pedro ===> token', token);
 
     const credentialResponse = {
       credential: token,
