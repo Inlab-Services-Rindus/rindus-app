@@ -1,6 +1,3 @@
-// Import the GoogleAuth object and Capacitor platform utilities
-import { useEffect } from 'react';
-
 import {
   GoogleLoginResponseOnline,
   SocialLogin,
@@ -15,16 +12,6 @@ export interface GoogleButtonProps {
 export default function NativeGoogleButton({
   afterLogin,
 }: GoogleButtonProps): JSX.Element {
-  // Initialize GoogleAuth when component mounts
-  useEffect(() => {
-    SocialLogin.initialize({
-      google: {
-        webClientId:
-          '107296892437-s1m61pk81b6qqj9g9u60ocml7m8vmnq2.apps.googleusercontent.com', // the web client id for Android and Web
-      },
-    });
-  }, []);
-
   async function signIn() {
     const res = await SocialLogin.login({
       provider: 'google',
