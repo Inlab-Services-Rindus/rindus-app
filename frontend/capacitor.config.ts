@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Rindus',
   webDir: 'dist',
   server: {
-    url: 'https://app.rindus.de',
+    url: 'https://staging.app.rindus.de',
   },
   plugins: {
     GoogleAuth: {
