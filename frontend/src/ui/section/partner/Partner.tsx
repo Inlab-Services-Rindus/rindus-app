@@ -53,6 +53,7 @@ export function Partner() {
       refresh={() => load(id)}
       isLoading={isLoading}
       shouldRefresh={hasError}
+      
     >
       <div className="partner">
         <div className="partner__header">
