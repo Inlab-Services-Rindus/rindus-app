@@ -42,16 +42,18 @@ func (i *personioImporter) UpdateEmployee(ctx context.Context, personioEmpl mode
 		return nil, internal.ErrNotFound(strconv.Itoa(personioID))
 	}
 
-	if err := i.updateBasicData(ctx, personioID, personioEmpl); err != nil {
-		logger.Warn("Error while updating basic data", "err", err)
-		return nil, err
-	}
 	if err := i.updateTeamCaptain(ctx, employee.ID, personioEmpl.Data.TeamCaptain); err != nil {
 		logger.Warn("Error while updating team captain", "err", err)
-		return nil, err
 	}
 	if err := i.updateLanguages(ctx, employee.ID, personioEmpl.Data.Languages); err != nil {
 		logger.Warn("Error while updating languages", "err", err)
+	}
+	partnerID, err := i.obtainUpdatedPartnerID(ctx, employee.ID, personioEmpl.Data.DepartmentID)
+	if err != nil {
+		logger.Warn("Error while updating partner", "err", err)
+	}
+	if err := i.updateBasicData(ctx, employee, personioEmpl, partnerID); err != nil {
+		logger.Warn("Error while updating basic data", "err", err)
 		return nil, err
 	}
 
@@ -82,13 +84,39 @@ func (i *personioImporter) updateLanguages(ctx context.Context, employeeID int32
 	return i.processLanguages(ctx, employeeID, languages)
 }
 
-func (i *personioImporter) updateBasicData(ctx context.Context, personioID int, personioEmpl model.PersonioEmployee) error {
+func (i *personioImporter) obtainUpdatedPartnerID(ctx context.Context, employeeID int32, departmentID string) (*int32, error) {
+	tx, err := i.conn.Begin(ctx)
+	if err != nil {
+		i.logger.Warn("Not possible to create transaction", "err", err)
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
+
+	qtx := i.q.WithTx(tx)
+	partnerID, err := processPartner(ctx, qtx, departmentID)
+	if err != nil {
+		i.logger.Warn("Partner was not processed due to", "partner", departmentID, "err", err)
+		return nil, err
+	}
+
+	return &partnerID, nil
+}
+
+func (i *personioImporter) updateBasicData(ctx context.Context, employee repository.Employee, personioEmpl model.PersonioEmployee, departmentID *int32) error {
+	var partnerID int32
+	if departmentID == nil {
+		partnerID = employee.PartnerID
+	} else {
+		partnerID = *departmentID
+	}
+
 	if _, err := i.q.UpdateEmployee(ctx, repository.UpdateEmployeeParams{
-		PersonioID: int32(personioID),
+		PersonioID: employee.PersonioID,
 		FirstName:  personioEmpl.Data.FirstName,
 		LastName:   helper.ParseString(personioEmpl.Data.LastName),
 		Position:   personioEmpl.Data.Position,
 		Birthday:   helper.ParseString(personioEmpl.Data.Birthday),
+		PartnerID:  partnerID,
 	}); err != nil {
 		return err
 	}
@@ -268,7 +296,7 @@ func findOrCreateLanguage(ctx context.Context, q *repository.Queries, languageEn
 	return &language, nil
 }
 
-func processEmployeeData(ctx context.Context, qtx *repository.Queries, personioEmployee model.PersonioEmployee, partnerID int) (*repository.Employee, error) {
+func processEmployeeData(ctx context.Context, qtx *repository.Queries, personioEmployee model.PersonioEmployee, partnerID int32) (*repository.Employee, error) {
 	firstName := personioEmployee.Data.FirstName
 	lastName := personioEmployee.Data.LastName
 	pictureURL := model.EmployeePicture(firstName, lastName)
@@ -281,7 +309,7 @@ func processEmployeeData(ctx context.Context, qtx *repository.Queries, personioE
 		PictureUrl: helper.ParseString(pictureURL),
 		Position:   personioEmployee.Data.Position,
 		Birthday:   helper.ParseString(personioEmployee.Data.Birthday),
-		PartnerID:  int32(partnerID),
+		PartnerID:  partnerID,
 	})
 
 	if err != nil {
@@ -291,7 +319,7 @@ func processEmployeeData(ctx context.Context, qtx *repository.Queries, personioE
 	return &employee, nil
 }
 
-func processPartner(ctx context.Context, qtx *repository.Queries, departmentID string) (int, error) {
+func processPartner(ctx context.Context, qtx *repository.Queries, departmentID string) (int32, error) {
 	partnerName, err := model.ParsePersonioPartnerID(departmentID)
 
 	if err != nil {
@@ -315,12 +343,12 @@ func processPartner(ctx context.Context, qtx *repository.Queries, departmentID s
 
 		slog.Debug("Partner newly created", "partner", partnerName)
 
-		return int(partner.ID), nil
+		return partner.ID, nil
 	}
 
 	slog.Debug("Partner already existing. Assigning", "partner", partnerName)
 
-	return int(partner.ID), nil
+	return partner.ID, nil
 }
 
 func NewPersonioImporter(l *slog.Logger, queries *repository.Queries, conn *pgxpool.Pool) PersonioImporter {
