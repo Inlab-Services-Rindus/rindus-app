@@ -93,7 +93,8 @@ UPDATE employees SET
     first_name = $2,
     last_name = $3,
     position = $4,
-    birthday = $5
+    birthday = $5,
+    partner_id = $6
 WHERE personio_id = $1
 RETURNING *;
 
