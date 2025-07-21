@@ -8,12 +8,9 @@ import (
 	"api/internal/repository"
 	"api/internal/service"
 	"api/logger"
-	"api/personioapi"
 	"context"
 	"log/slog"
 	"os"
-
-	"github.com/robfig/cron/v3"
 )
 
 func run() error {
@@ -52,17 +49,10 @@ func run() error {
 	personioImporter := importer.NewPersonioImporter(logger, q, conn)
 	employeeService := service.NewEmployeeService(q, personioImporter)
 	pinsService := service.NewPinsService(q, conn)
-	apiImporter := personioapi.NewImporter(logger, personioImporter, q)
-	service := personioapi.NewPersonioService(logger, cfg.Personio.APIUrl, cfg.Personio.ClientID, cfg.Personio.ClientSecret)
-	personioApiSeeder := personioapi.NewSeeder(service, apiImporter)
-	imp := importer.NewSlackImporter(logger, q)
-	slackService := importer.NewSlackService(logger, cfg.Slack.APIUrl, cfg.Slack.AuthToken)
-	slackSeeder := importer.NewSlackSeeder(slackService, imp)
 
 	server := app.NewServer(cfg, employeeService, pinsService)
 	server.Setup()
 
-	setupCrons(cfg.Cronjob, slackSeeder, personioApiSeeder, ctx)
 	err = server.Run()
 	if err != nil {
 		return err
@@ -79,32 +69,6 @@ func setLogLevel(logLevel slog.Level) {
 	slog.SetLogLoggerLevel(logLevel)
 }
 
-func setupCrons(cronjob string, slackSeeder *importer.SlackSeeder, personioApiSeeder personioapi.Seeder, ctx context.Context) {
-	c := cron.New()
-	slog.Info("Setting up cron jobs")
-	_, err := c.AddFunc(cronjob, func() {
-		if err := apiImporter(slackSeeder, personioApiSeeder, ctx); err != nil {
-			slog.Error("Error while executing cronjob", "err", err.Error())
-		}
-		slog.Info("Cronjob executed succesfully")
-	})
-	if err != nil {
-		slog.Error("Error setting cronjob", "err", err.Error())
-	}
-	c.Start()
-}
-
-func apiImporter(slackSeeder *importer.SlackSeeder, personioApiSeeder personioapi.Seeder, ctx context.Context) error {
-	if err := personioApiSeeder.Seed(ctx); err != nil {
-		return err
-	}
-
-	if err := slackSeeder.Seed(ctx); err != nil {
-		return err
-	}
-
-	return nil
-}
 
 func main() {
 	initLogger()

@@ -11,7 +11,6 @@ require (
 	github.com/jackc/pgx/v5 v5.5.5
 	github.com/joho/godotenv v1.5.1
 	github.com/prometheus/client_golang v1.19.0
-	github.com/robfig/cron/v3 v3.0.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 

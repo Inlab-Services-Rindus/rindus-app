@@ -1,0 +1,45 @@
+name: Daily Data Import
+
+on:
+  schedule:
+    # Run once per day at 2:00 PM (14:00) UTC
+    - cron: "0 14 * * *"
+  workflow_dispatch:
+    # This allows manual triggering of the workflow if needed
+
+jobs:
+  import-data:
+    name: Run Data Import
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+
+      - name: Install dependencies
+        run: |
+          cd api
+          go mod download
+
+      - name: Build importer
+        run: |
+          cd api
+          go build -o importer ./cmd/importer
+
+      - name: Run importer
+        run: |
+          cd api
+          ./importer
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          PERSONIO_API_URL: ${{ secrets.PERSONIO_API_URL }}
+          PERSONIO_CLIENT_ID: ${{ secrets.PERSONIO_CLIENT_ID }}
+          PERSONIO_CLIENT_SECRET: ${{ secrets.PERSONIO_CLIENT_SECRET }}
+          SLACK_API_URL: ${{ secrets.SLACK_API_URL }}
+          SLACK_AUTH_TOKEN: ${{ secrets.SLACK_AUTH_TOKEN }}
+          LOG_LEVEL: "info"
