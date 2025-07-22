@@ -163,7 +163,12 @@ export function Search(): JSX.Element {
         dataTestId="search"
         refresh={getSearchSuggestions}
         isLoading={isLoading}
-        shouldRefresh={search.hasError}
+        shouldRefresh={search.hasError || search.noResults}
+        retryMessage={
+          search.hasError
+            ? 'Oops! Something went wrong. Please click to refresh and try again.'
+            : 'No results found.'
+        }
       >
         {search.noResults && renderNoResults()}
         {!search.noResults && renderResults()}

@@ -42,6 +42,7 @@ export function Profile() {
   const openLightbox = () => setIsLightboxOpen(true);
   const closeLightbox = () => setIsLightboxOpen(false);
 
+
   return (
     <Section
       dataTestId="profile"
