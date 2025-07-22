@@ -129,7 +129,7 @@ func (i *personioImporter) UpdateEmployees(ctx context.Context, employees model.
 	for _, empl := range employees.Data.Items {
 		i.UpdateEmployee(ctx, empl)
 
-		i.logger.Info("Updating", "email", empl.Data.Email)
+		i.logger.Info("Updating", "email", helper.MaskEmail(empl.Data.Email))
 	}
 
 	return nil
@@ -140,7 +140,7 @@ func (i *personioImporter) ImportEmployees(ctx context.Context, employees model.
 	for _, empl := range employees.Data.Items {
 		i.ImportEmployee(ctx, empl)
 
-		i.logger.Info("Processing", "email", empl.Data.Email)
+		i.logger.Info("Processing", "email", helper.MaskEmail(empl.Data.Email))
 	}
 
 	return nil

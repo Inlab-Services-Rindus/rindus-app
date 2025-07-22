@@ -1,6 +1,7 @@
 package personioapi
 
 import (
+	"api/helper"
 	"api/importer"
 	"api/internal/model"
 	"api/internal/repository"
@@ -25,7 +26,7 @@ type personioApiImporter struct {
 
 func (i *personioApiImporter) UpdateEmployees(ctx context.Context, employees []Employee) error {
 	for _, empl := range employees {
-		i.logger.Info("Updating", "email", empl.Attributes.Email.Value)
+		i.logger.Info("Updating", "email", helper.MaskEmail(empl.Attributes.Email.Value))
 
 		if _, err := i.UpdateEmployee(ctx, empl); err != nil {
 			i.logger.Warn("Error while updating employee", "err", err.Error())
@@ -37,7 +38,7 @@ func (i *personioApiImporter) UpdateEmployees(ctx context.Context, employees []E
 
 func (i *personioApiImporter) ImportEmployees(ctx context.Context, employees []Employee) error {
 	for _, empl := range employees {
-		i.logger.Info("Processing", "email", empl.Attributes.Email.Value)
+		i.logger.Info("Processing", "email", helper.MaskEmail(empl.Attributes.Email.Value))
 
 		if _, err := i.ImportEmployee(ctx, empl); err != nil {
 			i.logger.Warn("Error while importing employee", "err", err.Error())

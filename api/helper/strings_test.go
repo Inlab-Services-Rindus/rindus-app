@@ -21,3 +21,28 @@ func TestIsEmpty(t *testing.T) {
 		})
 	}
 }
+
+func TestMaskEmail(t *testing.T) {
+	tests := []struct {
+		name  string
+		email string
+		want  string
+	}{
+		{"should mask standard email", "john.doe@example.com", "jo****oe@ex*****.com"},
+		{"should mask email with short local part", "jo@example.com", "jo@ex*****.com"},
+		{"should mask email with short domain", "john.doe@ex.com", "jo****oe@ex.com"},
+		{"should mask email with subdomain", "john.doe@sub.example.com", "jo****oe@su*********.com"},
+		{"should handle empty email", "", ""},
+		{"should handle invalid email", "invalid-email", "invalid-email"},
+		{"should handle email with multiple @", "john@doe@example.com", "invalid-email"},
+		{"should handle email with no domain extension", "john.doe@localhost", "jo****oe@lo*******"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := MaskEmail(tt.email); got != tt.want {
+				t.Errorf("MaskEmail() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

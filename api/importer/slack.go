@@ -31,7 +31,7 @@ func (s *slackImporter) UpdateSlackMember(ctx context.Context, member SlackMembe
 	id := member.Id
 	name := member.Name
 	email := member.Profile.Email
-	s.l.Info("Updating slack member", "email", email)
+	s.l.Info("Updating slack member", "email", helper.MaskEmail(*email))
 
 	indexOfDomain := strings.LastIndex(*email, ".")
 	emailPattern := fmt.Sprintf("%s.%s", (*email)[:indexOfDomain], "%")
@@ -71,7 +71,7 @@ func (s *slackImporter) ImportSlackMember(ctx context.Context, member SlackMembe
 	id := member.Id
 	name := member.Name
 	email := member.Profile.Email
-	s.l.Info("Importing slack member", "email", email)
+	s.l.Info("Importing slack member", "email", helper.MaskEmail(*email))
 
 	employee, err := s.q.GetEmployeeByEmail(ctx, *email)
 	if err != nil {
