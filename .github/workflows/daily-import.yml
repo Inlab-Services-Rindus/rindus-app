@@ -26,15 +26,10 @@ jobs:
           cd api
           go mod download
 
-      - name: Build importer
-        run: |
-          cd api
-          go build -o importer ./cmd/importer
-
       - name: Run importer
         run: |
           cd api
-          ./importer
+          go run ./cmd/importer/main.go
         env:
           DB_URL: ${{ secrets.DB_URL }}
           PERSONIO_API_URL: ${{ secrets.PERSONIO_API_URL }}
