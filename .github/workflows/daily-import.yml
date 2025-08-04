@@ -32,7 +32,10 @@ jobs:
           go run ./cmd/importer/main.go
         env:
           API_ENV: "production"
-          API_DB_URL: ${{ secrets.DB_URL }}
+          API_DB_HOST: ${{ secrets.DB_HOST }}
+          API_DB_NAME: ${{ secrets.DB_NAME }}
+          API_DB_USER: ${{ secrets.DB_USER }}
+          API_DB_PASS: ${{ secrets.DB_PASS }}
           API_PERSONIO_API_URL: ${{ secrets.PERSONIO_API_URL }}
           API_PERSONIO_CLIENT_ID: ${{ secrets.PERSONIO_CLIENT_ID }}
           API_PERSONIO_CLIENT_SECRET: ${{ secrets.PERSONIO_CLIENT_SECRET }}
