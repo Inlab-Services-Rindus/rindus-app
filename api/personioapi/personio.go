@@ -65,7 +65,7 @@ func (p *personioService) authenticate() error {
 	token := helper.TrimSpace(response.Data.AccessToken)
 	if len(token) > 0 {
 		p.authToken = &token
-		p.logger.Info("Authentication token received and stored", "authToken", *p.authToken)
+		p.logger.Info("Authentication token received and stored")
 		return nil
 	}
 
