@@ -81,9 +81,10 @@ func (p *personioService) CompanyEmployees() ([]Employee, error) {
 	}
 
 	var offset = 0
+	var currentPage = 0
 	var totalPages int
 	var employees []Employee
-	for ok := true; ok; ok = (offset < totalPages) {
+	for ok := true; ok; ok = (currentPage < totalPages) {
 		req, err := p.newCompanyEmployeesRequest(offset)
 		if err != nil {
 			return nil, err
@@ -107,7 +108,8 @@ func (p *personioService) CompanyEmployees() ([]Employee, error) {
 			return nil, err
 		}
 
-		offset += 1
+		offset += 200
+		currentPage = response.Metadata.CurrentPage + 1
 		totalPages = response.Metadata.TotalPages
 		employees = append(employees, response.Data...)
 	}

@@ -13,9 +13,9 @@ import (
 
 const createPartner = `-- name: CreatePartner :one
 INSERT INTO partners (
-    name, logo_url, description
+    name, logo_url, description, created_at, updated_at
 ) VALUES (
-    $1, $2, $3
+    $1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 )
 RETURNING id, name, logo_url, description, created_at, updated_at
 `

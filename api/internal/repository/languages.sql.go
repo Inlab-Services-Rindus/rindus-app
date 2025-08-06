@@ -11,9 +11,13 @@ import (
 
 const createLanguage = `-- name: CreateLanguage :one
 INSERT INTO languages (
-    name
+    name,
+    created_at,
+    updated_at
 ) VALUES (
-    $1
+    $1,
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP
 )
 RETURNING id, name, created_at, updated_at
 `

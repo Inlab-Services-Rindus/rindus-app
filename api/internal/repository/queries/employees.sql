@@ -26,9 +26,11 @@ INSERT INTO employees (
     picture_url,
     position,
     birthday,
-    partner_id
+    partner_id,
+    created_at,
+    updated_at
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8
+    $1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 )
 RETURNING *;
 
@@ -73,9 +75,9 @@ WHERE e.id = $1;
 
 -- name: AssignEmployeeLanguages :exec
 INSERT INTO employees_languages (
-    employee_id, language_id
+    employee_id, language_id, created_at, updated_at
 ) VALUES (
-    $1, $2
+    $1, $2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 );
 
 -- name: DeleteEmployeeLanguage :exec
@@ -83,9 +85,9 @@ DELETE FROM employees_languages WHERE employee_id = $1;
 
 -- name: AssignTeamCaptain :exec
 INSERT INTO team_captains (
-    employee_id, team_captain_id
+    employee_id, team_captain_id, created_at, updated_at
 ) VALUES (
-    $1, $2
+    $1, $2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 );
 
 -- name: UpdateEmployee :one
@@ -94,18 +96,21 @@ UPDATE employees SET
     last_name = $3,
     position = $4,
     birthday = $5,
-    partner_id = $6
+    partner_id = $6,
+    updated_at = CURRENT_TIMESTAMP
 WHERE personio_id = $1
 RETURNING *;
 
 -- name: UpdateTeamCaptain :exec
 UPDATE team_captains SET
-    team_captain_id = $2
+    team_captain_id = $2,
+    updated_at = CURRENT_TIMESTAMP
 WHERE
     employee_id = $1
 ;
 
 -- name: UpdateEmployeeSetSoftDeleted :exec
 UPDATE employees SET 
-    soft_deleted = true
+    soft_deleted = true,
+    updated_at = CURRENT_TIMESTAMP
 WHERE personio_id = $1;
