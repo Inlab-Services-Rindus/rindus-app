@@ -16,7 +16,7 @@ export class GoogleJwtValidator implements JwtValidator {
     try {
       const ticket = await this.client.verifyIdToken({
         idToken: token,
-        audience: config.app.google.clientId,
+        audience: config.app.google.clientIds,
       });
       payload = ticket.getPayload();
     } catch (error) {

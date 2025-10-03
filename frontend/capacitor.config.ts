@@ -4,9 +4,9 @@ const config: CapacitorConfig = {
   appId: 'com.rindus.app',
   appName: 'Rindus',
   webDir: 'dist',
-  // server: {
-  //   url: 'https://staging.app.rindus.de',
-  // },
+  server: {
+    url: 'https://app.rindus.de',
+  },
 };
 
 export default config;

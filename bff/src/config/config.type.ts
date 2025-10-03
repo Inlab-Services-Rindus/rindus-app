@@ -61,7 +61,7 @@ export interface App {
 }
 
 export interface Google {
-  clientId: string;
+  clientIds: string[];
 }
 
 interface Personio {

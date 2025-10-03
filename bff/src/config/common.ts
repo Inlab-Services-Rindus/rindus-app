@@ -25,8 +25,10 @@ export const getCommonConfig = (
     port: parseNumber(processVariables.BFF_PORT) || 3000,
     url: processVariables.BFF_APP_URL,
     google: {
-      clientId:
-        '107296892437-s1m61pk81b6qqj9g9u60ocml7m8vmnq2.apps.googleusercontent.com',
+      clientIds: [
+        '107296892437-s1m61pk81b6qqj9g9u60ocml7m8vmnq2.apps.googleusercontent.com', // Web/Android
+        '107296892437-c3e1m64cderer8ie39dbif5hle8uji6q.apps.googleusercontent.com', // iOS
+      ],
     },
   },
   cors: {

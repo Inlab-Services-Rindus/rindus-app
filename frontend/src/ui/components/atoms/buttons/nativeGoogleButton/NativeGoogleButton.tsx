@@ -20,6 +20,8 @@ export default function NativeGoogleButton({
       google: {
         webClientId:
           '107296892437-s1m61pk81b6qqj9g9u60ocml7m8vmnq2.apps.googleusercontent.com', // the web client id for Android and Web
+        // iOSClientId:
+        //   '107296892437-s1m61pk81b6qqj9g9u60ocml7m8vmnq2.apps.googleusercontent.com', // doesnt work, because is not setted in Info.plist
       },
     });
   }, []);
